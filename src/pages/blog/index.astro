@@ -10,10 +10,16 @@ const posts = (await getCollection('blog')).sort(
 <Layout title="Blog — eddn.dev">
 	<main class="max-w-7xl mx-auto px-6 py-24">
 		<header class="mb-16">
-			<h1 class="text-5xl font-black tracking-tighter text-slate-900 mb-4">
-				JOURNAL<span class="text-brand-500">.</span>
+			<h1
+				class="text-6xl sm:text-8xl font-black tracking-tighter text-slate-900 leading-[0.85] mb-8"
+			>
+				BLOG <br />
+				<span
+					class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8"
+					>JOURNAL.</span
+				>
 			</h1>
-			<p class="text-xl text-slate-600 font-light">
+			<p class="text-xl text-slate-600 font-light max-w-2xl">
 				Pensamientos sobre software, diseño y aprendizaje continuo.
 			</p>
 		</header>
