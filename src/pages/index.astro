@@ -96,13 +96,11 @@ import Layout from "../layouts/Layout.astro";
 	</main>
 
 	<script>
-		import GameOfLife from "../lib/GameOfLife";
-		import ParticleAttractor from "../lib/ParticleAttractor";
-		import NetworkGraph from "../lib/NetworkGraph";
+		import { createRandomVisual, type VisualInstance } from "../utils/visuals";
 
 		// Pattern for handling Astro View Transitions with interactive elements
 		// 1. Track the active instance in a module-scoped variable
-		let activeVisual: GameOfLife | ParticleAttractor | NetworkGraph | null = null;
+		let activeVisual: VisualInstance | null = null;
 
 		function initHeroVisualization() {
 			const canvas = document.getElementById(
@@ -116,17 +114,8 @@ import Layout from "../layouts/Layout.astro";
 				activeVisual.destroy();
 			}
 
-			// Randomly select visualization
-			const rand = Math.random();
-
-			if (rand < 0.33) {
-				activeVisual = new GameOfLife(canvas, "#8b5cf6");
-			} else if (rand < 0.66) {
-				activeVisual = new ParticleAttractor(canvas, "#8b5cf6");
-			} else {
-				activeVisual = new NetworkGraph(canvas, "#8b5cf6");
-			}
-			
+			// Initialize using factory
+			activeVisual = createRandomVisual(canvas, "#8b5cf6");
 			activeVisual.init();
 		}
 
