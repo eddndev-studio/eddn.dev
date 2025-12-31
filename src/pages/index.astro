@@ -101,29 +101,47 @@ import Layout from "../layouts/Layout.astro";
 		import ParticleAttractor from "../lib/ParticleAttractor";
 		import NetworkGraph from "../lib/NetworkGraph";
 
-		const canvas = document.getElementById(
-			"hero-canvas",
-		) as HTMLCanvasElement;
-		
-		if (canvas) {
+		// Pattern for handling Astro View Transitions with interactive elements
+		// 1. Track the active instance in a module-scoped variable
+		let activeVisual: GameOfLife | ParticleAttractor | NetworkGraph | null = null;
+
+		function initHeroVisualization() {
+			const canvas = document.getElementById(
+				"hero-canvas",
+			) as HTMLCanvasElement;
+			
+			if (!canvas) return;
+
+			// Cleanup any existing instance just in case
+			if (activeVisual) {
+				activeVisual.destroy();
+			}
+
 			// Randomly select visualization
 			const rand = Math.random();
-			let visual;
 
 			if (rand < 0.33) {
-				visual = new GameOfLife(canvas, "#8b5cf6");
+				activeVisual = new GameOfLife(canvas, "#8b5cf6");
 			} else if (rand < 0.66) {
-				visual = new ParticleAttractor(canvas, "#8b5cf6");
+				activeVisual = new ParticleAttractor(canvas, "#8b5cf6");
 			} else {
-				visual = new NetworkGraph(canvas, "#8b5cf6");
+				activeVisual = new NetworkGraph(canvas, "#8b5cf6");
 			}
 			
-			visual.init();
-
-			// Cleanup on navigation (if using View Transitions)
-			document.addEventListener("astro:before-swap", () => {
-				visual.destroy();
-			});
+			activeVisual.init();
 		}
+
+		function cleanup() {
+			if (activeVisual) {
+				activeVisual.destroy();
+				activeVisual = null;
+			}
+		}
+
+		// 2. Initialize on every page load (initial + navigation)
+		document.addEventListener("astro:page-load", initHeroVisualization);
+		
+		// 3. Cleanup before swapping content
+		document.addEventListener("astro:before-swap", cleanup);
 	</script>
 </Layout>
