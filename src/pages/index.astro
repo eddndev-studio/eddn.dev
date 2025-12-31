@@ -14,7 +14,7 @@ import Layout from "../layouts/Layout.astro";
 				class="w-full h-full"
 				style="border-radius: 64% 36% 27% 73% / 55% 58% 42% 45%;"
 			>
-				<canvas id="life-canvas" class="w-full h-full"></canvas>
+				<canvas id="hero-canvas" class="w-full h-full"></canvas>
 			</div>
 		</div>
 
@@ -98,17 +98,24 @@ import Layout from "../layouts/Layout.astro";
 
 	<script>
 		import GameOfLife from "../lib/GameOfLife";
+		import ParticleAttractor from "../lib/ParticleAttractor";
 
 		const canvas = document.getElementById(
-			"life-canvas",
+			"hero-canvas",
 		) as HTMLCanvasElement;
+		
 		if (canvas) {
-			const game = new GameOfLife(canvas, "#8b5cf6"); // Brand color
-			game.init();
+			// Randomly select visualization (50/50 chance)
+			const useParticles = Math.random() > 0.5;
+			const visual = useParticles 
+				? new ParticleAttractor(canvas, "#8b5cf6")
+				: new GameOfLife(canvas, "#8b5cf6");
+			
+			visual.init();
 
 			// Cleanup on navigation (if using View Transitions)
 			document.addEventListener("astro:before-swap", () => {
-				game.destroy();
+				visual.destroy();
 			});
 		}
 	</script>
