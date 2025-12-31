@@ -86,6 +86,7 @@ const difficultyColor = {
 							[ LATEST JOURNAL ]
 						</span>
 						<time 
+							transition:name={`date-${latestBlog.id}`}
 							class="relative z-10 mb-2 block text-xs font-mono text-slate-400 uppercase tracking-widest pointer-events-none"
 						>
 							{latestBlog.data.pubDate.toLocaleDateString('es-ES', {
@@ -95,7 +96,10 @@ const difficultyColor = {
 							})}
 						</time>
 						
-						<h3 class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight">
+						<h3 
+							transition:name={`title-${latestBlog.id}`}
+							class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight"
+						>
 							<a href={`/blog/${latestBlog.id}`} class="focus:outline-none">
 								<span class="absolute inset-0 z-20"></span>
 								{latestBlog.data.title}
@@ -124,12 +128,18 @@ const difficultyColor = {
 							<span class="text-xs font-mono text-brand-500 font-bold uppercase tracking-widest">
 								[ LATEST SOLUTION ]
 							</span>
-							<span class={`text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor[latestLeetCode.data.difficulty as keyof typeof difficultyColor]}`}>
+							<span 
+								transition:name={`difficulty-${latestLeetCode.id}`}
+								class={`text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor[latestLeetCode.data.difficulty as keyof typeof difficultyColor]}`}
+							>
 								{latestLeetCode.data.difficulty}
 							</span>
 						</div>
 						
-						<h3 class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight">
+						<h3 
+							transition:name={`title-${latestLeetCode.id}`}
+							class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight"
+						>
 							<a href={`/leetcode/${latestLeetCode.id}`} class="focus:outline-none">
 								<span class="absolute inset-0 z-20"></span>
 								{latestLeetCode.data.title}
