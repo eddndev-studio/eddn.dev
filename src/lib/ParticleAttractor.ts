@@ -102,46 +102,44 @@ export default class ParticleAttractor {
             const distSq = dx * dx + dy * dy;
             const dist = Math.sqrt(distSq);
             
-            // Gravity force (stronger when closer, but clamped to avoid singularity)
-            const force = Math.min(10, 500 / (dist + 10)); 
+            // Stronger Gravity force
+            // F = G * m1 * m2 / r^2
+            // We use a simplified version, clamping distance to avoid infinity
+            const force = 1000 / (dist + 50); 
             const angle = Math.atan2(dy, dx);
             
-            // Tangential velocity for swirling effect
-            // We add a perpendicular vector to the attraction vector
-            const spiralStrength = 0.5;
+            p.vx += Math.cos(angle) * force * 0.5; // Apply force
+            p.vy += Math.sin(angle) * force * 0.5;
             
-            p.vx += Math.cos(angle) * force * 0.05;
-            p.vy += Math.sin(angle) * force * 0.05;
-            
-            // Swirl: add velocity perpendicular to the radius
-            p.vx += -Math.sin(angle) * spiralStrength;
-            p.vy += Math.cos(angle) * spiralStrength;
+            // Removed artificial swirl addition. 
+            // The initial velocity + gravity creates the orbit.
 
             // Mouse Repulsion (Interaction)
             const mdx = this.mouse.x - p.x;
             const mdy = this.mouse.y - p.y;
             const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
-            if (mDist < 150) {
-                const repForce = (150 - mDist) * 0.02;
+            if (mDist < 200) {
+                const repForce = (200 - mDist) * 0.05;
                 p.vx -= (mdx / mDist) * repForce;
                 p.vy -= (mdy / mDist) * repForce;
             }
 
-            // Friction
-            p.vx *= 0.96;
-            p.vy *= 0.96;
+            // Friction (Air resistance)
+            // Keeps them from accelerating infinitely
+            p.vx *= 0.95;
+            p.vy *= 0.95;
 
             // Update position
             p.x += p.vx;
             p.y += p.vy;
 
             // Reset if sucked into the "event horizon" (too close to center)
-            if (dist < 5) {
+            if (dist < 10) {
                 p.reset(this.width, this.height);
             }
             
             // Reset if lost in space (too far)
-            if (p.x < -100 || p.x > this.width + 100 || p.y < -100 || p.y > this.height + 100) {
+            if (p.x < -200 || p.x > this.width + 200 || p.y < -200 || p.y > this.height + 200) {
                 p.reset(this.width, this.height);
             }
         });
