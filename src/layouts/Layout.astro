@@ -22,8 +22,26 @@ const {
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
+		
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		
+		<!-- Canonical URL -->
+		<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:site_name" content="eddn.dev" />
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={Astro.url} />
+		<meta property="twitter:title" content={title} />
+		<meta property="twitter:description" content={description} />
+		
 		<ClientRouter />
 		
 		<!-- Fonts -->

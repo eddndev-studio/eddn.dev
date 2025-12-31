@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://eddn.dev/sitemap-index.xml

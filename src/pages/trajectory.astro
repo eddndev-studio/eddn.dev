@@ -3,22 +3,24 @@ import Layout from '../layouts/Layout.astro';
 
 const milestones = [
 	{
-		year: '2025',
-		title: 'Senior Software Engineer',
-		company: 'Tech Solutions Inc.',
-		description: 'Liderando el desarrollo de microservicios y arquitectura cloud.',
+		year: '2024 — Presente',
+		title: 'Lead Developer',
+		company: 'Festival Dango Teotihuacan 2026',
+		description: 'Desarrollo del sitio web y experiencia digital para el festival, impulsado por la visión creativa de Sylestudio.',
+		link: { text: 'github.com/eddndev/dango', url: 'https://github.com/eddndev/dango' }
 	},
 	{
-		year: '2023',
-		title: 'Full Stack Developer',
-		company: 'Digital Factory',
-		description: 'Desarrollo de aplicaciones web escalables con React y Node.js.',
+		year: '2024 — Presente',
+		title: 'Tech Lead',
+		company: 'Sylestudio',
+		description: 'Liderando iniciativas tecnológicas y desarrollo web en un estudio creativo de alto impacto.',
+		link: { text: 'sylestudio.com', url: 'https://sylestudio.com' }
 	},
 	{
-		year: '2021',
-		title: 'Junior Developer',
-		company: 'Startup Lab',
-		description: 'Primeros pasos en el desarrollo profesional, enfocado en frontend.',
+		year: '2022 — Presente',
+		title: 'Ingeniería en Sistemas Computacionales',
+		company: 'IPN (Instituto Politécnico Nacional)',
+		description: 'Formación académica profunda en ciencias de la computación, algoritmos y arquitectura de software.',
 	},
 ];
 ---
@@ -47,6 +49,19 @@ const milestones = [
 						<p class="text-slate-600 max-w-2xl leading-relaxed">
 							{milestone.description}
 						</p>
+						{milestone.link && (
+							<a 
+								href={milestone.link.url} 
+								target="_blank" 
+								rel="noopener noreferrer" 
+								class="inline-flex items-center text-sm font-medium text-brand-500 hover:text-brand-600 transition-colors mt-1"
+							>
+								{milestone.link.text}
+								<svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+								</svg>
+							</a>
+						)}
 					</div>
 				</div>
 			))}
