@@ -36,7 +36,7 @@ const navItems = [
   </nav>
 
   <!-- Mobile Menu Overlay -->
-  <div id="mobile-menu" class="fixed inset-0 bg-white/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-all duration-500 md:hidden">
+  <div id="mobile-menu" class="fixed inset-0 bg-white/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 opacity-0 invisible transition-all duration-300 md:hidden">
       {navItems.map(item => (
         <a 
           href={item.href} 
@@ -53,40 +53,43 @@ const navItems = [
     const toggle = document.querySelector('#menu-toggle');
     const menu = document.querySelector('#mobile-menu');
     const links = document.querySelectorAll('.mobile-link');
+    const body = document.body;
 
     if (!toggle || !menu) return;
 
-    // Reset state on load
-    toggle.classList.remove('is-open');
-    menu.classList.remove('opacity-100', 'pointer-events-auto');
-    menu.classList.add('opacity-0', 'pointer-events-none');
+    const closeMenu = () => {
+      toggle.classList.remove('is-open');
+      menu.classList.remove('opacity-100', 'visible');
+      menu.classList.add('opacity-0', 'invisible');
+      body.style.overflow = '';
+    };
 
-    toggle.addEventListener('click', (e) => {
+    const openMenu = () => {
+      toggle.classList.add('is-open');
+      menu.classList.remove('opacity-0', 'invisible');
+      menu.classList.add('opacity-100', 'visible');
+      body.style.overflow = 'hidden';
+    };
+
+    // Initialize state (Force closed)
+    closeMenu();
+
+    toggle.onclick = (e) => {
       e.stopPropagation();
-      const isOpen = toggle.classList.toggle('is-open');
-      
+      const isOpen = toggle.classList.contains('is-open');
       if (isOpen) {
-        menu.classList.remove('opacity-0', 'pointer-events-none');
-        menu.classList.add('opacity-100', 'pointer-events-auto');
-        document.body.style.overflow = 'hidden'; // Lock scroll
+        closeMenu();
       } else {
-        menu.classList.remove('opacity-100', 'pointer-events-auto');
-        menu.classList.add('opacity-0', 'pointer-events-none');
-        document.body.style.overflow = ''; // Unlock scroll
+        openMenu();
       }
-    });
+    };
 
     // Close on link click
     links.forEach(link => {
-      link.addEventListener('click', () => {
-        toggle.classList.remove('is-open');
-        menu.classList.remove('opacity-100', 'pointer-events-auto');
-        menu.classList.add('opacity-0', 'pointer-events-none');
-        document.body.style.overflow = '';
-      });
+      link.addEventListener('click', closeMenu);
     });
   }
 
-  // Setup on page load and after View Transitions
+  // Bind on every navigation
   document.addEventListener('astro:page-load', setupMenu);
 </script>
