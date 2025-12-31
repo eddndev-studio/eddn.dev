@@ -99,17 +99,24 @@ import Layout from "../layouts/Layout.astro";
 	<script>
 		import GameOfLife from "../lib/GameOfLife";
 		import ParticleAttractor from "../lib/ParticleAttractor";
+		import NetworkGraph from "../lib/NetworkGraph";
 
 		const canvas = document.getElementById(
 			"hero-canvas",
 		) as HTMLCanvasElement;
 		
 		if (canvas) {
-			// Randomly select visualization (50/50 chance)
-			const useParticles = Math.random() > 0.5;
-			const visual = useParticles 
-				? new ParticleAttractor(canvas, "#8b5cf6")
-				: new GameOfLife(canvas, "#8b5cf6");
+			// Randomly select visualization
+			const rand = Math.random();
+			let visual;
+
+			if (rand < 0.33) {
+				visual = new GameOfLife(canvas, "#8b5cf6");
+			} else if (rand < 0.66) {
+				visual = new ParticleAttractor(canvas, "#8b5cf6");
+			} else {
+				visual = new NetworkGraph(canvas, "#8b5cf6");
+			}
 			
 			visual.init();
 
