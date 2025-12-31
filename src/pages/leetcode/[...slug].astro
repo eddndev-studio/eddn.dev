@@ -24,14 +24,20 @@ const difficultyColor = {
 	<article class="max-w-3xl mx-auto px-6 py-24">
 		<header class="mb-12">
 			<div class="flex items-center gap-4 mb-6">
-				<span class={`text-xs font-bold px-2.5 py-1 rounded-full ${difficultyColor[solution.data.difficulty]}`}>
+				<span 
+					transition:name={`difficulty-${solution.id}`}
+					class={`text-xs font-bold px-2.5 py-1 rounded-full ${difficultyColor[solution.data.difficulty]}`}
+				>
 					{solution.data.difficulty}
 				</span>
 				<a href={solution.data.problemUrl} target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-slate-400 hover:text-brand-500 underline underline-offset-4">
 					VER EN LEETCODE ↗
 				</a>
 			</div>
-			<h1 class="text-4xl sm:text-5xl font-black tracking-tighter text-slate-900 leading-tight mb-8">
+			<h1 
+				transition:name={`title-${solution.id}`}
+				class="text-4xl sm:text-5xl font-black tracking-tighter text-slate-900 leading-tight mb-8"
+			>
 				{solution.data.title}
 			</h1>
 			
