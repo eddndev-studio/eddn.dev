@@ -2,31 +2,31 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-[#0a0a0a] text-white py-24 lg:py-32 border-t border-white/10 overflow-hidden relative z-20">
+<footer class="bg-white text-slate-900 py-24 lg:py-32 border-t border-slate-200 overflow-hidden relative z-20">
     <div class="mx-auto max-w-5xl px-6">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
             
-            <!-- Site Map (Replaces Business Services) -->
+            <!-- Site Map -->
             <div class="space-y-12">
                 <h2 class="text-xs font-mono text-brand-500 tracking-widest mb-8">[ EXPLORAR ]</h2>
                 
                 <ul class="space-y-8">
-                    <li class="group border-b border-white/10 pb-4 hover:border-brand-500 transition-colors">
+                    <li class="group border-b border-slate-100 pb-4 hover:border-brand-500 transition-colors">
                         <a href="/blog" class="flex items-baseline justify-between w-full">
-                            <span class="text-2xl lg:text-3xl font-bold text-gray-300 group-hover:text-white transition-colors">Blog</span>
-                            <span class="text-sm font-mono text-gray-600 group-hover:text-brand-400 transition-colors">Engineering / Thoughts</span>
+                            <span class="text-2xl lg:text-3xl font-bold text-slate-700 group-hover:text-slate-900 transition-colors">Blog</span>
+                            <span class="text-sm font-mono text-slate-400 group-hover:text-brand-500 transition-colors">Engineering / Thoughts</span>
                         </a>
                     </li>
-                    <li class="group border-b border-white/10 pb-4 hover:border-brand-500 transition-colors">
+                    <li class="group border-b border-slate-100 pb-4 hover:border-brand-500 transition-colors">
                         <a href="/leetcode" class="flex items-baseline justify-between w-full">
-                            <span class="text-2xl lg:text-3xl font-bold text-gray-300 group-hover:text-white transition-colors">LeetCode</span>
-                            <span class="text-sm font-mono text-gray-600 group-hover:text-brand-400 transition-colors">Solutions / Complexity</span>
+                            <span class="text-2xl lg:text-3xl font-bold text-slate-700 group-hover:text-slate-900 transition-colors">LeetCode</span>
+                            <span class="text-sm font-mono text-slate-400 group-hover:text-brand-500 transition-colors">Solutions / Complexity</span>
                         </a>
                     </li>
-                    <li class="group border-b border-white/10 pb-4 hover:border-brand-500 transition-colors">
+                    <li class="group border-b border-slate-100 pb-4 hover:border-brand-500 transition-colors">
                         <a href="/trajectory" class="flex items-baseline justify-between w-full">
-                            <span class="text-2xl lg:text-3xl font-bold text-gray-300 group-hover:text-white transition-colors">Trayectoria</span>
-                            <span class="text-sm font-mono text-gray-600 group-hover:text-brand-400 transition-colors">Career / Milestones</span>
+                            <span class="text-2xl lg:text-3xl font-bold text-slate-700 group-hover:text-slate-900 transition-colors">Trayectoria</span>
+                            <span class="text-sm font-mono text-slate-400 group-hover:text-brand-500 transition-colors">Career / Milestones</span>
                         </a>
                     </li>
                 </ul>
@@ -38,15 +38,15 @@ const currentYear = new Date().getFullYear();
                     <h3 class="text-5xl lg:text-7xl font-black tracking-tighter leading-[0.9] mb-8">
                         LET'S <br> <span class="text-brand-500">TALK.</span>
                     </h3>
-                    <p class="text-gray-400 text-lg max-w-md mb-12">
+                    <p class="text-slate-600 text-lg max-w-md mb-12">
                         Siempre abierto a discutir sobre tecnología, retos de ingeniería o nuevas oportunidades de colaboración.
                     </p>
                  </div>
 
                  <div class="flex flex-col sm:flex-row gap-6">
                     <!-- Primary CTA -->
-                    <a href="mailto:contacto@eddn.dev" class="group relative inline-flex items-center justify-center px-8 py-4 bg-white text-black font-bold rounded-full overflow-hidden transition-transform hover:scale-105">
-                        <span class="relative z-10 group-hover:text-brand-700 transition-colors">Iniciar Conversación</span>
+                    <a href="mailto:contacto@eddn.dev" class="group relative inline-flex items-center justify-center px-8 py-4 bg-slate-900 text-white font-bold rounded-full overflow-hidden transition-transform hover:scale-105 shadow-lg shadow-slate-900/20">
+                        <span class="relative z-10 group-hover:text-brand-200 transition-colors">Iniciar Conversación</span>
                     </a>
                  </div>
             </div>
@@ -54,12 +54,15 @@ const currentYear = new Date().getFullYear();
         </div>
 
         <!-- Minimal Footer Info -->
-        <div class="mt-24 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-600 font-mono">
+        <div class="mt-24 pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 font-mono">
             <span>&copy; {currentYear} EDDN.DEV. ALL RIGHTS RESERVED.</span>
-            <div class="flex gap-4 mt-4 sm:mt-0">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">GITHUB</a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">LINKEDIN</a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">TWITTER</a>
+            <div class="flex flex-wrap gap-4 mt-4 sm:mt-0 justify-center">
+                <a href="https://github.com/eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">GITHUB</a>
+                <a href="https://www.linkedin.com/in/eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">LINKEDIN</a>
+                <a href="https://x.com/eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">X</a>
+                <a href="https://instagram.com/_eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">INSTAGRAM</a>
+                <a href="https://eddndev.com" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">EDDNDEV.COM</a>
+                <a href="https://achrony.me" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">ACHRONY.ME</a>
             </div>
         </div>
     </div>
