@@ -7,13 +7,14 @@ const navItems = [
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-brand-50/80 backdrop-blur-md border-b border-slate-200/50">
-  <nav class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+  <nav class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between relative z-50">
     <a href="/" class="group flex items-center gap-2">
       <div class="w-2 h-2 bg-brand-500 rounded-full group-hover:scale-125 transition-transform"></div>
-      <span class="font-bold tracking-tighter text-xl">eddn.dev</span>
+      <span class="font-bold tracking-tighter text-xl text-slate-900">eddn.dev</span>
     </a>
 
-    <ul class="flex gap-8">
+    <!-- Desktop Menu -->
+    <ul class="hidden md:flex gap-8">
       {navItems.map(item => (
         <li>
           <a 
@@ -25,5 +26,67 @@ const navItems = [
         </li>
       ))}
     </ul>
+
+    <!-- Mobile Toggle -->
+    <button id="menu-toggle" aria-label="Toggle Menu" class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 p-2 z-50 group">
+        <span class="w-6 h-0.5 bg-slate-900 transition-all duration-300 ease-out origin-center group-[.is-open]:rotate-45 group-[.is-open]:translate-y-2"></span>
+        <span class="w-6 h-0.5 bg-slate-900 transition-all duration-300 ease-out group-[.is-open]:opacity-0"></span>
+        <span class="w-6 h-0.5 bg-slate-900 transition-all duration-300 ease-out origin-center group-[.is-open]:-rotate-45 group-[.is-open]:-translate-y-2"></span>
+    </button>
   </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div id="mobile-menu" class="fixed inset-0 bg-white/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-all duration-500 md:hidden">
+      {navItems.map(item => (
+        <a 
+          href={item.href} 
+          class="text-3xl font-bold text-slate-900 hover:text-brand-500 transition-colors mobile-link"
+        >
+          {item.name}
+        </a>
+      ))}
+  </div>
 </header>
+
+<script>
+  function setupMenu() {
+    const toggle = document.querySelector('#menu-toggle');
+    const menu = document.querySelector('#mobile-menu');
+    const links = document.querySelectorAll('.mobile-link');
+
+    if (!toggle || !menu) return;
+
+    // Reset state on load
+    toggle.classList.remove('is-open');
+    menu.classList.remove('opacity-100', 'pointer-events-auto');
+    menu.classList.add('opacity-0', 'pointer-events-none');
+
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = toggle.classList.toggle('is-open');
+      
+      if (isOpen) {
+        menu.classList.remove('opacity-0', 'pointer-events-none');
+        menu.classList.add('opacity-100', 'pointer-events-auto');
+        document.body.style.overflow = 'hidden'; // Lock scroll
+      } else {
+        menu.classList.remove('opacity-100', 'pointer-events-auto');
+        menu.classList.add('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = ''; // Unlock scroll
+      }
+    });
+
+    // Close on link click
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        toggle.classList.remove('is-open');
+        menu.classList.remove('opacity-100', 'pointer-events-auto');
+        menu.classList.add('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  // Setup on page load and after View Transitions
+  document.addEventListener('astro:page-load', setupMenu);
+</script>
