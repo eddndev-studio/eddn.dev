@@ -6,18 +6,6 @@ import Layout from "../layouts/Layout.astro";
 	<main
 		class="relative max-w-7xl mx-auto px-6 py-12 sm:py-24 lg:py-32 overflow-visible"
 	>
-		<!-- Decorative Blob (Absolute) -->
-		<div
-			class="absolute -top-20 -right-40 sm:-right-20 lg:-right-20 w-[600px] h-[600px] lg:w-[1000px] lg:h-[1000px] -z-10 opacity-60 lg:opacity-80 pointer-events-none [mask-image:radial-gradient(closest-side,white,transparent)]"
-		>
-			<div
-				class="w-full h-full"
-				style="border-radius: 64% 36% 27% 73% / 55% 58% 42% 45%;"
-			>
-				<canvas id="hero-canvas" class="w-full h-full"></canvas>
-			</div>
-		</div>
-
 		<div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 			<!-- Left Column: Content -->
 			<header class="space-y-8 relative z-10">
@@ -57,8 +45,19 @@ import Layout from "../layouts/Layout.astro";
 				</div>
 			</header>
 
-			<!-- Right Column Spacer (keeps text on left in grid layout) -->
-			<div class="hidden lg:block"></div>
+			<!-- Right Column / Mobile Bottom: Decorative Blob -->
+			<div class="relative flex justify-center items-center mt-12 lg:mt-0">
+				<div 
+					class="relative w-[350px] h-[350px] sm:w-[500px] sm:h-[500px] lg:absolute lg:-top-20 lg:-right-20 lg:w-[1000px] lg:h-[1000px] z-0 lg:-z-10 opacity-60 lg:opacity-80 pointer-events-none [mask-image:radial-gradient(closest-side,white,transparent)]"
+				>
+					<div
+						class="w-full h-full"
+						style="border-radius: 64% 36% 27% 73% / 55% 58% 42% 45%;"
+					>
+						<canvas id="hero-canvas" class="w-full h-full"></canvas>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<section class="mt-32 grid grid-cols-1 md:grid-cols-2 gap-12">
