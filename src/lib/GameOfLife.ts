@@ -25,6 +25,7 @@ export default class GameOfLife {
         // Bind methods
         this.loop = this.loop.bind(this);
         this.resize = this.resize.bind(this);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
     }
 
     public init() {
@@ -32,11 +33,37 @@ export default class GameOfLife {
         this.seed();
         this.start();
         window.addEventListener('resize', this.resize);
+        window.addEventListener('mousemove', this.handleMouseMove);
     }
 
     public destroy() {
         this.stop();
         window.removeEventListener('resize', this.resize);
+        window.removeEventListener('mousemove', this.handleMouseMove);
+    }
+
+    private handleMouseMove(e: MouseEvent) {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const col = Math.floor(x / this.cellSize);
+        const row = Math.floor(y / this.cellSize);
+        
+        // Revive a small cluster around the cursor
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+                const c = (col + i + this.cols) % this.cols;
+                const r = (row + j + this.rows) % this.rows;
+                
+                if (this.grid[c] && this.grid[c][r] !== undefined) {
+                    // Add life with high probability
+                    if (Math.random() > 0.3) {
+                         this.grid[c][r] = 1;
+                    }
+                }
+            }
+        }
     }
 
     private resize() {
