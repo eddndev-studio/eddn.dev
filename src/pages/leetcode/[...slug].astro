@@ -1,0 +1,68 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const solutions = await getCollection('leetcode');
+	return solutions.map((solution) => ({
+		params: { slug: solution.id },
+		props: solution,
+	}));
+}
+
+const solution = Astro.props;
+const { Content } = await render(solution);
+
+const difficultyColor = {
+	Easy: 'text-emerald-500 bg-emerald-50',
+	Medium: 'text-amber-500 bg-amber-50',
+	Hard: 'text-rose-500 bg-rose-50',
+};
+---
+
+<Layout title={`${solution.data.title} — LeetCode Solution`} description={`Solución optimizada para el problema ${solution.data.title} en LeetCode.`}>
+	<article class="max-w-3xl mx-auto px-6 py-24">
+		<header class="mb-12">
+			<div class="flex items-center gap-4 mb-6">
+				<span class={`text-xs font-bold px-2.5 py-1 rounded-full ${difficultyColor[solution.data.difficulty]}`}>
+					{solution.data.difficulty}
+				</span>
+				<a href={solution.data.problemUrl} target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-slate-400 hover:text-brand-500 underline underline-offset-4">
+					VER EN LEETCODE ↗
+				</a>
+			</div>
+			<h1 class="text-4xl sm:text-5xl font-black tracking-tighter text-slate-900 leading-tight mb-8">
+				{solution.data.title}
+			</h1>
+			
+			<div class="grid grid-cols-2 gap-4 p-6 bg-slate-50 rounded-2xl border border-slate-100">
+				<div>
+					<span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 block mb-1">Time Complexity</span>
+					<span class="font-bold text-slate-900">{solution.data.complexity?.time || 'N/A'}</span>
+				</div>
+				<div>
+					<span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 block mb-1">Space Complexity</span>
+					<span class="font-bold text-slate-900">{solution.data.complexity?.space || 'N/A'}</span>
+				</div>
+			</div>
+		</header>
+
+		<div class="prose prose-slate prose-lg max-w-none 
+			prose-headings:text-slate-900 prose-headings:font-black prose-headings:tracking-tighter
+			prose-a:text-brand-500 prose-strong:text-slate-900
+			prose-code:text-brand-600 prose-code:bg-brand-50 prose-code:px-1 prose-code:rounded prose-code:before:content-none prose-code:after:content-none">
+			<Content />
+		</div>
+	</article>
+</Layout>
+
+<style is:global>
+	@reference "tailwindcss";
+
+	.prose pre {
+		@apply rounded-xl border border-slate-200 bg-slate-50! p-6;
+	}
+	.prose code {
+		@apply font-mono text-sm;
+	}
+</style>

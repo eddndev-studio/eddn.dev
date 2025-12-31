@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Layout title="Blog — eddn.dev">
+	<main class="max-w-5xl mx-auto px-6 py-24">
+		<header class="mb-16">
+			<h1 class="text-5xl font-black tracking-tighter text-slate-900 mb-4">
+				JOURNAL<span class="text-brand-500">.</span>
+			</h1>
+			<p class="text-xl text-slate-600 font-light">
+				Pensamientos sobre software, diseño y aprendizaje continuo.
+			</p>
+		</header>
+
+		<div class="grid gap-12">
+			{posts.map((post) => (
+				<article class="group relative flex flex-col items-start">
+					<h2 class="text-3xl font-bold text-slate-900 group-hover:text-brand-500 transition-colors">
+						<a href={`/blog/${post.id}`}>
+							<span class="absolute -inset-y-2.5 -inset-x-4 z-20 sm:-inset-x-6 sm:rounded-2xl"></span>
+							<span class="relative z-10">{post.data.title}</span>
+						</a>
+					</h2>
+					<time class="relative z-10 order-first mb-3 flex items-center text-sm text-slate-400 font-mono">
+						{post.data.pubDate.toLocaleDateString('es-ES', {
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric',
+						})}
+					</time>
+					<p class="relative z-10 mt-2 text-slate-600 leading-relaxed">
+						{post.data.description}
+					</p>
+					<div class="relative z-10 mt-4 flex items-center text-sm font-bold text-brand-500">
+						Leer más
+						<svg class="ml-1 h-3 w-3 stroke-current" fill="none" viewBox="0 0 12 12">
+							<path d="M1 1l4 4-4 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+						</svg>
+					</div>
+				</article>
+			))}
+		</div>
+	</main>
+</Layout>

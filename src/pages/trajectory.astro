@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const milestones = [
+	{
+		year: '2025',
+		title: 'Senior Software Engineer',
+		company: 'Tech Solutions Inc.',
+		description: 'Liderando el desarrollo de microservicios y arquitectura cloud.',
+	},
+	{
+		year: '2023',
+		title: 'Full Stack Developer',
+		company: 'Digital Factory',
+		description: 'Desarrollo de aplicaciones web escalables con React y Node.js.',
+	},
+	{
+		year: '2021',
+		title: 'Junior Developer',
+		company: 'Startup Lab',
+		description: 'Primeros pasos en el desarrollo profesional, enfocado en frontend.',
+	},
+];
+---
+
+<Layout title="Trayectoria — eddn.dev">
+	<main class="max-w-5xl mx-auto px-6 py-24">
+		<header class="mb-20">
+			<h1 class="text-5xl font-black tracking-tighter text-slate-900 mb-4">
+				TRAJECTORY<span class="text-brand-500">.</span>
+			</h1>
+			<p class="text-xl text-slate-600 font-light">
+				Mi camino profesional y evolución técnica a lo largo de los años.
+			</p>
+		</header>
+
+		<div class="relative space-y-12">
+			<div class="absolute left-0 top-0 bottom-0 w-px bg-slate-200 ml-[7px]"></div>
+			
+			{milestones.map((milestone) => (
+				<div class="relative pl-10">
+					<div class="absolute left-0 top-2 w-4 h-4 rounded-full border-4 border-white bg-brand-500 shadow-[0_0_0_1px_rgba(139,92,246,0.5)]"></div>
+					<div class="space-y-2">
+						<span class="font-mono text-sm font-bold text-brand-500 uppercase tracking-widest">{milestone.year}</span>
+						<h3 class="text-2xl font-bold text-slate-900">{milestone.title}</h3>
+						<p class="text-lg font-medium text-slate-500">{milestone.company}</p>
+						<p class="text-slate-600 max-w-2xl leading-relaxed">
+							{milestone.description}
+						</p>
+					</div>
+				</div>
+			))}
+		</div>
+	</main>
+</Layout>

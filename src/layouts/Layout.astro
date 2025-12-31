@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
 	title?: string;
@@ -28,7 +30,11 @@ const {
 		<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 	</head>
 	<body class="selection:bg-brand-500/30">
-		<slot />
+		<Header />
+		<main class="pt-16">
+			<slot />
+		</main>
+		<Footer />
 
 		<script>
 			import Lenis from 'lenis';
