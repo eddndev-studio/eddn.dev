@@ -1,74 +1,117 @@
 ---
 const navItems = [
-  { name: 'Blog', href: '/blog' },
-  { name: 'Trayectoria', href: '/trajectory' },
-  { name: 'LeetCode', href: '/leetcode' },
+  { name: "Blog", href: "/blog" },
+  { name: "Trayectoria", href: "/trajectory" },
+  { name: "LeetCode", href: "/leetcode" },
 ];
 ---
 
-<header class="fixed top-0 left-0 right-0 z-50 bg-brand-50/80 backdrop-blur-md border-b border-slate-200/50">
-  <nav class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between relative z-50">
-    <a href="/" class="group flex items-center gap-2">
-      <div class="w-2 h-2 bg-brand-500 rounded-full group-hover:scale-125 transition-transform"></div>
-      <span class="font-bold tracking-tighter text-xl text-slate-900">eddn.dev</span>
+<header
+  class="fixed top-0 left-0 right-0 z-50 bg-white/90 border-b border-slate-200"
+>
+  <nav
+    class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between relative z-50"
+  >
+    <!-- Logo -->
+    <a href="/" class="group flex items-center gap-1">
+      <span
+        class="font-black tracking-tighter text-xl text-slate-900 group-hover:text-brand-600 transition-colors"
+      >
+        eddn.dev
+      </span>
+      <span
+        class="w-2 h-2 bg-brand-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      ></span>
     </a>
 
     <!-- Desktop Menu -->
-    <ul class="hidden md:flex gap-8">
-      {navItems.map(item => (
-        <li>
-          <a 
-            href={item.href} 
-            class="text-sm font-medium text-slate-600 hover:text-brand-500 transition-colors"
-          >
-            {item.name}
-          </a>
-        </li>
-      ))}
+    <ul class="hidden md:flex gap-12">
+      {
+        navItems.map((item, index) => (
+          <li>
+            <a
+              href={item.href}
+              class="group flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-slate-500 hover:text-brand-600 transition-colors"
+            >
+              <span class="text-brand-300 group-hover:text-brand-600 transition-colors">
+                0{index + 1} //
+              </span>
+              {item.name}
+            </a>
+          </li>
+        ))
+      }
     </ul>
 
     <!-- Mobile Toggle -->
-    <button id="menu-toggle" aria-label="Toggle Menu" class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 p-2 z-50 group">
-        <span class="w-6 h-0.5 bg-slate-900 transition-all duration-300 ease-out origin-center group-[.is-open]:rotate-45 group-[.is-open]:translate-y-2"></span>
-        <span class="w-6 h-0.5 bg-slate-900 transition-all duration-300 ease-out group-[.is-open]:opacity-0"></span>
-        <span class="w-6 h-0.5 bg-slate-900 transition-all duration-300 ease-out origin-center group-[.is-open]:-rotate-45 group-[.is-open]:-translate-y-2"></span>
+    <button
+      id="menu-toggle"
+      aria-label="Toggle Menu"
+      class="md:hidden flex flex-col justify-center items-center w-12 h-12 gap-1.5 p-2 z-50 group border border-transparent hover:border-slate-200 transition-colors rounded-none"
+    >
+      <span
+        class="w-8 h-0.5 bg-slate-900 transition-all duration-300 ease-out origin-center group-[.is-open]:rotate-45 group-[.is-open]:translate-y-2"
+      ></span>
+      <span
+        class="w-8 h-0.5 bg-slate-900 transition-all duration-300 ease-out group-[.is-open]:opacity-0"
+      ></span>
+      <span
+        class="w-8 h-0.5 bg-slate-900 transition-all duration-300 ease-out origin-center group-[.is-open]:-rotate-45 group-[.is-open]:-translate-y-2"
+      ></span>
     </button>
   </nav>
-
-  <!-- Mobile Menu Overlay -->
-  <div id="mobile-menu" class="fixed inset-0 bg-white/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 opacity-0 invisible transition-all duration-300 md:hidden">
-      {navItems.map(item => (
-        <a 
-          href={item.href} 
-          class="text-3xl font-bold text-slate-900 hover:text-brand-500 transition-colors mobile-link"
-        >
-          {item.name}
-        </a>
-      ))}
-  </div>
 </header>
+
+<!-- Mobile Menu Overlay -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 bg-white z-40 flex flex-col justify-center px-8 opacity-0 invisible transition-all duration-300 md:hidden"
+>
+  <div class="flex flex-col gap-6 max-w-lg">
+    {
+      navItems.map((item, index) => (
+        <a
+          href={item.href}
+          class="flex items-baseline gap-4 text-4xl font-black tracking-tighter text-slate-900 hover:text-brand-600 transition-colors mobile-link group"
+        >
+          <span class="text-sm font-mono text-brand-300 font-normal group-hover:text-brand-600 transition-colors">
+            0{index + 1}
+          </span>
+          {item.name.toUpperCase()}
+        </a>
+      ))
+    }
+  </div>
+
+  <div
+    class="absolute bottom-12 left-8 right-8 pt-8 border-t border-slate-100 flex justify-between font-mono text-xs text-slate-400 uppercase tracking-widest"
+  >
+    <span>© 2025</span>
+    <span>Mexico City</span>
+  </div>
+</div>
 
 <script>
   function setupMenu() {
-    const toggle = document.querySelector('#menu-toggle');
-    const menu = document.querySelector('#mobile-menu');
-    const links = document.querySelectorAll('.mobile-link');
+    const toggle = document.querySelector("#menu-toggle") as HTMLElement;
+    const menu = document.querySelector("#mobile-menu");
+    const links = document.querySelectorAll(".mobile-link");
     const body = document.body;
 
     if (!toggle || !menu) return;
 
     const closeMenu = () => {
-      toggle.classList.remove('is-open');
-      menu.classList.remove('opacity-100', 'visible');
-      menu.classList.add('opacity-0', 'invisible');
-      body.style.overflow = '';
+      toggle.classList.remove("is-open");
+      menu.classList.remove("opacity-100", "visible");
+      menu.classList.add("opacity-0", "invisible");
+      body.style.overflow = "";
     };
 
     const openMenu = () => {
-      toggle.classList.add('is-open');
-      menu.classList.remove('opacity-0', 'invisible');
-      menu.classList.add('opacity-100', 'visible');
-      body.style.overflow = 'hidden';
+      toggle.classList.add("is-open");
+      menu.classList.remove("opacity-0", "invisible");
+      menu.classList.add("opacity-100", "visible");
+      body.style.overflow = "hidden";
     };
 
     // Initialize state (Force closed)
@@ -76,7 +119,7 @@ const navItems = [
 
     toggle.onclick = (e) => {
       e.stopPropagation();
-      const isOpen = toggle.classList.contains('is-open');
+      const isOpen = toggle.classList.contains("is-open");
       if (isOpen) {
         closeMenu();
       } else {
@@ -85,11 +128,11 @@ const navItems = [
     };
 
     // Close on link click
-    links.forEach(link => {
-      link.addEventListener('click', closeMenu);
+    links.forEach((link) => {
+      link.addEventListener("click", closeMenu);
     });
   }
 
   // Bind on every navigation
-  document.addEventListener('astro:page-load', setupMenu);
+  document.addEventListener("astro:page-load", setupMenu);
 </script>
