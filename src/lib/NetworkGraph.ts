@@ -60,10 +60,20 @@ export default class NetworkGraph {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         
-        // Adjust particle count based on area
+        // Adjust particle count based on area and screen type
         const area = this.width * this.height;
-        this.particleCount = Math.min(100, Math.floor(area / 8000));
-        if (this.particleCount < 30) this.particleCount = 30;
+        const isMobile = this.width < 768;
+        
+        if (isMobile) {
+            this.particleCount = Math.min(50, Math.floor(area / 10000));
+            this.connectionDistance = 120;
+        } else {
+            // Higher density for desktop
+            this.particleCount = Math.min(150, Math.floor(area / 6000));
+            this.connectionDistance = 180;
+        }
+        
+        if (this.particleCount < 20) this.particleCount = 20;
         
         this.createParticles();
     }
