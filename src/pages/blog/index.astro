@@ -18,29 +18,40 @@ const posts = (await getCollection('blog')).sort(
 			</p>
 		</header>
 
-		<div class="grid gap-12">
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 			{posts.map((post) => (
-				<article class="group relative flex flex-col items-start">
-					<h2 class="text-3xl font-bold text-slate-900 group-hover:text-brand-500 transition-colors">
-						<a href={`/blog/${post.id}`}>
-							<span class="absolute -inset-y-2.5 -inset-x-4 z-20 sm:-inset-x-6 sm:rounded-2xl"></span>
-							<span class="relative z-10">{post.data.title}</span>
-						</a>
-					</h2>
-					<time class="relative z-10 order-first mb-3 flex items-center text-sm text-slate-400 font-mono">
-						{post.data.pubDate.toLocaleDateString('es-ES', {
-							year: 'numeric',
-							month: 'long',
-							day: 'numeric',
-						})}
-					</time>
-					<p class="relative z-10 mt-2 text-slate-600 leading-relaxed">
-						{post.data.description}
-					</p>
-					<div class="relative z-10 mt-4 flex items-center text-sm font-bold text-brand-500">
-						Leer más
-						<svg class="ml-1 h-3 w-3 stroke-current" fill="none" viewBox="0 0 12 12">
-							<path d="M1 1l4 4-4 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+				<article class="group relative flex flex-col justify-between p-8 bg-white border border-slate-200 border-r-4 border-r-slate-200 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none h-full">
+					<div>
+						<time 
+							transition:name={`date-${post.id}`} 
+							class="relative z-10 mb-4 block text-xs font-mono text-slate-400 uppercase tracking-widest"
+						>
+							{post.data.pubDate.toLocaleDateString('es-ES', {
+								year: 'numeric',
+								month: 'long',
+								day: 'numeric',
+							})}
+						</time>
+						
+						<h2 
+							transition:name={`title-${post.id}`}
+							class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight"
+						>
+							<a href={`/blog/${post.id}`} class="focus:outline-none">
+								<span class="absolute inset-0 z-0"></span>
+								{post.data.title}
+							</a>
+						</h2>
+						
+						<p class="relative z-10 text-slate-600 leading-relaxed mb-6 line-clamp-3">
+							{post.data.description}
+						</p>
+					</div>
+
+					<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:translate-x-2 transition-transform duration-300">
+						Leer artículo
+						<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
 						</svg>
 					</div>
 				</article>

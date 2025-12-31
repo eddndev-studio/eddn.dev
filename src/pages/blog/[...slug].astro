@@ -17,14 +17,20 @@ const { Content } = await render(post);
 <Layout title={`${post.data.title} — eddn.dev`} description={post.data.description}>
 	<article class="max-w-3xl mx-auto px-6 py-24">
 		<header class="mb-12">
-			<time class="text-sm font-mono text-slate-400 mb-4 block">
+			<time 
+				transition:name={`date-${post.id}`}
+				class="text-sm font-mono text-slate-400 mb-4 block"
+			>
 				{post.data.pubDate.toLocaleDateString('es-ES', {
 					year: 'numeric',
 					month: 'long',
 					day: 'numeric',
 				})}
 			</time>
-			<h1 class="text-4xl sm:text-5xl font-black tracking-tighter text-slate-900 leading-tight">
+			<h1 
+				transition:name={`title-${post.id}`}
+				class="text-4xl sm:text-5xl font-black tracking-tighter text-slate-900 leading-tight"
+			>
 				{post.data.title}
 			</h1>
 			{post.data.tags && (
