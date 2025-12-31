@@ -38,7 +38,7 @@ const posts = (await getCollection('blog')).sort(
 							class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight"
 						>
 							<a href={`/blog/${post.id}`} class="focus:outline-none">
-								<span class="absolute inset-0 z-0"></span>
+								<span class="absolute inset-0 z-20"></span>
 								{post.data.title}
 							</a>
 						</h2>
