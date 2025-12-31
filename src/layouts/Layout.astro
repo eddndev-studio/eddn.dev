@@ -52,6 +52,7 @@ const {
 			};
 
 			function init() {
+				// Initialize Lenis
 				lenis = new Lenis({
 					duration: 1.2,
 					easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -62,6 +63,63 @@ const {
 				lenis.on('scroll', ScrollTrigger.update);
 				gsap.ticker.add(update);
 				gsap.ticker.lagSmoothing(0);
+
+				// Global Animations
+				animateContent();
+			}
+
+			function animateContent() {
+				// 1. Hero / Header Reveal
+				// Targets direct children of the main header
+				const heroElements = document.querySelectorAll('main > header > *');
+				if (heroElements.length) {
+					gsap.fromTo(heroElements, 
+						{ y: 20, opacity: 0 },
+						{ 
+							y: 0, 
+							opacity: 1, 
+							duration: 0.8, 
+							stagger: 0.1, 
+							ease: "power3.out", 
+							clearProps: "all" 
+						}
+					);
+				}
+
+				// 2. Grid Items (Blog Posts, Cards)
+				// Targets children of any generic grid container
+				const gridItems = document.querySelectorAll('.grid > article, .grid > a, .grid > div');
+				if (gridItems.length) {
+					gsap.fromTo(gridItems,
+						{ y: 30, opacity: 0 },
+						{ 
+							y: 0, 
+							opacity: 1, 
+							duration: 0.6, 
+							stagger: 0.1, 
+							ease: "power2.out", 
+							delay: 0.2, // Wait for hero to start
+							clearProps: "all" 
+						}
+					);
+				}
+
+				// 3. List/Table Items (LeetCode Rows, Trajectory Timeline)
+				const listItems = document.querySelectorAll('tbody > tr, .space-y-12 > .relative');
+				if (listItems.length) {
+					gsap.fromTo(listItems,
+						{ x: -10, opacity: 0 },
+						{ 
+							x: 0, 
+							opacity: 1, 
+							duration: 0.5, 
+							stagger: 0.05, 
+							ease: "power2.out", 
+							delay: 0.3, 
+							clearProps: "all" 
+						}
+					);
+				}
 			}
 
 			function cleanup() {
@@ -72,10 +130,7 @@ const {
 				ScrollTrigger.getAll().forEach(t => t.kill());
 			}
 
-			// Initialize on first load and after every navigation
 			document.addEventListener('astro:page-load', init);
-			
-			// Cleanup before swapping content
 			document.addEventListener('astro:before-swap', cleanup);
 		</script>
 	</body>
