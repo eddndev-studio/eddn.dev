@@ -3,7 +3,8 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer class="bg-white text-slate-900 min-h-[100dvh] flex flex-col justify-center py-24 lg:py-32 border-t border-slate-200 overflow-hidden relative z-20">
-    <div class="mx-auto max-w-7xl px-6">
+    <canvas id="footer-gol" class="absolute inset-0 w-full h-full opacity-30 pointer-events-none"></canvas>
+    <div class="mx-auto max-w-7xl px-6 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
             
             <!-- Site Map -->
@@ -67,3 +68,19 @@ const currentYear = new Date().getFullYear();
         </div>
     </div>
 </footer>
+
+<script>
+    import GameOfLife from "../lib/GameOfLife";
+
+    const canvas = document.getElementById('footer-gol') as HTMLCanvasElement;
+    if (canvas) {
+        // Use a brand color or slate color. The user passed #8b5cf6 in the example usage in visuals.ts
+        const gol = new GameOfLife(canvas, '#94a3b8'); // Slate-400 for a subtle background
+        gol.init();
+
+        // Optional: Cleanup if view transitions are used, though not strictly requested
+        document.addEventListener('astro:before-swap', () => {
+            gol.destroy();
+        });
+    }
+</script>
