@@ -72,15 +72,32 @@ const currentYear = new Date().getFullYear();
 <script>
     import GameOfLife from "../lib/GameOfLife";
 
-    const canvas = document.getElementById('footer-gol') as HTMLCanvasElement;
-    if (canvas) {
-        // Use a brand color or slate color. The user passed #8b5cf6 in the example usage in visuals.ts
-        const gol = new GameOfLife(canvas, '#94a3b8'); // Slate-400 for a subtle background
-        gol.init();
+    let gol: GameOfLife | null = null;
 
-        // Optional: Cleanup if view transitions are used, though not strictly requested
-        document.addEventListener('astro:before-swap', () => {
+    function initFooterVisual() {
+        const canvas = document.getElementById('footer-gol') as HTMLCanvasElement;
+        if (!canvas) return;
+
+        // Cleanup existing instance if any
+        if (gol) {
             gol.destroy();
-        });
+        }
+
+        // Initialize
+        gol = new GameOfLife(canvas, '#94a3b8');
+        gol.init();
     }
+
+    function cleanupFooterVisual() {
+        if (gol) {
+            gol.destroy();
+            gol = null;
+        }
+    }
+
+    // Initialize on every page load (initial + navigation)
+    document.addEventListener('astro:page-load', initFooterVisual);
+    
+    // Cleanup before swapping content
+    document.addEventListener('astro:before-swap', cleanupFooterVisual);
 </script>
