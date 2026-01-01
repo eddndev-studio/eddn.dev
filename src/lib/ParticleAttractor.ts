@@ -15,7 +15,7 @@ export default class ParticleAttractor {
         if (!context) throw new Error('Could not get canvas context');
         this.ctx = context;
         this.color = color;
-        
+
         // Initialize dimensions
         this.width = canvas.width;
         this.height = canvas.height;
@@ -55,15 +55,15 @@ export default class ParticleAttractor {
             this.canvas.width = window.innerWidth;
             this.canvas.height = window.innerHeight;
         }
-        
+
         this.width = this.canvas.width;
         this.height = this.canvas.height;
-        
+
         // Adjust particle count based on area (performance heuristic)
         // Base: 400 particles for a 1000x1000 area roughly
         const area = this.width * this.height;
         this.particleCount = Math.min(600, Math.floor(area / 2000));
-        
+
         this.createParticles();
     }
 
@@ -79,11 +79,11 @@ export default class ParticleAttractor {
         this.ctx.globalCompositeOperation = 'destination-out';
         this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; // Slow fade for longer trails
         this.ctx.fillRect(0, 0, this.width, this.height);
-        
+
         // Reset composition to draw new particles
         this.ctx.globalCompositeOperation = 'source-over';
         this.ctx.fillStyle = this.color;
-        
+
         this.particles.forEach(p => {
             this.ctx.beginPath();
             this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -101,18 +101,25 @@ export default class ParticleAttractor {
             const dy = centerY - p.y;
             const distSq = dx * dx + dy * dy;
             const dist = Math.sqrt(distSq);
-            
-            // Stronger Gravity force
-            // F = G * m1 * m2 / r^2
-            // We use a simplified version, clamping distance to avoid infinity
-            const force = 1000 / (dist + 50); 
+
+            // Gravity force
+            // Sharper curve: strong pull at center, weaker at distance
+            const force = 2000 / (dist + 50);
             const angle = Math.atan2(dy, dx);
-            
-            p.vx += Math.cos(angle) * force * 0.5; // Apply force
-            p.vy += Math.sin(angle) * force * 0.5;
-            
-            // Removed artificial swirl addition. 
-            // The initial velocity + gravity creates the orbit.
+
+            // Radial force (Attraction)
+            p.vx += Math.cos(angle) * force * 0.3;
+            p.vy += Math.sin(angle) * force * 0.3;
+
+            // Tangential force (Orbit/Swirl)
+            const swirlAngle = angle + Math.PI / 2;
+            p.vx += Math.cos(swirlAngle) * force * 0.04;
+            p.vy += Math.sin(swirlAngle) * force * 0.04;
+
+            // Chaos Factor: Destabilize orbits
+            // Small random push to prevent particles from finding a "perfect track"
+            p.vx += (Math.random() - 0.5) * 0.5;
+            p.vy += (Math.random() - 0.5) * 0.5;
 
             // Mouse Repulsion (Interaction)
             const mdx = this.mouse.x - p.x;
@@ -125,7 +132,6 @@ export default class ParticleAttractor {
             }
 
             // Friction (Air resistance)
-            // Keeps them from accelerating infinitely
             p.vx *= 0.95;
             p.vy *= 0.95;
 
@@ -134,10 +140,10 @@ export default class ParticleAttractor {
             p.y += p.vy;
 
             // Reset if sucked into the "event horizon" (too close to center)
-            if (dist < 10) {
+            if (dist < 50) {
                 p.reset(this.width, this.height);
             }
-            
+
             // Reset if lost in space (too far)
             if (p.x < -200 || p.x > this.width + 200 || p.y < -200 || p.y > this.height + 200) {
                 p.reset(this.width, this.height);
@@ -179,7 +185,7 @@ class Particle {
         this.vy = 0;
         this.size = Math.random() * 2 + 1;
         this.reset(w, h);
-        
+
         // Pre-warm position so they don't all start at edges
         this.x = Math.random() * w;
         this.y = Math.random() * h;
@@ -189,14 +195,14 @@ class Particle {
         // Spawn at random edge or random position
         const angle = Math.random() * Math.PI * 2;
         // Spawn effectively "orbiting" at a distance
-        const r = Math.min(w, h) / 2 + Math.random() * 50;
-        
-        this.x = w/2 + Math.cos(angle) * r;
-        this.y = h/2 + Math.sin(angle) * r;
-        
+        const r = Math.min(w, h) / 2 + Math.random() * 200;
+
+        this.x = w / 2 + Math.cos(angle) * r;
+        this.y = h / 2 + Math.sin(angle) * r;
+
         // Initial orbital velocity
         // Tangent to the circle
-        const speed = Math.random() * 2 + 1;
+        const speed = Math.random() * 5 + 2;
         this.vx = -Math.sin(angle) * speed;
         this.vy = Math.cos(angle) * speed;
     }
