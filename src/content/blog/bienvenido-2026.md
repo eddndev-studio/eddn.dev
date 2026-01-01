@@ -7,7 +7,7 @@ tags: ["personal", "2026", "reflection"]
 
 El calendario marca 1 de enero de 2026. Un nuevo ciclo comienza y, con él, una oportunidad renovada para definir quiénes somos y qué construimos.
 
-Como mencioné en mis reflexiones sobre el 2025, el año pasado fue una forja. Hubo fuego, hubo golpes y hubo transformación. Ahora, el metal está templado y listo para ser afilado. Este año no se trata solo de sobrevivir al mercado o de aprender a la fuerza; se trata de **ejecutar con maestría**.
+El año pasado fue una forja. Hubo fuego, hubo golpes y hubo transformación. Ahora, el metal está templado y listo para ser afilado. Este año no se trata solo de sobrevivir al mercado o de aprender a la fuerza; se trata de **ejecutar con maestría**.
 
 ## Volver a la Esencia
 
