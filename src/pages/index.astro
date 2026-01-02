@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from 'astro:content';
 import GitHubContributions from "../components/GitHubContributions.astro";
+import LeetCodeContributions from "../components/LeetCodeContributions.astro";
 
 const latestBlog = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -170,6 +171,7 @@ const difficultyColor = {
 		</section>
 
 		<GitHubContributions />
+		<LeetCodeContributions />
 	</main>
 
 	<script>
