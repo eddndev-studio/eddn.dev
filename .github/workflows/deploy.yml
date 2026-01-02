@@ -3,6 +3,8 @@ name: Deploy to Shared Hosting
 on:
   push:
     branches: [ master ]
+  schedule:
+    - cron: '0 0 * * *' # Ejecuta el build y deploy cada día a medianoche (UTC)
 
 jobs:
   build-and-deploy:
