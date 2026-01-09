@@ -51,10 +51,10 @@ const { Content } = await render(post);
 			)}
 		</header>
 
-		<div class="main-grid grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative">
+		<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
 			<!-- Sidebar / Metadata -->
-			<aside class="sidebar hidden lg:block lg:col-span-3 h-fit">
-				<div class="space-y-8">
+			<aside class="hidden lg:block lg:col-span-3">
+				<div class="sticky top-32 space-y-8">
 					<div class="text-sm text-slate-500 leading-relaxed border-l-2 border-brand-200 pl-4">
 						<p>{post.data.description}</p>
 					</div>
@@ -91,41 +91,6 @@ const { Content } = await render(post);
 
 <script>
 	import '../../utils/codeUtils';
-	import { gsap } from 'gsap';
-	import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-	gsap.registerPlugin(ScrollTrigger);
-
-	let stInstance: ScrollTrigger | null = null;
-
-	function initSidebarPin() {
-		// Only enable on desktop where sidebar is visible
-		if (window.innerWidth < 1024) return;
-
-		const sidebar = document.querySelector('.sidebar') as HTMLElement;
-		const grid = document.querySelector('.main-grid') as HTMLElement;
-
-		if (!sidebar || !grid) return;
-
-		stInstance = ScrollTrigger.create({
-			trigger: grid,
-			start: 'top top+=120', // Start pinning when grid top is 120px from viewport top
-			end: 'bottom bottom',   // End when grid bottom hits viewport bottom
-			pin: sidebar,
-			pinSpacing: false,      // Keep layout intact
-			scrub: 1,               // Smooth catch-up
-		});
-	}
-
-	function cleanup() {
-		if (stInstance) {
-			stInstance.kill();
-			stInstance = null;
-		}
-	}
-
-	document.addEventListener('astro:page-load', initSidebarPin);
-	document.addEventListener('astro:before-swap', cleanup);
 </script>
 
 <style is:global>
