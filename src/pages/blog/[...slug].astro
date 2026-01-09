@@ -51,10 +51,10 @@ const { Content } = await render(post);
 			)}
 		</header>
 
-		<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+		<div id="main-content-grid" class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
 			<!-- Sidebar / Metadata -->
-			<aside class="hidden lg:block lg:col-span-3">
-				<div class="sticky top-32 space-y-8">
+			<aside id="sidebar-container" class="hidden lg:block lg:col-span-3 relative">
+				<div id="sidebar-inner" class="space-y-8">
 					<div class="text-sm text-slate-500 leading-relaxed border-l-2 border-brand-200 pl-4">
 						<p>{post.data.description}</p>
 					</div>
@@ -91,6 +91,20 @@ const { Content } = await render(post);
 
 <script>
 	import '../../utils/codeUtils';
+	import { initStickySidebar } from '../../utils/stickySidebar';
+
+	let cleanup: (() => void) | undefined;
+
+	function setupSticky() {
+		cleanup = initStickySidebar('#sidebar-inner', '#main-content-grid', 128);
+	}
+
+	function teardownSticky() {
+		if (cleanup) cleanup();
+	}
+
+	document.addEventListener('astro:page-load', setupSticky);
+	document.addEventListener('astro:before-swap', teardownSticky);
 </script>
 
 <style is:global>
