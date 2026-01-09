@@ -45,10 +45,10 @@ const difficultyColor = {
 			</h1>
 		</header>
 
-		<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+		<div class="main-grid grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative">
 			<!-- Sidebar / Complexity Stats -->
-			<aside class="hidden lg:block lg:col-span-3">
-				<div class="sticky top-32 space-y-8">
+			<aside class="sidebar hidden lg:block lg:col-span-3 h-fit">
+				<div class="space-y-8">
 					<div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-6">
 						<div>
 							<span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 block mb-2">Time Complexity</span>
@@ -88,7 +88,7 @@ const difficultyColor = {
 					prose-a:text-brand-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
 					prose-strong:font-bold prose-strong:text-slate-900
 					prose-code:text-brand-600 prose-code:bg-brand-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
-					prose-pre:bg-[#1e1e2e] prose-pre:border prose-pre:border-slate-800 prose-pre:shadow-2xl prose-pre:rounded-xl">
+					prose-pre:shadow-2xl prose-pre:rounded-xl">
 					<Content />
 				</div>
 
@@ -105,14 +105,57 @@ const difficultyColor = {
 
 <script>
 	import '../../utils/codeUtils';
+	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	let stInstance: ScrollTrigger | null = null;
+
+	function initSidebarPin() {
+		// Only enable on desktop
+		if (window.innerWidth < 1024) return;
+
+		const sidebar = document.querySelector('.sidebar') as HTMLElement;
+		const grid = document.querySelector('.main-grid') as HTMLElement;
+
+		if (!sidebar || !grid) return;
+
+		stInstance = ScrollTrigger.create({
+			trigger: grid,
+			start: 'top top+=120',
+			end: 'bottom bottom',
+			pin: sidebar,
+			pinSpacing: false,
+			scrub: 1,
+		});
+	}
+
+	function cleanup() {
+		if (stInstance) {
+			stInstance.kill();
+			stInstance = null;
+		}
+	}
+
+	document.addEventListener('astro:page-load', initSidebarPin);
+	document.addEventListener('astro:before-swap', cleanup);
 </script>
 
 <style is:global>
 	@reference "tailwindcss";
 
 	.prose pre {
-		@apply rounded-xl border border-slate-200 bg-slate-50! p-6;
+		@apply rounded-xl border border-slate-700/50 bg-[#2e3440]! p-6 text-white;
 	}
+	
+	.prose pre code {
+		background-color: transparent !important;
+		color: inherit !important;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.875rem;
+	}
+
 	.prose code {
 		@apply font-mono text-sm;
 	}

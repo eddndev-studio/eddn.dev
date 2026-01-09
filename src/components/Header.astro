@@ -7,7 +7,8 @@ const navItems = [
 ---
 
 <header
-  class="fixed top-0 left-0 right-0 z-50 bg-brand-50/80 backdrop-blur-md border-b border-brand-100/50"
+  id="main-header"
+  class="fixed top-0 left-0 right-0 z-50 bg-brand-50/80 backdrop-blur-md border-b border-brand-100/50 transition-all duration-500"
 >
   <nav
     class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative z-50"
@@ -100,6 +101,35 @@ const navItems = [
   import { createRandomVisual, type VisualInstance } from "../utils/visuals";
 
   let menuVisual: VisualInstance | null = null;
+  let observer: IntersectionObserver | null = null;
+
+  function setupHeaderTransparency() {
+    const header = document.getElementById('main-header');
+    const footer = document.querySelector('footer'); // Assuming footer tag
+
+    if (!header || !footer) return;
+
+    const options = {
+        root: null,
+        threshold: 0.1, // Trigger when 10% of footer is visible
+    };
+
+    observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Remove background/blur, make transparent
+                header.classList.remove('bg-brand-50/80', 'backdrop-blur-md', 'border-b', 'border-brand-100/50');
+                header.classList.add('bg-transparent', 'border-transparent');
+            } else {
+                // Restore original styles
+                header.classList.add('bg-brand-50/80', 'backdrop-blur-md', 'border-b', 'border-brand-100/50');
+                header.classList.remove('bg-transparent', 'border-transparent');
+            }
+        });
+    }, options);
+
+    observer.observe(footer);
+  }
 
   function setupMenu() {
     const toggle = document.querySelector("#menu-toggle") as HTMLElement;
@@ -154,12 +184,19 @@ const navItems = [
     links.forEach((link) => {
       link.addEventListener("click", closeMenu);
     });
+    
+    // Setup footer observer
+    setupHeaderTransparency();
   }
 
   function cleanupMenu() {
     if (menuVisual) {
       menuVisual.destroy();
       menuVisual = null;
+    }
+    if (observer) {
+        observer.disconnect();
+        observer = null;
     }
   }
 
