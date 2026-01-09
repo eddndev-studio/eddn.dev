@@ -11,23 +11,26 @@ export function initStickySidebar(
     headerOffset: number = 120
 ) {
     const sidebar = document.querySelector(sidebarSelector) as HTMLElement;
-    const container = document.querySelector(containerSelector) as HTMLElement;
+    const parentColumn = sidebar?.parentElement as HTMLElement; // The <aside> element
+    const gridContainer = document.querySelector(containerSelector) as HTMLElement;
 
-    if (!sidebar || !container) return;
+    if (!sidebar || !parentColumn || !gridContainer) return;
 
-    // Cache initial width to prevent resizing when switching to fixed
-    let sidebarWidth = sidebar.getBoundingClientRect().width;
-    
+    // Helper to sync width with parent column
+    const syncWidth = () => {
+        const width = parentColumn.getBoundingClientRect().width;
+        sidebar.style.width = `${width}px`;
+    };
+
     // Resize observer to update width on window resize
     const resizeObserver = new ResizeObserver(() => {
-        // Reset temporarily to measure natural width
-        sidebar.style.width = '';
-        sidebarWidth = sidebar.getBoundingClientRect().width;
-        if (sidebar.style.position === 'fixed') {
-            sidebar.style.width = `${sidebarWidth}px`;
+        if (sidebar.style.position === 'fixed' || sidebar.style.position === 'absolute') {
+            syncWidth();
+        } else {
+            sidebar.style.width = ''; // Reset to natural
         }
     });
-    resizeObserver.observe(container);
+    resizeObserver.observe(parentColumn);
 
     const handleScroll = () => {
         // Only run on desktop
@@ -36,60 +39,46 @@ export function initStickySidebar(
             return;
         }
 
-        const containerRect = container.getBoundingClientRect();
+        const containerRect = gridContainer.getBoundingClientRect();
         const sidebarHeight = sidebar.offsetHeight;
-        const viewportHeight = window.innerHeight;
-
-        // 1. Check if sidebar is taller than container (shouldn't happen usually but safety first)
-        if (sidebarHeight >= containerRect.height) {
-            resetStyles(sidebar);
-            return;
-        }
-
-        // 2. Logic:
-        // Start: When container top hits the headerOffset
-        // Stop: When sidebar bottom hits container bottom
         
-        const containerTop = containerRect.top;
+        // Use parent column for top reference, not the inner element
+        // This ensures we know where the "start" line is even when the element is moved
+        const startPoint = parentColumn.getBoundingClientRect().top + window.scrollY; 
+        const currentScroll = window.scrollY;
+
+        // Calculate limits
+        // We want to start sticking when the scroll reaches (StartPoint - HeaderOffset)
+        // But simpler: just check container rect top relative to viewport
+        
+        // Correct Logic:
+        // 1. Sidebar Top should be at HeaderOffset.
+        // 2. This happens when ParentColumn Top is <= HeaderOffset.
+        const parentTop = parentColumn.getBoundingClientRect().top;
+
+        // Stop point: When bottom of sidebar hits bottom of container
+        // Container Bottom relative to viewport
         const containerBottom = containerRect.bottom;
-        
-        // Calculate the limit where sidebar should stop being fixed and become absolute bottom
-        // This triggers when the bottom of the fixed sidebar would cross the bottom of the container
-        const stopPoint = containerBottom - sidebarHeight - headerOffset;
+        const stopThreshold = sidebarHeight + headerOffset;
 
-        if (containerTop > headerOffset) {
-            // SCENARIO 1: Above the sticky area
-            // Sidebar sits naturally at top
+        if (parentTop > headerOffset) {
+            // SCENARIO 1: Above sticky zone
             resetStyles(sidebar);
         } 
-        else if (stopPoint > 0) {
-            // SCENARIO 2: In the sticky zone
-            // Sidebar becomes fixed
+        else if (containerBottom > stopThreshold) {
+            // SCENARIO 2: Sticky Zone
             sidebar.style.position = 'fixed';
             sidebar.style.top = `${headerOffset}px`;
             sidebar.style.bottom = 'auto';
-            sidebar.style.width = `${sidebarWidth}px`;
+            syncWidth(); // Enforce width
         } 
         else {
-            // SCENARIO 3: Reached the bottom
-            // Sidebar becomes absolute positioned at the bottom of the container relative
-            // NOTE: The parent ASIDE needs position: relative for this to work relative to it, 
-            // but since we are manipulating the inner DIV, we can just pin it to the bottom of the container logic.
-            
-            // Actually, simpler approach for "stuck at bottom":
-            // TranslateY = (Container Height - Sidebar Height)
-            // Or just keep it relative/static but pushed down.
-            
-            // Let's use absolute positioning relative to the CONTAINER (grid)
-            // But container is a Grid... positioning absolute inside grid items can be tricky.
-            
-            // Safer bet: absolute relative to the ASIDE column which stretches.
-            // Let's assume the parent <aside> has `position: relative` (we will enforce this).
-            
+            // SCENARIO 3: Reached Bottom
+            // Position absolute at bottom of the PARENT COLUMN (which stretches to grid height)
             sidebar.style.position = 'absolute';
             sidebar.style.top = 'auto';
             sidebar.style.bottom = '0';
-            sidebar.style.width = `${sidebarWidth}px`;
+            syncWidth(); // Enforce width
         }
     };
 
