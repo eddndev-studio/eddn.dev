@@ -111,7 +111,8 @@ const navItems = [
 
     const options = {
         root: null,
-        threshold: 0.1, // Trigger when 10% of footer is visible
+        rootMargin: '0px 0px -100% 0px', // Trigger only when footer hits the top of the viewport (where header is)
+        threshold: 0,
     };
 
     observer = new IntersectionObserver((entries) => {

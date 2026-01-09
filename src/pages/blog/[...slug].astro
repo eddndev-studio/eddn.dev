@@ -41,9 +41,9 @@ const { Content } = await render(post);
 			</h1>
 
 			{post.data.tags && (
-				<div class="flex flex-wrap gap-2">
+				<div class="flex flex-wrap gap-x-4 gap-y-2">
 					{post.data.tags.map(tag => (
-						<span class="text-xs font-mono font-medium px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full border border-slate-200">
+						<span class="text-sm font-mono font-bold text-brand-600 hover:text-brand-700 transition-colors cursor-default">
 							#{tag}
 						</span>
 					))}
