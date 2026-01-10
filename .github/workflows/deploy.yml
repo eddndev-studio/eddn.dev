@@ -3,6 +3,7 @@ name: Deploy to Shared Hosting
 on:
   push:
     branches: [ master ]
+  workflow_dispatch: # Permite ejecución manual desde la pestaña 'Actions'
   schedule:
     - cron: '0 0 * * *' # Ejecuta el build y deploy cada día a medianoche (UTC)
 
