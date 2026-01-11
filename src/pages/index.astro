@@ -17,6 +17,12 @@ const difficultyColor = {
 	Medium: 'text-amber-500 bg-amber-50',
 	Hard: 'text-rose-500 bg-rose-50',
 };
+
+const difficultyLabel = {
+	Easy: 'Fácil',
+	Medium: 'Medio',
+	Hard: 'Difícil',
+};
 ---
 
 <Layout title="eddn.dev — Eduardo Alonso">
@@ -92,7 +98,7 @@ const difficultyColor = {
 				<article class="group relative flex flex-col justify-between p-8 bg-white border border-slate-200 border-r-4 border-r-slate-200 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none h-full select-none">
 					<div>
 						<span class="block text-xs font-mono text-brand-500 font-bold uppercase tracking-widest mb-4 pointer-events-none">
-							[ LATEST JOURNAL ]
+							[ ÚLTIMO ARTÍCULO ]
 						</span>
 						<time 
 							transition:name={`date-${latestBlog.id}`}
@@ -135,13 +141,13 @@ const difficultyColor = {
 					<div>
 						<div class="flex justify-between items-start mb-4 pointer-events-none">
 							<span class="text-xs font-mono text-brand-500 font-bold uppercase tracking-widest">
-								[ LATEST SOLUTION ]
+								[ ÚLTIMA SOLUCIÓN ]
 							</span>
 							<span 
 								transition:name={`difficulty-${latestLeetCode.id}`}
 								class={`text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor[latestLeetCode.data.difficulty as keyof typeof difficultyColor]}`}
 							>
-								{latestLeetCode.data.difficulty}
+								{difficultyLabel[latestLeetCode.data.difficulty as keyof typeof difficultyLabel] || latestLeetCode.data.difficulty}
 							</span>
 						</div>
 						
@@ -158,8 +164,8 @@ const difficultyColor = {
 						<div class="relative z-10 text-slate-600 leading-relaxed mb-6 font-mono text-sm pointer-events-none">
 							{latestLeetCode.data.complexity ? (
 								<div class="flex flex-col gap-1">
-									<span>Time: {latestLeetCode.data.complexity.time}</span>
-									<span>Space: {latestLeetCode.data.complexity.space}</span>
+									<span>Tiempo: {latestLeetCode.data.complexity.time}</span>
+									<span>Espacio: {latestLeetCode.data.complexity.space}</span>
 								</div>
 							) : (
 								<p>Ver análisis de complejidad y solución.</p>
