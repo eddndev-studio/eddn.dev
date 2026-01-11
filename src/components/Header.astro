@@ -102,24 +102,58 @@ const navItems = [
 
   let menuVisual: VisualInstance | null = null;
   let scrollHandler: (() => void) | null = null;
+  let observer: IntersectionObserver | null = null;
 
   function setupHeaderTransparency() {
     const header = document.getElementById('main-header');
+    const footer = document.querySelector('footer');
     if (!header) return;
 
-    scrollHandler = () => {
-      if (window.scrollY > 20) {
-        header.classList.add('bg-brand-50/80', 'backdrop-blur-md', 'border-brand-100/50');
-        header.classList.remove('bg-transparent', 'border-transparent');
-      } else {
-        header.classList.remove('bg-brand-50/80', 'backdrop-blur-md', 'border-brand-100/50');
+    let isAtTop = window.scrollY <= 20;
+    let isFooterIntersecting = false;
+
+    const updateHeaderState = () => {
+      // Transparent if at top OR touching footer
+      if (isAtTop || isFooterIntersecting) {
+        header.classList.remove('bg-brand-50/80', 'backdrop-blur-md', 'border-brand-100/50', 'border-b');
         header.classList.add('bg-transparent', 'border-transparent');
+      } else {
+        header.classList.add('bg-brand-50/80', 'backdrop-blur-md', 'border-brand-100/50', 'border-b');
+        header.classList.remove('bg-transparent', 'border-transparent');
       }
     };
 
+    // 1. Scroll Handler (Top Logic)
+    scrollHandler = () => {
+      const currentTop = window.scrollY <= 20;
+      if (currentTop !== isAtTop) {
+        isAtTop = currentTop;
+        updateHeaderState();
+      }
+    };
     window.addEventListener('scroll', scrollHandler);
+
+    // 2. Footer Observer (Restored Logic)
+    if (footer) {
+        const options = {
+            root: null,
+            // Detect when footer reaches the top part of viewport
+            rootMargin: '0px 0px -100% 0px', 
+            threshold: 0,
+        };
+
+        observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isFooterIntersecting = entry.isIntersecting;
+                updateHeaderState();
+            });
+        }, options);
+
+        observer.observe(footer);
+    }
+    
     // Initial check
-    scrollHandler();
+    updateHeaderState();
   }
 
   function setupMenu() {
@@ -188,6 +222,10 @@ const navItems = [
     if (scrollHandler) {
         window.removeEventListener('scroll', scrollHandler);
         scrollHandler = null;
+    }
+    if (observer) {
+        observer.disconnect();
+        observer = null;
     }
   }
 
