@@ -1,8 +1,14 @@
 ---
+import { useTranslations } from '../i18n/ui';
+import LanguagePicker from './LanguagePicker.astro';
+
+const lang = (Astro.currentLocale as keyof typeof import('../i18n/ui').ui) || 'en';
+const t = useTranslations(lang);
+
 const navItems = [
-  { name: "Blog", href: "/blog" },
-  { name: "Trayectoria", href: "/trajectory" },
-  { name: "LeetCode", href: "/leetcode" },
+  { name: t('nav.blog'), href: lang === 'es' ? "/es/blog" : "/blog" },
+  { name: t('nav.trajectory'), href: lang === 'es' ? "/es/trajectory" : "/trajectory" },
+  { name: t('nav.leetcode'), href: lang === 'es' ? "/es/leetcode" : "/leetcode" },
 ];
 ---
 
@@ -14,7 +20,7 @@ const navItems = [
     class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative z-50"
   >
     <!-- Logo -->
-    <a href="/" class="group flex items-center gap-1">
+    <a href={lang === 'es' ? "/es/" : "/"} class="group flex items-center gap-1">
       <span
         class="font-black tracking-tighter text-xl text-slate-900 group-hover:text-brand-600 transition-colors duration-300"
       >
@@ -26,23 +32,27 @@ const navItems = [
     </a>
 
     <!-- Desktop Menu -->
-    <ul class="hidden md:flex gap-12">
-      {
-        navItems.map((item, index) => (
-          <li>
-            <a
-              href={item.href}
-              class="group flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-slate-900 hover:text-brand-600 transition-colors duration-300"
-            >
-              <span class="text-slate-400 group-hover:text-brand-400 transition-colors duration-300">
-                0{index + 1} //
-              </span>
-              {item.name}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="hidden md:flex items-center gap-8">
+      <ul class="flex gap-12">
+        {
+          navItems.map((item, index) => (
+            <li>
+              <a
+                href={item.href}
+                class="group flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-slate-900 hover:text-brand-600 transition-colors duration-300"
+              >
+                <span class="text-slate-400 group-hover:text-brand-400 transition-colors duration-300">
+                  0{index + 1} //
+                </span>
+                {item.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="h-4 w-px bg-slate-200"></div>
+      <LanguagePicker />
+    </div>
 
     <!-- Mobile Toggle -->
     <button
