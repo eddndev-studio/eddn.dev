@@ -7,6 +7,13 @@ import { transformerMetaHighlight, transformerNotationFocus } from '@shikijs/tra
 // https://astro.build/config
 export default defineConfig({
   site: 'https://eddn.dev',
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "es"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
   },

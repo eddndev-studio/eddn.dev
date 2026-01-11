@@ -1,0 +1,73 @@
+export const languages = {
+  en: 'English',
+  es: 'Español',
+};
+
+export const defaultLang = 'en';
+
+export const ui = {
+  en: {
+    'nav.blog': 'Blog',
+    'nav.trajectory': 'Trajectory',
+    'nav.leetcode': 'LeetCode',
+    'home.greeting': "Hi, I'm eddndev",
+    'home.title': 'ARCHITECTURE.<br />PERFORMANCE.<br /><span class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8">SYSTEMS.</span>',
+    'home.subtitle': 'Engineering notes: decisions, technical trade-offs, and learning.',
+    'home.description': "I'm a software engineer. I'm passionate about diving deep into how systems work and building scalable products. This is my personal space where I document technical challenges and reflections on software development.",
+    'home.latest_blog_btn': 'Read latest',
+    'home.trajectory_btn': 'View Trajectory',
+    'home.latest_post_label': '[ LATEST POST ]',
+    'home.read_article': 'Read article',
+    'home.latest_solution_label': '[ LATEST SOLUTION ]',
+    'home.view_solution': 'View Solution',
+    'home.complexity_analysis': 'View complexity analysis and solution.',
+    'home.time': 'Time',
+    'home.space': 'Space',
+    'difficulty.easy': 'Easy',
+    'difficulty.medium': 'Medium',
+    'difficulty.hard': 'Hard',
+    'footer.explore': '[ EXPLORE ]',
+    'footer.blog_desc': 'Engineering / Notes',
+    'footer.leetcode_desc': 'Solutions / Complexity',
+    'footer.trajectory_desc': 'Career / Milestones',
+    'footer.talk_title': 'Let\'s talk <br> <span class="text-brand-500">a bit.</span>',
+    'footer.talk_desc': 'Always open to discussing technology, engineering challenges, or new collaboration opportunities.',
+    'footer.start_conversation': 'Start Conversation',
+    'footer.rights': 'ALL RIGHTS RESERVED',
+  },
+  es: {
+    'nav.blog': 'Blog',
+    'nav.trajectory': 'Trayectoria',
+    'nav.leetcode': 'LeetCode',
+    'home.greeting': 'Hola, soy eddndev',
+    'home.title': 'ARQUITECTURA.<br />RENDIMIENTO.<br /><span class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8">SISTEMAS.</span>',
+    'home.subtitle': 'Notas de ingeniería: decisiones, compromisos técnicos y aprendizaje.',
+    'home.description': 'Soy ingeniero de software. Me apasiona profundizar en el funcionamiento de los sistemas y construir productos que escalan. Este es mi espacio personal donde documento retos técnicos y reflexiones sobre el desarrollo de software.',
+    'home.latest_blog_btn': 'Leer lo más reciente',
+    'home.trajectory_btn': 'Ver Trayectoria',
+    'home.latest_post_label': '[ ÚLTIMO ARTÍCULO ]',
+    'home.read_article': 'Leer artículo',
+    'home.latest_solution_label': '[ ÚLTIMA SOLUCIÓN ]',
+    'home.view_solution': 'Ver Solución',
+    'home.complexity_analysis': 'Ver análisis de complejidad y solución.',
+    'home.time': 'Tiempo',
+    'home.space': 'Espacio',
+    'difficulty.easy': 'Fácil',
+    'difficulty.medium': 'Medio',
+    'difficulty.hard': 'Difícil',
+    'footer.explore': '[ EXPLORAR ]',
+    'footer.blog_desc': 'Ingeniería / Notas',
+    'footer.leetcode_desc': 'Soluciones / Complejidad',
+    'footer.trajectory_desc': 'Carrera / Hitos',
+    'footer.talk_title': 'Hablemos <br> <span class="text-brand-500">un poco.</span>',
+    'footer.talk_desc': 'Siempre abierto a discutir sobre tecnología, retos de ingeniería o nuevas oportunidades de colaboración.',
+    'footer.start_conversation': 'Iniciar Conversación',
+    'footer.rights': 'TODOS LOS DERECHOS RESERVADOS',
+  },
+} as const;
+
+export function useTranslations(lang: keyof typeof ui) {
+  return function t(key: keyof typeof ui[typeof lang]) {
+    return ui[lang][key] || ui[defaultLang][key];
+  }
+}

@@ -1,0 +1,28 @@
+---
+import { languages } from '../i18n/ui';
+
+const currentLang = Astro.currentLocale || 'en';
+
+// Helper to get the path for the other language
+function getTranslatedPath(path: string, currentLang: string) {
+  const isSpanish = currentLang === 'es';
+  
+  if (isSpanish) {
+    // Convert /es/foo -> /foo
+    // /es -> /
+    return path.replace(/^\/es/, '') || '/';
+  } else {
+    // Convert /foo -> /es/foo
+    // / -> /es/
+    return path === '/' ? '/es/' : `/es${path}`;
+  }
+}
+
+const translatedPath = getTranslatedPath(Astro.url.pathname, currentLang);
+const targetLang = currentLang === 'en' ? 'es' : 'en';
+const label = targetLang.toUpperCase();
+---
+
+<a href={translatedPath} class="text-xs font-mono font-bold text-slate-400 hover:text-brand-600 transition-colors uppercase">
+  {label}
+</a>
