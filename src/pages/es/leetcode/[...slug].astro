@@ -1,12 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
 	const solutions = await getCollection('leetcode');
-	const englishSolutions = solutions.filter(s => s.id.startsWith('en/'));
-	return englishSolutions.map((solution) => {
-		const slug = solution.id.replace(/^en\//, '').replace(/\.(md|mdx)$/, '');
+	const spanishSolutions = solutions.filter(s => s.id.startsWith('es/'));
+	return spanishSolutions.map((solution) => {
+		const slug = solution.id.replace(/^es\//, '').replace(/\.(md|mdx)$/, '');
 		return {
 			params: { slug },
 			props: solution,
@@ -65,7 +65,7 @@ const difficultyColor = {
 						</div>
 					</div>
 
-					<a href="/leetcode" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
+					<a href="/es/leetcode" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
 						<svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
 						Volver a Soluciones
 					</a>
@@ -97,7 +97,7 @@ const difficultyColor = {
 				</div>
 
 				<div class="mt-24 pt-12 border-t border-slate-200 flex justify-between items-center lg:hidden">
-					<a href="/leetcode" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
+					<a href="/es/leetcode" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
 						<svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
 						Volver a Soluciones
 					</a>
@@ -108,8 +108,8 @@ const difficultyColor = {
 </Layout>
 
 <script>
-	import '../../utils/codeUtils';
-	import { initStickySidebar } from '../../utils/stickySidebar';
+	import '../../../utils/codeUtils';
+	import { initStickySidebar } from '../../../utils/stickySidebar';
 
 	let cleanup: (() => void) | undefined;
 

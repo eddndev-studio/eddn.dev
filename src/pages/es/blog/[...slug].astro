@@ -1,12 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
-	const englishPosts = posts.filter(p => p.id.startsWith('en/'));
-	return englishPosts.map((post) => {
-		const slug = post.id.replace(/^en\//, '').replace(/\.(md|mdx)$/, '');
+	const spanishPosts = posts.filter(p => p.id.startsWith('es/'));
+	return spanishPosts.map((post) => {
+		const slug = post.id.replace(/^es\//, '').replace(/\.(md|mdx)$/, '');
 		return {
 			params: { slug },
 			props: post,
@@ -63,7 +63,7 @@ const { Content } = await render(post);
 						<p>{post.data.description}</p>
 					</div>
 					<div class="h-px bg-slate-200 w-12"></div>
-					<a href="/blog" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
+					<a href="/es/blog" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
 						<svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
 						Volver al Blog
 					</a>
@@ -83,7 +83,7 @@ const { Content } = await render(post);
 				</div>
 				
 				<div class="mt-24 pt-12 border-t border-slate-200 flex justify-between items-center lg:hidden">
-					<a href="/blog" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
+					<a href="/es/blog" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
 						<svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
 						Volver al Blog
 					</a>
@@ -94,8 +94,8 @@ const { Content } = await render(post);
 </Layout>
 
 <script>
-	import '../../utils/codeUtils';
-	import { initStickySidebar } from '../../utils/stickySidebar';
+	import '../../../utils/codeUtils';
+	import { initStickySidebar } from '../../../utils/stickySidebar';
 
 	let cleanup: (() => void) | undefined;
 
