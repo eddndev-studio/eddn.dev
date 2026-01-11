@@ -1,16 +1,16 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { useTranslations } from '../../i18n/ui';
+import { useTranslations } from '../../../i18n/ui';
 
-const t = useTranslations('en');
+const t = useTranslations('es');
 
 const posts = (await getCollection('blog'))
-	.filter(post => post.id.startsWith('en/'))
+	.filter(post => post.id.startsWith('es/'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 function getSlug(id: string) {
-	return id.replace(/^en\//, '').replace(/\.(md|mdx)$/, '');
+	return id.replace(/^es\//, '').replace(/\.(md|mdx)$/, '');
 }
 ---
 
@@ -23,11 +23,11 @@ function getSlug(id: string) {
 				BLOG <br />
 				<span
 					class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8"
-					>CHRONICLES.</span
+					>CRÓNICAS.</span
 				>
 			</h1>
 			<p class="text-xl text-slate-600 font-light max-w-2xl">
-				Thoughts on software, design, and continuous learning.
+				Pensamientos sobre software, diseño y aprendizaje continuo.
 			</p>
 		</header>
 
@@ -39,7 +39,7 @@ function getSlug(id: string) {
 												transition:name={`date-${post.id}`} 
 												class="relative z-10 mb-4 block text-xs font-mono text-slate-400 uppercase tracking-widest pointer-events-none"
 											>
-												{post.data.pubDate.toLocaleDateString('en-US', {
+												{post.data.pubDate.toLocaleDateString('es-ES', {
 													year: 'numeric',
 													month: 'long',
 													day: 'numeric',
@@ -50,7 +50,7 @@ function getSlug(id: string) {
 												transition:name={`title-${post.id}`}
 												class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight"
 											>
-												<a href={`/blog/${getSlug(post.id)}`} class="focus:outline-none">
+												<a href={`/es/blog/${getSlug(post.id)}`} class="focus:outline-none">
 													<span class="absolute inset-0 z-20"></span>
 													{post.data.title}
 												</a>
@@ -62,7 +62,7 @@ function getSlug(id: string) {
 										</div>
 					
 										<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:translate-x-2 transition-transform duration-300 pointer-events-none">
-											Read article
+											Leer artículo
 											<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
 											</svg>

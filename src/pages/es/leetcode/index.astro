@@ -1,9 +1,9 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const solutions = (await getCollection('leetcode'))
-	.filter(s => s.id.startsWith('en/'))
+	.filter(s => s.id.startsWith('es/'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const difficultyColor = {
@@ -13,7 +13,7 @@ const difficultyColor = {
 };
 
 function getSlug(id: string) {
-	return id.replace(/^en\//, '').replace(/\.(md|mdx)$/, '');
+	return id.replace(/^es\//, '').replace(/\.(md|mdx)$/, '');
 }
 ---
 
@@ -23,14 +23,14 @@ function getSlug(id: string) {
 			<h1
 				class="text-6xl sm:text-8xl font-black tracking-tighter text-slate-900 leading-[0.85] mb-8"
 			>
-				SOLUTIONS <br />
+				SOLUCIONES <br />
 				<span
 					class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8"
 					>LEETCODE.</span
 				>
 			</h1>
 			<p class="text-xl text-slate-600 font-light max-w-2xl">
-				Analysis and solutions for algorithmic problems.
+				Análisis y resoluciones de problemas algorítmicos.
 			</p>
 		</header>
 
@@ -38,17 +38,17 @@ function getSlug(id: string) {
 			<table class="w-full text-left border-collapse">
 				<thead>
 					<tr class="border-b border-slate-200">
-						<th class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400">Problem</th>
-						<th class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400">Difficulty</th>
-						<th class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400">Complexity</th>
-						<th class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400">Date</th>
+						<th class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400">Problema</th>
+						<th class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400">Dificultad</th>
+						<th class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400">Complejidad</th>
+						<th class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400">Fecha</th>
 					</tr>
 				</thead>
 				<tbody>
 					{solutions.map((solution) => (
 						<tr class="border-b border-slate-100 group hover:bg-brand-50/30 transition-colors">
 							<td class="py-6">
-								<a href={`/leetcode/${getSlug(solution.id)}`} class="font-bold text-slate-900 group-hover:text-brand-500 transition-colors">
+								<a href={`/es/leetcode/${getSlug(solution.id)}`} class="font-bold text-slate-900 group-hover:text-brand-500 transition-colors">
 									<span transition:name={`title-${solution.id}`}>{solution.data.title}</span>
 								</a>
 							</td>
@@ -68,7 +68,7 @@ function getSlug(id: string) {
 								)}
 							</td>
 							<td class="py-6 text-sm font-mono text-slate-400">
-								{solution.data.pubDate.toLocaleDateString('en-US', {
+								{solution.data.pubDate.toLocaleDateString('es-ES', {
 									year: 'numeric',
 									month: 'short',
 								})}
