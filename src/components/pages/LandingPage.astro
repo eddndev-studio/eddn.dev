@@ -12,14 +12,25 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-// TODO: Filter collections by language when content is separated
-const latestBlog = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-)[0];
+// Helper to filter content by language (folder structure)
+function filterByLang(entry: { id: string }) {
+  const [entryLang] = entry.id.split('/');
+  return entryLang === lang;
+}
 
-const latestLeetCode = (await getCollection('leetcode')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-)[0];
+// Helper to clean slug (remove lang prefix and extension)
+function getSlug(id: string) {
+  const parts = id.split('/');
+  return parts.slice(1).join('/').replace(/\.(md|mdx)$/, '');
+}
+
+const latestBlog = (await getCollection('blog'))
+  .filter(filterByLang)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
+
+const latestLeetCode = (await getCollection('leetcode'))
+  .filter(filterByLang)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
 
 const difficultyColor = {
 	Easy: 'text-emerald-500 bg-emerald-50',
@@ -79,7 +90,7 @@ const difficultyLabel = (difficulty: string) => {
 
 					<div class="flex flex-wrap gap-4 pt-4">
 						<a
-							href={latestBlog ? (lang === 'es' ? `/es/blog/${latestBlog.id}` : `/blog/${latestBlog.id}`) : (lang === 'es' ? "/es/blog" : "/blog")}
+							href={latestBlog ? (lang === 'es' ? `/es/blog/${getSlug(latestBlog.id)}` : `/blog/${getSlug(latestBlog.id)}`) : (lang === 'es' ? "/es/blog" : "/blog")}
 							class="px-6 py-3 bg-brand-500 text-white font-bold rounded-full hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20"
 						>
 							{t('home.latest_blog_btn')}
@@ -121,7 +132,7 @@ const difficultyLabel = (difficulty: string) => {
 							transition:name={`title-${latestBlog.id}`}
 							class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight"
 						>
-							<a href={lang === 'es' ? `/es/blog/${latestBlog.id}` : `/blog/${latestBlog.id}`} class="focus:outline-none">
+							<a href={lang === 'es' ? `/es/blog/${getSlug(latestBlog.id)}` : `/blog/${getSlug(latestBlog.id)}`} class="focus:outline-none">
 								<span class="absolute inset-0 z-20"></span>
 								{latestBlog.data.title}
 							</a>
@@ -161,7 +172,7 @@ const difficultyLabel = (difficulty: string) => {
 							transition:name={`title-${latestLeetCode.id}`}
 							class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight"
 						>
-							<a href={lang === 'es' ? `/es/leetcode/${latestLeetCode.id}` : `/leetcode/${latestLeetCode.id}`} class="focus:outline-none">
+							<a href={lang === 'es' ? `/es/leetcode/${getSlug(latestLeetCode.id)}` : `/leetcode/${getSlug(latestLeetCode.id)}`} class="focus:outline-none">
 								<span class="absolute inset-0 z-20"></span>
 								{latestLeetCode.data.title}
 							</a>
