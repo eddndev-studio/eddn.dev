@@ -67,10 +67,10 @@ const difficultyColor = {
 
 					<div class="flex flex-wrap gap-4 pt-4">
 						<a
-							href="/blog"
+							href={latestBlog ? `/blog/${latestBlog.id}` : "/blog"}
 							class="px-6 py-3 bg-brand-500 text-white font-bold rounded-full hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20"
 						>
-							Explorar Blog
+							Leer lo más reciente
 						</a>
 						<a
 							href="/trajectory"
