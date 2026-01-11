@@ -29,27 +29,64 @@ try {
         : data.submissionCalendar;
       
       const normalizedMap = new Map<string, number>();
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+
       Object.entries(rawCalendar).forEach(([ts, count]) => {
-         const dateStr = new Date(parseInt(ts) * 1000).toISOString().split('T')[0];
+         // LeetCode returns timestamps in seconds.
+         // We filter out any submission that claims to be in the future relative to server time.
+         const date = new Date(parseInt(ts) * 1000);
+         date.setHours(0, 0, 0, 0);
+         
+         if (date > now) return;
+
+         const dateStr = date.toISOString().split('T')[0];
          normalizedMap.set(dateStr, (normalizedMap.get(dateStr) || 0) + (count as number));
       });
 
-      const end = new Date();
+      const end = new Date(now);
+      // Calculate start: Go back ~1 year (52 weeks)
       const start = new Date(end);
-      start.setDate(start.getDate() - 366);
-      while (start.getDay() !== 0) { start.setDate(start.getDate() + 1); }
+      start.setDate(start.getDate() - 365);
+      
+      // ALIGN TO SUNDAY: Go back to the previous Sunday (or stay if today is Sunday)
+      // getDay(): 0 = Sunday, 1 = Monday, ...
+      start.setDate(start.getDate() - start.getDay());
 
       let current = new Date(start);
+      // Reset hours to avoid DST issues affecting day loop
+      current.setHours(0, 0, 0, 0);
+      
       let week: ContributionDay[] = [];
       let yearTotal = 0;
 
+      // Loop until we pass 'end' or finish the last week
       while (current <= end || week.length > 0) {
         const dateStr = current.toISOString().split('T')[0];
-        const count = normalizedMap.get(dateStr) || 0;
-        yearTotal += count;
-        week.push({ date: current.toISOString(), count, level: getLevel(count) });
-        if (week.length === 7) { weeks.push(week); week = []; }
+        // Only count submissions if current date is within valid range (<= end)
+        // But we might need to pad the rest of the week with empty cells if we passed 'end'
+        
+        const isFuture = current > end;
+        const count = !isFuture ? (normalizedMap.get(dateStr) || 0) : 0;
+        
+        if (!isFuture) {
+             yearTotal += count;
+        }
+
+        week.push({ 
+            date: current.toISOString(), 
+            count: count, 
+            level: getLevel(count) 
+        });
+
+        if (week.length === 7) { 
+            weeks.push(week); 
+            week = []; 
+        }
+        
+        // Safety break if we went too far past end and finished the week
         if (current > end && week.length === 0) break;
+        
         current.setDate(current.getDate() + 1);
       }
       totalSubmissions = yearTotal;
