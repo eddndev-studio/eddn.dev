@@ -1,0 +1,57 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { trajectoryData } from '../../i18n/trajectory';
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+const data = trajectoryData[lang];
+---
+
+<Layout title={`${lang === 'es' ? 'Trayectoria' : 'Trajectory'} — eddn.dev`}>
+	<main class="max-w-7xl mx-auto px-6 py-24">
+		<header class="mb-20">
+			<h1
+				class="text-6xl sm:text-8xl font-black tracking-tighter text-slate-900 leading-[0.85] mb-8"
+        set:html={data.title}
+			>
+			</h1>
+			<p class="text-xl text-slate-600 font-light max-w-2xl">
+				{data.description}
+			</p>
+		</header>
+
+		<div class="relative space-y-12">
+			<div class="absolute left-0 top-0 bottom-0 w-px bg-slate-200 ml-[7px]"></div>
+			
+			{data.milestones.map((milestone) => (
+				<div class="relative pl-10">
+					<div class="absolute left-0 top-2 w-4 h-4 rounded-full border-4 border-white bg-brand-500 shadow-[0_0_0_1px_rgba(139,92,246,0.5)]"></div>
+					<div class="space-y-2">
+						<span class="font-mono text-sm font-bold text-brand-500 uppercase tracking-widest">{milestone.year}</span>
+						<h3 class="text-2xl font-bold text-slate-900">{milestone.title}</h3>
+						<p class="text-lg font-medium text-slate-500">{milestone.company}</p>
+						<p class="text-slate-600 max-w-2xl leading-relaxed">
+							{milestone.description}
+						</p>
+						{milestone.link && (
+							<a 
+								href={milestone.link.url} 
+								target="_blank" 
+								rel="noopener noreferrer" 
+								class="inline-flex items-center text-sm font-medium text-brand-500 hover:text-brand-600 transition-colors mt-1"
+							>
+								{milestone.link.text}
+								<svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+								</svg>
+							</a>
+						)}
+					</div>
+				</div>
+			))}
+		</div>
+	</main>
+</Layout>
