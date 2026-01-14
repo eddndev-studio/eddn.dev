@@ -2,16 +2,18 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { ClientRouter } from 'astro:transitions';
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
 	title?: string;
 	description?: string;
+	hreflangs?: Array<{ lang: string; href: string }>;
 }
 
-const { 
-	title = "eddn.dev — Personal Journal", 
-	description = "Ingeniería de software, trayectoria y pensamientos personales de Eduardo Alonso." 
+const {
+	title = "eddn.dev — Personal Journal",
+	description = "Ingeniería de software, trayectoria y pensamientos personales de Eduardo Alonso.",
+	hreflangs = [],
 } = Astro.props;
 ---
 
@@ -22,12 +24,23 @@ const {
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		
+
 		<title>{title}</title>
 		<meta name="description" content={description} />
-		
+
 		<!-- Canonical URL -->
 		<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+
+		<!-- Hreflang Tags -->
+		{
+			hreflangs.map(({ lang, href }) => (
+				<link
+					rel="alternate"
+					hreflang={lang}
+					href={new URL(href, Astro.site)}
+				/>
+			))
+		}
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
@@ -41,13 +54,16 @@ const {
 		<meta property="twitter:url" content={Astro.url} />
 		<meta property="twitter:title" content={title} />
 		<meta property="twitter:description" content={description} />
-		
+
 		<ClientRouter />
-		
+
 		<!-- Fonts -->
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+			rel="stylesheet"
+		/>
 	</head>
 	<body class="selection:bg-brand-500/30 overflow-x-hidden">
 		<Header />
@@ -57,9 +73,9 @@ const {
 		<Footer />
 
 		<script>
-			import Lenis from 'lenis';
-			import { gsap } from 'gsap';
-			import { ScrollTrigger } from 'gsap/ScrollTrigger';
+			import Lenis from "lenis";
+			import { gsap } from "gsap";
+			import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 			gsap.registerPlugin(ScrollTrigger);
 
@@ -78,7 +94,7 @@ const {
 				});
 
 				// GSAP & Lenis integration
-				lenis.on('scroll', ScrollTrigger.update);
+				lenis.on("scroll", ScrollTrigger.update);
 				gsap.ticker.add(update);
 				gsap.ticker.lagSmoothing(0);
 
@@ -89,52 +105,60 @@ const {
 			function animateContent() {
 				// 1. Hero / Header Reveal
 				// Targets direct children of the main header
-				const heroElements = document.querySelectorAll('main > header > *');
+				const heroElements =
+					document.querySelectorAll("main > header > *");
 				if (heroElements.length) {
-					gsap.fromTo(heroElements, 
+					gsap.fromTo(
+						heroElements,
 						{ y: 20, opacity: 0 },
-						{ 
-							y: 0, 
-							opacity: 1, 
-							duration: 0.8, 
-							stagger: 0.1, 
-							ease: "power3.out", 
-							clearProps: "all" 
-						}
+						{
+							y: 0,
+							opacity: 1,
+							duration: 0.8,
+							stagger: 0.1,
+							ease: "power3.out",
+							clearProps: "all",
+						},
 					);
 				}
 
 				// 2. Grid Items (Blog Posts, Cards)
 				// Targets children of any generic grid container
-				const gridItems = document.querySelectorAll('.grid > article, .grid > a, .grid > div');
+				const gridItems = document.querySelectorAll(
+					".grid > article, .grid > a, .grid > div",
+				);
 				if (gridItems.length) {
-					gsap.fromTo(gridItems,
+					gsap.fromTo(
+						gridItems,
 						{ y: 10 },
-						{ 
-							y: 0, 
-							duration: 0.4, 
-							stagger: 0.05, 
-							ease: "power2.out", 
-							delay: 0.1, 
-							clearProps: "all" 
-						}
+						{
+							y: 0,
+							duration: 0.4,
+							stagger: 0.05,
+							ease: "power2.out",
+							delay: 0.1,
+							clearProps: "all",
+						},
 					);
 				}
 
 				// 3. List/Table Items (LeetCode Rows, Trajectory Timeline)
-				const listItems = document.querySelectorAll('tbody > tr, .space-y-12 > .relative');
+				const listItems = document.querySelectorAll(
+					"tbody > tr, .space-y-12 > .relative",
+				);
 				if (listItems.length) {
-					gsap.fromTo(listItems,
+					gsap.fromTo(
+						listItems,
 						{ x: -10, opacity: 0 },
-						{ 
-							x: 0, 
-							opacity: 1, 
-							duration: 0.5, 
-							stagger: 0.05, 
-							ease: "power2.out", 
-							delay: 0.3, 
-							clearProps: "all" 
-						}
+						{
+							x: 0,
+							opacity: 1,
+							duration: 0.5,
+							stagger: 0.05,
+							ease: "power2.out",
+							delay: 0.3,
+							clearProps: "all",
+						},
 					);
 				}
 			}
@@ -144,11 +168,11 @@ const {
 					lenis.destroy();
 				}
 				gsap.ticker.remove(update);
-				ScrollTrigger.getAll().forEach(t => t.kill());
+				ScrollTrigger.getAll().forEach((t) => t.kill());
 			}
 
-			document.addEventListener('astro:page-load', init);
-			document.addEventListener('astro:before-swap', cleanup);
+			document.addEventListener("astro:page-load", init);
+			document.addEventListener("astro:before-swap", cleanup);
 		</script>
 	</body>
 </html>

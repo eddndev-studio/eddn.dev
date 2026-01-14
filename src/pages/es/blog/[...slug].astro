@@ -1,12 +1,12 @@
 ---
-import { getCollection, render } from 'astro:content';
-import Layout from '../../../layouts/Layout.astro';
+import { getCollection, render } from "astro:content";
+import Layout from "../../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	const spanishPosts = posts.filter(p => p.id.startsWith('es/'));
+	const posts = await getCollection("blog");
+	const spanishPosts = posts.filter((p) => p.id.startsWith("es/"));
 	return spanishPosts.map((post) => {
-		const slug = post.id.replace(/^es\//, '').replace(/\.(md|mdx)$/, '');
+		const slug = post.id.replace(/^es\//, "").replace(/\.(md|mdx)$/, "");
 		return {
 			params: { slug },
 			props: post,
@@ -16,55 +16,111 @@ export async function getStaticPaths() {
 
 const post = Astro.props;
 const { Content } = await render(post);
+
+// Find translation
+const allPosts = await getCollection("blog");
+const translationKey = post.data.translationKey;
+let hreflangs = [
+	{
+		lang: "es",
+		href: `/es/blog/${post.id.replace(/^es\//, "").replace(/\.(md|mdx)$/, "")}`,
+	},
+];
+
+if (translationKey) {
+	const englishPost = allPosts.find(
+		(p) =>
+			p.id.startsWith("en/") && p.data.translationKey === translationKey,
+	);
+	if (englishPost) {
+		const enSlug = englishPost.id
+			.replace(/^en\//, "")
+			.replace(/\.(md|mdx)$/, "");
+		hreflangs.push({ lang: "en", href: `/blog/${enSlug}` });
+	}
+}
 ---
 
-<Layout title={`${post.data.title} — eddn.dev`} description={post.data.description}>
+<Layout
+	title={`${post.data.title} — eddn.dev`}
+	description={post.data.description}
+	hreflangs={hreflangs}
+>
 	<div class="max-w-7xl mx-auto px-6 py-24 lg:py-32">
 		<header class="mb-16 lg:mb-24 max-w-4xl">
 			<div class="flex items-center gap-4 mb-6">
-				<time 
+				<time
 					transition:name={`date-${post.id}`}
 					class="text-sm font-mono font-bold text-brand-500 uppercase tracking-widest"
 				>
-					{post.data.pubDate.toLocaleDateString('es-ES', {
-						year: 'numeric',
-						month: 'long',
-						day: 'numeric',
-					})}
+					{
+						post.data.pubDate.toLocaleDateString("es-ES", {
+							year: "numeric",
+							month: "long",
+							day: "numeric",
+						})
+					}
 				</time>
-				{post.data.updatedDate && (
-					<span class="text-xs text-slate-400 font-mono">(Actualizado)</span>
-				)}
+				{
+					post.data.updatedDate && (
+						<span class="text-xs text-slate-400 font-mono">
+							(Actualizado)
+						</span>
+					)
+				}
 			</div>
-			
-			<h1 
+
+			<h1
 				transition:name={`title-${post.id}`}
 				class="text-5xl sm:text-7xl font-black tracking-tighter text-slate-900 leading-[0.9] mb-8"
 			>
 				{post.data.title}
 			</h1>
 
-			{post.data.tags && (
-				<div class="flex flex-wrap gap-x-4 gap-y-2">
-					{post.data.tags.map(tag => (
-						<span class="text-sm font-mono font-bold text-brand-600 hover:text-brand-700 transition-colors cursor-default">
-							#{tag}
-						</span>
-					))}
-				</div>
-			)}
+			{
+				post.data.tags && (
+					<div class="flex flex-wrap gap-x-4 gap-y-2">
+						{post.data.tags.map((tag) => (
+							<span class="text-sm font-mono font-bold text-brand-600 hover:text-brand-700 transition-colors cursor-default">
+								#{tag}
+							</span>
+						))}
+					</div>
+				)
+			}
 		</header>
 
-		<div id="main-content-grid" class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+		<div
+			id="main-content-grid"
+			class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24"
+		>
 			<!-- Sidebar / Metadata -->
-			<aside id="sidebar-container" class="hidden lg:block lg:col-span-3 relative">
+			<aside
+				id="sidebar-container"
+				class="hidden lg:block lg:col-span-3 relative"
+			>
 				<div id="sidebar-inner" class="space-y-8">
-					<div class="text-sm text-slate-500 leading-relaxed border-l-2 border-brand-200 pl-4">
+					<div
+						class="text-sm text-slate-500 leading-relaxed border-l-2 border-brand-200 pl-4"
+					>
 						<p>{post.data.description}</p>
 					</div>
 					<div class="h-px bg-slate-200 w-12"></div>
-					<a href="/es/blog" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
-						<svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+					<a
+						href="/es/blog"
+						class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
+					>
+						<svg
+							class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg
+						>
 						Volver al Blog
 					</a>
 				</div>
@@ -72,19 +128,36 @@ const { Content } = await render(post);
 
 			<!-- Main Content -->
 			<article class="lg:col-span-8 lg:col-start-5">
-				<div class="prose prose-lg prose-slate max-w-none 
+				<div
+					class="prose prose-lg prose-slate max-w-none
 					prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-slate-900
 					prose-p:leading-relaxed prose-p:text-slate-700
 					prose-a:text-brand-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
 					prose-strong:font-bold prose-strong:text-slate-900
 					prose-code:text-brand-600 prose-code:bg-brand-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
-					prose-pre:shadow-2xl prose-pre:rounded-xl">
+					prose-pre:shadow-2xl prose-pre:rounded-xl"
+				>
 					<Content />
 				</div>
-				
-				<div class="mt-24 pt-12 border-t border-slate-200 flex justify-between items-center lg:hidden">
-					<a href="/es/blog" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
-						<svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+
+				<div
+					class="mt-24 pt-12 border-t border-slate-200 flex justify-between items-center lg:hidden"
+				>
+					<a
+						href="/es/blog"
+						class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
+					>
+						<svg
+							class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg
+						>
 						Volver al Blog
 					</a>
 				</div>
@@ -94,21 +167,25 @@ const { Content } = await render(post);
 </Layout>
 
 <script>
-	import '../../../utils/codeUtils';
-	import { initStickySidebar } from '../../../utils/stickySidebar';
+	import "../../../utils/codeUtils";
+	import { initStickySidebar } from "../../../utils/stickySidebar";
 
 	let cleanup: (() => void) | undefined;
 
 	function setupSticky() {
-		cleanup = initStickySidebar('#sidebar-inner', '#main-content-grid', 128);
+		cleanup = initStickySidebar(
+			"#sidebar-inner",
+			"#main-content-grid",
+			128,
+		);
 	}
 
 	function teardownSticky() {
 		if (cleanup) cleanup();
 	}
 
-	document.addEventListener('astro:page-load', setupSticky);
-	document.addEventListener('astro:before-swap', teardownSticky);
+	document.addEventListener("astro:page-load", setupSticky);
+	document.addEventListener("astro:before-swap", teardownSticky);
 </script>
 
 <style is:global>
@@ -119,12 +196,13 @@ const { Content } = await render(post);
 	.prose pre {
 		@apply rounded-xl border border-slate-700/50 bg-[#2e3440]! p-6 text-white;
 	}
-	
+
 	/* Ensure code text inside has good contrast if not handled by shiki theme fully */
 	.prose pre code {
 		background-color: transparent !important;
 		color: inherit !important;
-		font-family: 'JetBrains Mono', monospace; /* Optional: if you have a mono font */
+		font-family:
+			"JetBrains Mono", monospace; /* Optional: if you have a mono font */
 		font-size: 0.875rem;
 	}
 

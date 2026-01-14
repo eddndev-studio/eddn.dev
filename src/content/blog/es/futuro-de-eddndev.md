@@ -3,6 +3,7 @@ title: "El futuro de eddn.dev"
 description: "Reflexiones sobre el rediseño y los objetivos de este nuevo espacio personal."
 pubDate: "2025-12-31"
 tags: ["personal", "webdev", "achronyme"]
+translationKey: "future-of-eddndev"
 ---
 
 Bienvenidos a la nueva versión de mi sitio personal. Este espacio nace con la intención de ser mi bitácora central de ingeniería. Aquí no solo documentaré el desarrollo de **Achronyme**, sino que también compartiré anécdotas del oficio, casos de estudio técnicos y reflexiones sobre lo que significa construir software hoy en día.

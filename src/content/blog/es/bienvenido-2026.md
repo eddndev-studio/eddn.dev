@@ -3,6 +3,7 @@ title: "Bienvenido 2026"
 description: "Un nuevo comienzo enfocado en la esencia de la ingeniería de software y los retos por venir."
 pubDate: "2026-01-01"
 tags: ["personal", "2026", "reflection"]
+translationKey: "welcome-2026"
 ---
 
 El calendario marca 1 de enero de 2026. Un nuevo ciclo comienza y, con él, una oportunidad renovada para definir quiénes somos y qué construimos.
