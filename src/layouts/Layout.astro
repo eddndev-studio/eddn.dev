@@ -8,12 +8,16 @@ interface Props {
 	title?: string;
 	description?: string;
 	hreflangs?: Array<{ lang: string; href: string }>;
+	prevUrl?: string;
+	nextUrl?: string;
 }
 
 const {
 	title = "eddn.dev — Personal Journal",
 	description = "Ingeniería de software, trayectoria y pensamientos personales de Eduardo Alonso.",
 	hreflangs = [],
+	prevUrl,
+	nextUrl,
 } = Astro.props;
 ---
 
@@ -41,6 +45,10 @@ const {
 				/>
 			))
 		}
+
+		<!-- Pagination SEO -->
+		{prevUrl && <link rel="prev" href={new URL(prevUrl, Astro.site)} />}
+		{nextUrl && <link rel="next" href={new URL(nextUrl, Astro.site)} />}
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
