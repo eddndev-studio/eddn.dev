@@ -5,8 +5,6 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import { useTranslations } from "../../../i18n/ui";
 import type { GetStaticPaths, Page } from "astro";
 
-const t = useTranslations("es");
-
 export const getStaticPaths = (async ({ paginate }) => {
 	const posts = (await getCollection("blog"))
 		.filter((post) => post.id.startsWith("es/"))
@@ -25,7 +23,12 @@ function getSlug(id: string) {
 }
 ---
 
-<Layout title="Blog — eddn.dev" prevUrl={page.url.prev} nextUrl={page.url.next}>
+<Layout
+	title="Blog — eddn.dev"
+	prevUrl={page.url.prev}
+	nextUrl={page.url.next}
+	hreflangs={[{ lang: "en", href: "/blog" }]}
+>
 	<main class="max-w-7xl mx-auto px-6 py-24">
 		<header class="mb-16">
 			<h1

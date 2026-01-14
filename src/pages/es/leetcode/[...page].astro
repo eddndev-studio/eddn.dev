@@ -1,15 +1,15 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import Pagination from "../../components/Pagination.astro";
-import LeetCodeFilters from "../../components/LeetCodeFilters.astro";
+import Layout from "../../../layouts/Layout.astro";
+import Pagination from "../../../components/Pagination.astro";
+import LeetCodeFilters from "../../../components/LeetCodeFilters.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import type { GetStaticPaths, Page } from "astro";
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const solutions = (await getCollection("leetcode"))
-		.filter((s) => s.id.startsWith("en/"))
+		.filter((s) => s.id.startsWith("es/"))
 		.sort((a, b) => {
-			// Extract number from ID (e.g. en/0001-two-sum.md -> 1)
+			// Extract number from ID (e.g. es/0001-two-sum.md -> 1)
 			const getNum = (id: string) => {
 				const match = id.split("/")[1].match(/^(\d+)/);
 				return match ? parseInt(match[1]) : 0;
@@ -33,7 +33,7 @@ const difficultyColor = {
 };
 
 function getSlug(id: string) {
-	return id.replace(/^en\//, "").replace(/\.(md|mdx)$/, "");
+	return id.replace(/^es\//, "").replace(/\.(md|mdx)$/, "");
 }
 ---
 
@@ -41,25 +41,25 @@ function getSlug(id: string) {
 	title="LeetCode — eddn.dev"
 	prevUrl={page.url.prev}
 	nextUrl={page.url.next}
-	hreflangs={[{ lang: "es", href: "/es/leetcode" }]}
+	hreflangs={[{ lang: "en", href: "/leetcode" }]}
 >
 	<main class="max-w-7xl mx-auto px-6 py-24">
 		<header class="mb-16">
 			<h1
 				class="text-6xl sm:text-8xl font-black tracking-tighter text-slate-900 leading-[0.85] mb-8"
 			>
-				SOLUTIONS <br />
+				SOLUCIONES <br />
 				<span
 					class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8"
 					>LEETCODE.</span
 				>
 			</h1>
 			<p class="text-xl text-slate-600 font-light max-w-2xl">
-				Analysis and solutions for algorithmic problems.
+				Análisis y resoluciones de problemas algorítmicos.
 			</p>
 		</header>
 
-		<LeetCodeFilters currentFilter="All" />
+		<LeetCodeFilters currentFilter="All" baseUrl="/es/leetcode" />
 
 		<div class="overflow-x-auto">
 			<table class="w-full text-left border-collapse">
@@ -67,19 +67,19 @@ function getSlug(id: string) {
 					<tr class="border-b border-slate-200">
 						<th
 							class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400"
-							>Problem</th
+							>Problema</th
 						>
 						<th
 							class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400"
-							>Difficulty</th
+							>Dificultad</th
 						>
 						<th
 							class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400"
-							>Complexity</th
+							>Complejidad</th
 						>
 						<th
 							class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400"
-							>Date</th
+							>Fecha</th
 						>
 					</tr>
 				</thead>
@@ -89,7 +89,7 @@ function getSlug(id: string) {
 							<tr class="border-b border-slate-100 group hover:bg-brand-50/30 transition-colors">
 								<td class="py-6">
 									<a
-										href={`/leetcode/${getSlug(solution.id)}`}
+										href={`/es/leetcode/${getSlug(solution.id)}`}
 										class="font-bold text-slate-900 group-hover:text-brand-500 transition-colors"
 									>
 										<span
@@ -119,7 +119,7 @@ function getSlug(id: string) {
 								</td>
 								<td class="py-6 text-sm font-mono text-slate-400">
 									{solution.data.pubDate.toLocaleDateString(
-										"en-US",
+										"es-ES",
 										{
 											year: "numeric",
 											month: "short",
