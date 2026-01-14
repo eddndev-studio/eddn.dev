@@ -1,29 +1,30 @@
 ---
 interface Props {
     currentFilter?: "All" | "Easy" | "Medium" | "Hard";
+    baseUrl?: string;
 }
 
-const { currentFilter = "All" } = Astro.props;
+const { currentFilter = "All", baseUrl = "/leetcode" } = Astro.props;
 
 const filters = [
     {
         label: "All",
-        href: "/leetcode",
+        href: `${baseUrl}`,
         color: "bg-slate-100 text-slate-600 hover:bg-slate-200",
     },
     {
         label: "Easy",
-        href: "/leetcode/difficulty/easy",
+        href: `${baseUrl}/difficulty/easy`,
         color: "bg-emerald-50 text-emerald-600 hover:bg-emerald-100",
     },
     {
         label: "Medium",
-        href: "/leetcode/difficulty/medium",
+        href: `${baseUrl}/difficulty/medium`,
         color: "bg-amber-50 text-amber-600 hover:bg-amber-100",
     },
     {
         label: "Hard",
-        href: "/leetcode/difficulty/hard",
+        href: `${baseUrl}/difficulty/hard`,
         color: "bg-rose-50 text-rose-600 hover:bg-rose-100",
     },
 ];

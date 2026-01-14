@@ -1,16 +1,27 @@
 ---
+import type { Page } from "astro";
+
 interface Props {
-    page: {
-        url: {
-            prev: string | undefined;
-            next: string | undefined;
-        };
-        currentPage: number;
-        lastPage: number;
-    };
+    page: Page<any>;
 }
 
 const { page } = Astro.props;
+
+// Helper to construct URL for any page number
+const getPageUrl = (pageNum: number) => {
+    if (pageNum === 1) {
+        // Try to deduce base URL from current or prev/next
+        const currentPath = Astro.url.pathname;
+        return currentPath.replace(/\/(\d+)\/?$/, "").replace(/\/$/, "") || "/";
+    }
+    // For page > 1, append number.
+    // We need a reliable base. If we are on page 2 (/blog/2), base is /blog.
+    // If we are on page 1 (/blog), base is /blog.
+    const currentPath = Astro.url.pathname;
+    const cleanBase =
+        currentPath.replace(/\/(\d+)\/?$/, "").replace(/\/$/, "") || "/";
+    return `${cleanBase === "/" ? "" : cleanBase}/${pageNum}`;
+};
 ---
 
 {
@@ -44,19 +55,7 @@ const { page } = Astro.props;
                 {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(
                     (pageNum) => (
                         <a
-                            href={
-                                pageNum === 1
-                                    ? page.url.first ||
-                                      (page.url.prev
-                                          ? page.url.prev.replace(/\/\d+$/, "")
-                                          : "./")
-                                    : page.url.first
-                                      ? `${page.url.first === "/" ? "" : page.url.first}/${pageNum}`
-                                      : page.url.prev
-                                        ? page.url.prev.replace(/\/\d+$/, "") +
-                                          `/${pageNum}`
-                                        : `./${pageNum}`
-                            }
+                            href={getPageUrl(pageNum)}
                             class={`w-8 h-8 flex items-center justify-center text-sm font-bold rounded-none transition-colors ${
                                 pageNum === page.currentPage
                                     ? "bg-brand-600 text-white"
