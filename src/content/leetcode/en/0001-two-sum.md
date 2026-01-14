@@ -1,5 +1,5 @@
 ---
-title: "0001 Two Sum - EN"
+title: "0001 Two Sum"
 problemUrl: "https://leetcode.com/problems/two-sum/"
 difficulty: "Easy"
 pubDate: "2026-01-08"
@@ -8,8 +8,6 @@ complexity:
   time: "O(n)"
   space: "O(n)"
 ---
-
-# 0001 Two Sum - EN
 
 ## Problem
 Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
