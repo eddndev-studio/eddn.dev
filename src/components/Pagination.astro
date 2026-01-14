@@ -1,0 +1,100 @@
+---
+interface Props {
+    page: {
+        url: {
+            prev: string | undefined;
+            next: string | undefined;
+        };
+        currentPage: number;
+        lastPage: number;
+    };
+}
+
+const { page } = Astro.props;
+---
+
+{
+    page.lastPage > 1 && (
+        <nav class="flex justify-between items-center mt-16 pt-8 border-t border-slate-200">
+            <div class="flex-1">
+                {page.url.prev && (
+                    <a
+                        href={page.url.prev}
+                        class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
+                    >
+                        <svg
+                            class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                            />
+                        </svg>
+                        Previous
+                    </a>
+                )}
+            </div>
+
+            <div class="hidden sm:flex space-x-2">
+                {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(
+                    (pageNum) => (
+                        <a
+                            href={
+                                pageNum === 1
+                                    ? page.url.first ||
+                                      (page.url.prev
+                                          ? page.url.prev.replace(/\/\d+$/, "")
+                                          : "./")
+                                    : page.url.first
+                                      ? `${page.url.first === "/" ? "" : page.url.first}/${pageNum}`
+                                      : page.url.prev
+                                        ? page.url.prev.replace(/\/\d+$/, "") +
+                                          `/${pageNum}`
+                                        : `./${pageNum}`
+                            }
+                            class={`w-8 h-8 flex items-center justify-center text-sm font-bold rounded-none transition-colors ${
+                                pageNum === page.currentPage
+                                    ? "bg-brand-600 text-white"
+                                    : "text-slate-600 hover:bg-slate-100 hover:text-brand-600"
+                            }`}
+                        >
+                            {pageNum}
+                        </a>
+                    ),
+                )}
+            </div>
+            <div class="sm:hidden font-mono text-sm text-slate-500">
+                {page.currentPage} / {page.lastPage}
+            </div>
+
+            <div class="flex-1 flex justify-end">
+                {page.url.next && (
+                    <a
+                        href={page.url.next}
+                        class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
+                    >
+                        Next
+                        <svg
+                            class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                            />
+                        </svg>
+                    </a>
+                )}
+            </div>
+        </nav>
+    )
+}

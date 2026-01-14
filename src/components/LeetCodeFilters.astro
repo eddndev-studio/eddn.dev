@@ -1,0 +1,45 @@
+---
+interface Props {
+    currentFilter?: "All" | "Easy" | "Medium" | "Hard";
+}
+
+const { currentFilter = "All" } = Astro.props;
+
+const filters = [
+    {
+        label: "All",
+        href: "/leetcode",
+        color: "bg-slate-100 text-slate-600 hover:bg-slate-200",
+    },
+    {
+        label: "Easy",
+        href: "/leetcode/difficulty/easy",
+        color: "bg-emerald-50 text-emerald-600 hover:bg-emerald-100",
+    },
+    {
+        label: "Medium",
+        href: "/leetcode/difficulty/medium",
+        color: "bg-amber-50 text-amber-600 hover:bg-amber-100",
+    },
+    {
+        label: "Hard",
+        href: "/leetcode/difficulty/hard",
+        color: "bg-rose-50 text-rose-600 hover:bg-rose-100",
+    },
+];
+
+const activeClasses = "ring-2 ring-offset-2 ring-brand-500 font-bold";
+---
+
+<div class="flex flex-wrap gap-4 mb-8">
+    {
+        filters.map((filter) => (
+            <a
+                href={filter.href}
+                class={`px-4 py-2 rounded-lg text-sm transition-all ${filter.color} ${currentFilter === filter.label ? activeClasses : ""}`}
+            >
+                {filter.label}
+            </a>
+        ))
+    }
+</div>
