@@ -2,9 +2,10 @@
 import Layout from "../../layouts/Layout.astro";
 import Pagination from "../../components/Pagination.astro";
 import LeetCodeFilters from "../../components/LeetCodeFilters.astro";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
 
-export async function getStaticPaths({ paginate }) {
+export const getStaticPaths = (async ({ paginate }) => {
 	const solutions = (await getCollection("leetcode"))
 		.filter((s) => s.id.startsWith("en/"))
 		.sort((a, b) => {
@@ -17,6 +18,10 @@ export async function getStaticPaths({ paginate }) {
 		});
 
 	return paginate(solutions, { pageSize: 20 });
+}) satisfies GetStaticPaths;
+
+interface Props {
+	page: Page<CollectionEntry<"leetcode">>;
 }
 
 const { page } = Astro.props;

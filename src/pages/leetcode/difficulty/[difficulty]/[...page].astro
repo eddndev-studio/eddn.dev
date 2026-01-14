@@ -2,9 +2,10 @@
 import Layout from "../../../../layouts/Layout.astro";
 import Pagination from "../../../../components/Pagination.astro";
 import LeetCodeFilters from "../../../../components/LeetCodeFilters.astro";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
 
-export async function getStaticPaths({ paginate }) {
+export const getStaticPaths = (async ({ paginate }) => {
     const allSolutions = await getCollection("leetcode");
     const difficulties = ["Easy", "Medium", "Hard"];
 
@@ -29,6 +30,11 @@ export async function getStaticPaths({ paginate }) {
             props: { difficulty },
         });
     });
+}) satisfies GetStaticPaths;
+
+interface Props {
+    page: Page<CollectionEntry<"leetcode">>;
+    difficulty: "Easy" | "Medium" | "Hard";
 }
 
 const { page, difficulty } = Astro.props;

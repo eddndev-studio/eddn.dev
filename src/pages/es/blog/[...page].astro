@@ -1,16 +1,21 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import Pagination from "../../../components/Pagination.astro";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import { useTranslations } from "../../../i18n/ui";
+import type { GetStaticPaths, Page } from "astro";
 
 const t = useTranslations("es");
 
-export async function getStaticPaths({ paginate }) {
+export const getStaticPaths = (async ({ paginate }) => {
 	const posts = (await getCollection("blog"))
 		.filter((post) => post.id.startsWith("es/"))
 		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 	return paginate(posts, { pageSize: 12 });
+}) satisfies GetStaticPaths;
+
+interface Props {
+	page: Page<CollectionEntry<"blog">>;
 }
 
 const { page } = Astro.props;
