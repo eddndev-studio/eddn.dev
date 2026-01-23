@@ -1,10 +1,18 @@
 ---
+import { useTranslations } from "../i18n/ui";
+
+interface Props {
+  lang: 'en' | 'es';
+}
+
 interface LanguageStats {
   name: string;
   percent: number;
   color: string;
 }
 
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 const USERNAME = "eddndev";
 let languages: LanguageStats[] = [];
 
@@ -68,10 +76,10 @@ const totalPercent = languages.reduce((acc, curr) => acc + curr.percent, 0);
   <div class="flex items-center justify-between mb-6">
     <div class="flex items-baseline gap-4">
       <h3 class="text-xl font-bold text-slate-900">
-        Lenguajes más usados
+        {t('languages.most_used')}
       </h3>
       <span class="text-xs font-mono text-slate-500">
-        GitHub Stats
+        {t('languages.stats_label')}
       </span>
     </div>
   </div>
