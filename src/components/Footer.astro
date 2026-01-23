@@ -49,7 +49,7 @@ const t = useTranslations(lang);
 
                  <div class="flex flex-col sm:flex-row gap-6">
                     <!-- Primary CTA -->
-                    <a href="mailto:contacto@eddn.dev" class="group relative inline-flex items-center justify-center px-8 py-4 bg-brand-500 text-white font-bold rounded-full overflow-hidden transition-transform hover:scale-105 shadow-lg shadow-brand-500/20">
+                    <a href="#" id="email-cta" class="group relative inline-flex items-center justify-center px-8 py-4 bg-brand-500 text-white font-bold rounded-full overflow-hidden transition-transform hover:scale-105 shadow-lg shadow-brand-500/20">
                         <span class="relative z-10 group-hover:text-brand-100 transition-colors">{t('footer.start_conversation')}</span>
                     </a>
                  </div>
@@ -89,6 +89,23 @@ const t = useTranslations(lang);
         // Initialize
         gol = new GameOfLife(canvas, '#94a3b8');
         gol.init();
+        
+        // Email Obfuscation Logic (Bypasses Cloudflare Email Protection)
+        const emailCta = document.getElementById('email-cta');
+        if (emailCta) {
+            emailCta.addEventListener('click', (e) => {
+                e.preventDefault();
+                const user = 'contacto';
+                const domain = 'eddn.dev';
+                window.location.href = `mailto:${user}@${domain}`;
+            });
+            // Optional: Set href on hover so status bar looks legit (but might trigger CF if it scans DOM aggressively, though usually it scans static HTML)
+            emailCta.addEventListener('mouseover', () => {
+                 const user = 'contacto';
+                 const domain = 'eddn.dev';
+                 emailCta.setAttribute('href', `mailto:${user}@${domain}`);
+            });
+        }
     }
 
     function cleanupFooterVisual() {
