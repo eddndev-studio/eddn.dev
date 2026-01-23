@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from 'astro:content';
 import GitHubContributions from "../../components/GitHubContributions.astro";
+import GitHubLanguages from "../../components/GitHubLanguages.astro";
 import LeetCodeContributions from "../../components/LeetCodeContributions.astro";
 import { useTranslations } from "../../i18n/ui";
 
@@ -201,6 +202,7 @@ const difficultyLabel = (difficulty: string) => {
 		</section>
 
 		<GitHubContributions />
+		<GitHubLanguages />
 		<LeetCodeContributions />
 	</main>
 

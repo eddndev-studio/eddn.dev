@@ -1,0 +1,116 @@
+---
+interface LanguageStats {
+  name: string;
+  percent: number;
+  color: string;
+}
+
+const USERNAME = "eddndev";
+let languages: LanguageStats[] = [];
+
+// Custom Brand Palette (Violet/Slate mix)
+// brand-600, brand-400, slate-600, brand-300, slate-400, brand-200, slate-500
+const brandPalette = [
+    "#7c3aed", // brand-600 (Primary)
+    "#a78bfa", // brand-400 (Secondary)
+    "#475569", // slate-600 (Neutral Dark)
+    "#c4b5fd", // brand-300 (Light Accent)
+    "#94a3b8", // slate-400 (Neutral Light)
+    "#ddd6fe", // brand-200 (Pale)
+    "#64748b"  // slate-500
+];
+
+try {
+  // We fetch the SVG because the JSON endpoint is not reliably available without a private instance.
+  // We then parse the SVG to extract the data. This is a hack, but effective for this specific API.
+  const response = await fetch(
+    `https://github-readme-stats.vercel.app/api/top-langs/?username=${USERNAME}&hide=html,css,jupyter%20notebook&layout=compact&card_width=300`
+  );
+  
+  if (response.ok) {
+    const svgText = await response.text();
+    
+    // Regex to extract Name, Percent, and Color
+    // Pattern matches the structure of the github-readme-stats SVG output
+    const regex = /data-testid="lang-name"[^>]*>([^<]+)<\/text>\s*<text[^>]*>([\d.]+)%<\/text>[\s\S]*?fill="([^"]+)"[^>]*class="lang-progress"/g;
+    
+    let match;
+    let index = 0;
+    while ((match = regex.exec(svgText)) !== null) {
+      languages.push({
+        name: match[1],
+        percent: parseFloat(match[2]),
+        // Override API color with Brand Palette
+        color: brandPalette[index % brandPalette.length]
+      });
+      index++;
+    }
+  }
+} catch (e) {
+  console.warn("Failed to fetch GitHub languages", e);
+}
+
+// Fallback/Placeholder if fetch fails (or for development)
+if (languages.length === 0) {
+    languages = [
+        { name: "TypeScript", percent: 45, color: brandPalette[0] },
+        { name: "Rust", percent: 30, color: brandPalette[1] },
+        { name: "Python", percent: 15, color: brandPalette[2] },
+        { name: "Other", percent: 10, color: brandPalette[3] }
+    ];
+}
+
+// Normalize percentages to ensure they sum to ~100 for the bar (visually)
+const totalPercent = languages.reduce((acc, curr) => acc + curr.percent, 0);
+---
+
+<section class="w-full py-8 border-t border-slate-200">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-baseline gap-4">
+      <h3 class="text-xl font-bold text-slate-900">
+        Lenguajes más usados
+      </h3>
+      <span class="text-xs font-mono text-slate-500">
+        GitHub Stats
+      </span>
+    </div>
+  </div>
+
+  <div class="bg-slate-50 p-6 border border-slate-100">
+      <!-- Progress Bar -->
+      <div class="flex h-3 w-full overflow-hidden rounded-none bg-slate-200 mb-6">
+        {languages.map((lang) => (
+          <div
+            style={{ width: `${(lang.percent / totalPercent) * 100}%`, backgroundColor: lang.color }}
+            class="h-full first:rounded-l-none last:rounded-r-none transition-all duration-500 hover:opacity-90 relative group"
+          >
+             {/* Tooltip on hover */}
+             <div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-slate-900 text-white text-xs font-bold py-1 px-2 pointer-events-none whitespace-nowrap z-10">
+                {lang.name} {lang.percent}%
+                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></div>
+             </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Legend -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {languages.map((lang) => (
+          <div class="flex items-center gap-2">
+            <div 
+                class="w-3 h-3 rounded-full" 
+                style={{ backgroundColor: lang.color }}
+            ></div>
+            <div class="flex flex-col">
+                <span class="text-xs font-bold text-slate-700 leading-none">
+                    {lang.name}
+                </span>
+                <span class="text-[10px] font-mono text-slate-500 mt-1">
+                    {lang.percent}%
+                </span>
+            </div>
+          </div>
+        ))}
+      </div>
+  </div>
+</section>
