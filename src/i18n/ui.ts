@@ -41,7 +41,7 @@ export const ui = {
     'footer.blog_desc': 'Engineering / Notes',
     'footer.leetcode_desc': 'Solutions / Complexity',
     'footer.trajectory_desc': 'Career / Milestones',
-    'footer.talk_title': 'Let\'s talk.',
+    'footer.talk_title': 'Let\'s <br> <span class="text-brand-500">talk.</span>',
     'footer.talk_desc': 'Always open to discussing technology, engineering challenges, or new collaboration opportunities.',
     'footer.start_conversation': 'Start Conversation',
     'footer.rights': 'ALL RIGHTS RESERVED',
