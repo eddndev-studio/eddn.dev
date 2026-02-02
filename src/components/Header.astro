@@ -6,9 +6,9 @@ const lang = (Astro.currentLocale as keyof typeof import('../i18n/ui').ui) || 'e
 const t = useTranslations(lang);
 
 const navItems = [
-  { name: t('nav.blog'), href: lang === 'es' ? "/es/blog" : "/blog" },
-  { name: t('nav.trajectory'), href: lang === 'es' ? "/es/trajectory" : "/trajectory" },
-  { name: t('nav.leetcode'), href: lang === 'es' ? "/es/leetcode" : "/leetcode" },
+  { name: t('nav.blog'), href: lang === 'es' ? "/es/blog/" : "/blog/" },
+  { name: t('nav.trajectory'), href: lang === 'es' ? "/es/trajectory/" : "/trajectory/" },
+  { name: t('nav.leetcode'), href: lang === 'es' ? "/es/leetcode/" : "/leetcode/" },
 ];
 ---
 

@@ -7,20 +7,19 @@ interface Props {
 
 const { page } = Astro.props;
 
+// Helper to ensure trailing slash
+const ensureSlash = (path: string) => path.endsWith('/') ? path : `${path}/`;
+
 // Helper to construct URL for any page number
 const getPageUrl = (pageNum: number) => {
-    if (pageNum === 1) {
-        // Try to deduce base URL from current or prev/next
-        const currentPath = Astro.url.pathname;
-        return currentPath.replace(/\/(\d+)\/?$/, "").replace(/\/$/, "") || "/";
-    }
-    // For page > 1, append number.
-    // We need a reliable base. If we are on page 2 (/blog/2), base is /blog.
-    // If we are on page 1 (/blog), base is /blog.
     const currentPath = Astro.url.pathname;
-    const cleanBase =
-        currentPath.replace(/\/(\d+)\/?$/, "").replace(/\/$/, "") || "/";
-    return `${cleanBase === "/" ? "" : cleanBase}/${pageNum}`;
+    let cleanBase = currentPath.replace(/\/(\d+)\/?$/, "").replace(/\/$/, "");
+    if (!cleanBase) cleanBase = "/";
+
+    if (pageNum === 1) {
+        return cleanBase === "/" ? "/" : `${cleanBase}/`;
+    }
+    return `${cleanBase === "/" ? "" : cleanBase}/${pageNum}/`;
 };
 ---
 
@@ -30,7 +29,7 @@ const getPageUrl = (pageNum: number) => {
             <div class="flex-1">
                 {page.url.prev && (
                     <a
-                        href={page.url.prev}
+                        href={ensureSlash(page.url.prev)}
                         class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
                     >
                         <svg
@@ -74,7 +73,7 @@ const getPageUrl = (pageNum: number) => {
             <div class="flex-1 flex justify-end">
                 {page.url.next && (
                     <a
-                        href={page.url.next}
+                        href={ensureSlash(page.url.next)}
                         class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
                     >
                         Next

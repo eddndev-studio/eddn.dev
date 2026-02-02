@@ -23,7 +23,7 @@ const translationKey = post.data.translationKey;
 let hreflangs = [
 	{
 		lang: "en",
-		href: `/blog/${post.id.replace(/^en\//, "").replace(/\.(md|mdx)$/, "")}`,
+		href: `/blog/${post.id.replace(/^en\//, "").replace(/\.(md|mdx)$/, "")}/`,
 	},
 ];
 
@@ -36,7 +36,7 @@ if (translationKey) {
 		const esSlug = spanishPost.id
 			.replace(/^es\//, "")
 			.replace(/\.(md|mdx)$/, "");
-		hreflangs.push({ lang: "es", href: `/es/blog/${esSlug}` });
+		hreflangs.push({ lang: "es", href: `/es/blog/${esSlug}/` });
 	}
 }
 ---
@@ -107,7 +107,7 @@ if (translationKey) {
 					</div>
 					<div class="h-px bg-slate-200 w-12"></div>
 					<a
-						href="/blog"
+						href="/blog/"
 						class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
 					>
 						<svg
@@ -144,7 +144,7 @@ if (translationKey) {
 					class="mt-24 pt-12 border-t border-slate-200 flex justify-between items-center lg:hidden"
 				>
 					<a
-						href="/blog"
+						href="/blog/"
 						class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
 					>
 						<svg
