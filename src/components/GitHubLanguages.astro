@@ -31,6 +31,23 @@ const brandPalette = [
 
 if (GITHUB_TOKEN) {
   try {
+    const ORGS = ["achronyme", "eddndev-studio", "eddndev-archive"];
+
+    const orgQueries = ORGS.map((org, i) => `
+      org${i}: organization(login: "${org}") {
+        repositories(first: 100) {
+          nodes {
+            languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+              edges {
+                size
+                node { name }
+              }
+            }
+          }
+        }
+      }
+    `).join("\n");
+
     const query = `
       query {
         user(login: "${USERNAME}") {
@@ -45,12 +62,13 @@ if (GITHUB_TOKEN) {
             }
           }
         }
+        ${orgQueries}
       }
     `;
 
     const response = await fetch("https://api.github.com/graphql", {
       method: "POST",
-      headers: { 
+      headers: {
         "Authorization": `Bearer ${GITHUB_TOKEN}`,
         "Content-Type": "application/json",
         "User-Agent": "Astro-Build"
@@ -59,13 +77,27 @@ if (GITHUB_TOKEN) {
     });
 
     const json = await response.json();
-    
-    if (json.data?.user?.repositories?.nodes) {
-      const repos = json.data.user.repositories.nodes;
+
+    if (json.data) {
+      const allRepos: any[] = [];
+
+      // User's own repos
+      if (json.data.user?.repositories?.nodes) {
+        allRepos.push(...json.data.user.repositories.nodes);
+      }
+
+      // Organization repos
+      ORGS.forEach((_org, i) => {
+        const orgData = json.data[`org${i}`];
+        if (orgData?.repositories?.nodes) {
+          allRepos.push(...orgData.repositories.nodes);
+        }
+      });
+
       const langMap: Record<string, number> = {};
-      
-      repos.forEach((repo: any) => {
-        repo.languages.edges.forEach((edge: any) => {
+
+      allRepos.forEach((repo: any) => {
+        repo.languages?.edges?.forEach((edge: any) => {
           const { name } = edge.node;
           langMap[name] = (langMap[name] || 0) + edge.size;
         });
