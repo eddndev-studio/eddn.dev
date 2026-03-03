@@ -1,5 +1,5 @@
 ---
-title: "Achronyme 0.1.0-beta2: La primera versión usable y el ecosistema de herramientas"
+title: "Achronyme: First Release"
 description: "Celebramos el lanzamiento de la beta 0.1.0-beta2 de Achronyme, marcando un hito con funciones de primera clase, estructuras dinámicas y soporte oficial para editores."
 pubDate: "2026-03-03"
 tags: ["achronyme", "release", "zk", "rust", "compiler"]
