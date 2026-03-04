@@ -42,11 +42,14 @@ const links = [
                 {links.map(link => (
                     <a 
                         href={link.url}
-                        class="group relative w-full flex items-center justify-center px-8 py-4 bg-white border-2 border-slate-200 hover:border-brand-500 text-slate-900 hover:text-brand-600 font-bold transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                        class="group relative w-full flex items-center justify-between p-6 bg-white border border-slate-200 border-r-4 border-r-slate-200 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none text-slate-900 font-bold"
                         target={link.url.startsWith('http') ? '_blank' : '_self'}
                         rel={link.url.startsWith('http') ? 'noopener noreferrer' : ''}
                     >
-                        {link.label}
+                        <span>{link.label}</span>
+                        <svg class="h-5 w-5 text-slate-400 group-hover:text-brand-500 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
                     </a>
                 ))}
             </div>
