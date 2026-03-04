@@ -45,6 +45,12 @@ export const ui = {
     'footer.talk_desc': 'Always open to discussing technology, engineering challenges, or new collaboration opportunities.',
     'footer.start_conversation': 'Start Conversation',
     'footer.rights': 'ALL RIGHTS RESERVED',
+    'error.404.greeting': 'ERROR 404',
+    'error.404.title': 'PAGE NOT<br /><span class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8">FOUND.</span>',
+    'error.404.subtitle': "It seems you've wandered into an undefined route.",
+    'error.404.description': "Don't worry, even the best algorithms hit a dead end sometimes. You can go back to the home page or explore other sections.",
+    'error.404.home_btn': 'Go Home',
+    'error.404.blog_btn': 'Read Blog',
   },
   es: {
     'nav.blog': 'Blog',
@@ -85,6 +91,12 @@ export const ui = {
     'footer.talk_desc': 'Siempre abierto a discutir sobre tecnología, retos de ingeniería o nuevas oportunidades de colaboración.',
     'footer.start_conversation': 'Iniciar Conversación',
     'footer.rights': 'TODOS LOS DERECHOS RESERVADOS',
+    'error.404.greeting': 'ERROR 404',
+    'error.404.title': 'PÁGINA NO<br /><span class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8">ENCONTRADA.</span>',
+    'error.404.subtitle': 'Parece que te has perdido en una ruta no definida.',
+    'error.404.description': 'No te preocupes, incluso los mejores algoritmos llegan a un callejón sin salida a veces. Puedes volver al inicio o explorar otras secciones.',
+    'error.404.home_btn': 'Volver al Inicio',
+    'error.404.blog_btn': 'Leer el Blog',
   },
 } as const;
 
