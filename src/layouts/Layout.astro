@@ -117,17 +117,27 @@ const {
 
 				for (let i = 0; i < blobCount; i++) {
 					const blob = document.createElement("div");
-					const size = Math.floor(Math.random() * 300) + 400; // Between 400px and 700px
-					const color = colors[Math.floor(Math.random() * colors.length)];
 					
-					// Distribute vertically evenly, but add some random jitter
-					const topPosition = (pageHeight / blobCount) * i + (Math.random() * 500 - 250);
+					// Deterministic size pattern between 450px and 650px
+					const sizes = [450, 600, 500, 650, 550];
+					const size = sizes[i % sizes.length];
+					
+					// Deterministic color pattern
+					const color = colors[i % colors.length];
+					
+					// Deterministic vertical jitter to break perfect symmetry
+					const jitters = [100, -150, 200, -100, 150];
+					const topPosition = (pageHeight / blobCount) * i + jitters[i % jitters.length];
 					
 					// Alternate between left and right sides
 					const isLeft = i % 2 === 0;
+					
+					// Predictable horizontal offset to vary how much of the blob is visible
+					const horizontalOffsets = [3, 2.5, 4, 3.5, 2.8];
+					const offsetDivisor = horizontalOffsets[i % horizontalOffsets.length];
 					const horizontalPosition = isLeft 
-						? `left: -${size / 3}px;` 
-						: `right: -${size / 3}px;`;
+						? `left: -${size / offsetDivisor}px;` 
+						: `right: -${size / offsetDivisor}px;`;
 
 					blob.className = `absolute rounded-full opacity-20 blur-[120px] ${color}`;
 					blob.style.width = `${size}px`;
