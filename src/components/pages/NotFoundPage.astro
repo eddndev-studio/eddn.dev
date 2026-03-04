@@ -1,0 +1,107 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { useTranslations } from "../../i18n/ui";
+
+interface Props {
+	lang: 'en' | 'es';
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Layout title="404 - Not Found">
+	<main
+		class="relative max-w-7xl mx-auto px-6 overflow-visible"
+	>
+		<div class="relative min-h-[100dvh] flex items-center py-24 sm:py-32">
+			<!-- Decorative Background/Blob -->
+			<div
+				class="absolute inset-0 lg:-top-20 lg:-right-20 lg:left-auto lg:bottom-auto lg:w-[1000px] lg:h-[1000px] -z-10 opacity-40 lg:opacity-80 pointer-events-none [mask-image:linear-gradient(to_top,white,transparent)] lg:[mask-image:radial-gradient(closest-side,white,transparent)]"
+			>
+				<div
+					class="w-full h-full lg:[border-radius:64%_36%_27%_73%_/_55%_58%_42%_45%]"
+				>
+					<canvas id="hero-canvas" class="w-full h-full"></canvas>
+				</div>
+			</div>
+
+			<div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center w-full">
+				<!-- Left Column: Content -->
+				<header class="space-y-8 relative z-10">
+					<div class="space-y-4">
+						<span class="inline-block font-mono text-xs font-bold tracking-widest uppercase text-brand-600 mb-2">
+							{t('error.404.greeting')}
+						</span>
+
+						<h1
+							class="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 leading-[0.9]"
+                            set:html={t('error.404.title')}
+						>
+						</h1>
+						
+						<p class="text-xl sm:text-2xl font-medium text-slate-800 leading-tight">
+							{t('error.404.subtitle')}
+						</p>
+					</div>
+
+					<p
+						class="text-lg sm:text-xl text-slate-600 font-light leading-relaxed max-w-2xl border-l-4 border-brand-200 pl-4"
+					>
+                        {t('error.404.description')}
+					</p>
+
+					<div class="flex flex-wrap gap-4 pt-4">
+						<a
+							href={lang === 'es' ? "/es/" : "/"}
+							class="px-6 py-3 bg-brand-500 text-white font-bold rounded-full hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20"
+						>
+							{t('error.404.home_btn')}
+						</a>
+						<a
+							href={lang === 'es' ? "/es/blog/" : "/blog/"}
+							class="px-6 py-3 bg-white text-slate-900 font-bold rounded-full border border-slate-200 hover:bg-slate-50 transition-colors"
+						>
+							{t('error.404.blog_btn')}
+						</a>
+					</div>
+				</header>
+
+				<!-- Right Column Spacer (keeps text on left in grid layout) -->
+				<div class="hidden lg:block"></div>
+			</div>
+		</div>
+	</main>
+
+	<script>
+		import { createRandomVisual, type VisualInstance } from "../../utils/visuals";
+
+		let activeVisual: VisualInstance | null = null;
+
+		function initHeroVisualization() {
+			const canvas = document.getElementById(
+				"hero-canvas",
+			) as HTMLCanvasElement;
+			
+			if (!canvas) return;
+
+			if (activeVisual) {
+				activeVisual.destroy();
+			}
+
+			// Using a slightly different color or standard brand color for the 404
+			activeVisual = createRandomVisual(canvas, "#f43f5e"); // Rose-500 for error
+			activeVisual.init();
+		}
+
+		function cleanup() {
+			if (activeVisual) {
+				activeVisual.destroy();
+				activeVisual = null;
+			}
+		}
+
+		document.addEventListener("astro:page-load", initHeroVisualization);
+		document.addEventListener("astro:before-swap", cleanup);
+	</script>
+</Layout>
