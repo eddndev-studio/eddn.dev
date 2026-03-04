@@ -54,11 +54,11 @@ export const ui = {
     'bio.title': 'Links & Contact',
     'bio.role': 'Software Engineer',
     'bio.link.portfolio': 'Website / Portfolio',
-    'bio.link.blog': 'Engineering Blog',
-    'bio.link.achronyme': 'Achronyme (ZK Engine)',
     'bio.link.github': 'GitHub',
     'bio.link.linkedin': 'LinkedIn',
     'bio.link.x': 'X (Twitter)',
+    'bio.link.instagram': 'Instagram',
+    'bio.link.tiktok': 'TikTok',
   },
   es: {
     'nav.blog': 'Blog',
@@ -108,11 +108,11 @@ export const ui = {
     'bio.title': 'Enlaces y Contacto',
     'bio.role': 'Ingeniero de Software',
     'bio.link.portfolio': 'Sitio Web / Portafolio',
-    'bio.link.blog': 'Blog de Ingeniería',
-    'bio.link.achronyme': 'Achronyme (Motor ZK)',
     'bio.link.github': 'GitHub',
     'bio.link.linkedin': 'LinkedIn',
     'bio.link.x': 'X (Twitter)',
+    'bio.link.instagram': 'Instagram',
+    'bio.link.tiktok': 'TikTok',
   },
 } as const;
 
