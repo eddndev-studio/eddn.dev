@@ -54,7 +54,7 @@ if (translationKey) {
 					class="text-sm font-mono font-bold text-brand-500 uppercase tracking-widest"
 				>
 					{
-						post.data.pubDate.toLocaleDateString("es-ES", {
+						post.data.pubDate.toLocaleDateString("en-US", {
 							year: "numeric",
 							month: "long",
 							day: "numeric",
@@ -64,7 +64,7 @@ if (translationKey) {
 				{
 					post.data.updatedDate && (
 						<span class="text-xs text-slate-400 font-mono">
-							(Actualizado)
+							(Updated)
 						</span>
 					)
 				}
