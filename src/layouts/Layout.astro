@@ -81,7 +81,8 @@ const {
 			crossorigin="anonymous"
 		/>
 	</head>
-	<body class="selection:bg-brand-500/30 overflow-x-hidden">
+	<body class="selection:bg-brand-500/30 overflow-x-hidden relative">
+		<div id="ambient-blobs" class="pointer-events-none absolute left-0 top-0 w-full h-full z-[-1] overflow-hidden"></div>
 		<Header />
 		<main class="pt-16">
 			<slot />
@@ -101,6 +102,43 @@ const {
 				lenis?.raf(time * 1000);
 			};
 
+			function generateBlobs() {
+				const container = document.getElementById("ambient-blobs");
+				if (!container) return;
+
+				// Clear existing blobs (important for view transitions)
+				container.innerHTML = '';
+
+				const pageHeight = document.documentElement.scrollHeight;
+				// Add roughly one blob every 1200px of content
+				const blobCount = Math.max(2, Math.floor(pageHeight / 1200));
+
+				const colors = ['bg-brand-300', 'bg-brand-500', 'bg-slate-300'];
+
+				for (let i = 0; i < blobCount; i++) {
+					const blob = document.createElement("div");
+					const size = Math.floor(Math.random() * 300) + 400; // Between 400px and 700px
+					const color = colors[Math.floor(Math.random() * colors.length)];
+					
+					// Distribute vertically evenly, but add some random jitter
+					const topPosition = (pageHeight / blobCount) * i + (Math.random() * 500 - 250);
+					
+					// Alternate between left and right sides
+					const isLeft = i % 2 === 0;
+					const horizontalPosition = isLeft 
+						? `left: -${size / 3}px;` 
+						: `right: -${size / 3}px;`;
+
+					blob.className = `absolute rounded-full opacity-20 blur-[120px] ${color}`;
+					blob.style.width = `${size}px`;
+					blob.style.height = `${size}px`;
+					blob.style.top = `${Math.max(0, topPosition)}px`;
+					blob.style.cssText += horizontalPosition;
+
+					container.appendChild(blob);
+				}
+			}
+
 			function init() {
 				// Initialize Lenis
 				lenis = new Lenis({
@@ -116,6 +154,10 @@ const {
 
 				// Global Animations
 				animateContent();
+
+				// Ambient Background Blobs
+				// Use setTimeout to ensure the DOM is fully painted and scrollHeight is accurate
+				setTimeout(generateBlobs, 100);
 			}
 
 			function animateContent() {
