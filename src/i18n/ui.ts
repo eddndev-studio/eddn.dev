@@ -59,6 +59,7 @@ export const ui = {
     'bio.link.x': 'X (Twitter)',
     'bio.link.instagram': 'Instagram',
     'bio.link.tiktok': 'TikTok',
+    'bio.link.threads': 'Threads',
   },
   es: {
     'nav.blog': 'Blog',
@@ -113,6 +114,7 @@ export const ui = {
     'bio.link.x': 'X (Twitter)',
     'bio.link.instagram': 'Instagram',
     'bio.link.tiktok': 'TikTok',
+    'bio.link.threads': 'Threads',
   },
 } as const;
 
