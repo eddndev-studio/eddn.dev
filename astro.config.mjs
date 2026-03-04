@@ -10,7 +10,6 @@ import rehypeKatex from 'rehype-katex';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://eddn.dev',
-  trailingSlash: 'always',
   i18n: {
     defaultLocale: "en",
     locales: ["en", "es"],
