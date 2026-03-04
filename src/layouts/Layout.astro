@@ -33,7 +33,7 @@ const {
 		<meta name="description" content={description} />
 
 		<!-- Canonical URL -->
-		<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+		<link rel="canonical" href={new URL(Astro.url.pathname.replace(/\/?$/, '/'), Astro.site)} />
 
 		<!-- Hreflang Tags -->
 		{
@@ -41,14 +41,14 @@ const {
 				<link
 					rel="alternate"
 					hreflang={lang}
-					href={new URL(href, Astro.site)}
+					href={new URL(href.replace(/\/?$/, '/'), Astro.site)}
 				/>
 			))
 		}
 
 		<!-- Pagination SEO -->
-		{prevUrl && <link rel="prev" href={new URL(prevUrl, Astro.site)} />}
-		{nextUrl && <link rel="next" href={new URL(nextUrl, Astro.site)} />}
+		{prevUrl && <link rel="prev" href={new URL(prevUrl.replace(/\/?$/, '/'), Astro.site)} />}
+		{nextUrl && <link rel="next" href={new URL(nextUrl.replace(/\/?$/, '/'), Astro.site)} />}
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
