@@ -1,0 +1,110 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Pagination from "../../components/Pagination.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const posts = (await getCollection("articles"))
+		.filter((post) => post.id.startsWith("en/"))
+		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+	return paginate(posts, { pageSize: 12 });
+}) satisfies GetStaticPaths;
+
+interface Props {
+	page: Page<CollectionEntry<"articles">>;
+}
+
+const { page } = Astro.props;
+
+function getSlug(id: string) {
+	return id.replace(/^en\//, "").replace(/\.(md|mdx)$/, "");
+}
+---
+
+<Layout
+	title="Articles — eddn.dev"
+	prevUrl={page.url.prev}
+	nextUrl={page.url.next}
+	hreflangs={[{ lang: "es", href: "/es/articles/" }]}
+>
+	<main class="max-w-7xl mx-auto px-6 py-24">
+		<header class="mb-16">
+			<h1
+				class="text-6xl sm:text-8xl font-black tracking-tighter text-slate-900 leading-[0.85] mb-8"
+			>
+				TECH <br />
+				<span
+					class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8"
+					>PAPERS.</span
+				>
+			</h1>
+			<p class="text-xl text-slate-600 font-light max-w-2xl">
+				In-depth technical articles, architectural decisions, and system deep-dives.
+			</p>
+		</header>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			{
+				page.data.map((post) => (
+					<article class="group relative flex flex-col justify-between p-8 bg-white border border-slate-200 border-r-4 border-r-slate-200 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none h-full select-none">
+						<div>
+							<time
+								transition:name={`date-${post.id}`}
+								class="relative z-10 mb-4 block text-xs font-mono text-slate-400 uppercase tracking-widest pointer-events-none"
+							>
+								{post.data.pubDate.toLocaleDateString("en-US", {
+									year: "numeric",
+									month: "long",
+									day: "numeric",
+								})}
+							</time>
+
+							<h2
+								transition:name={`title-${post.id}`}
+								class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight"
+							>
+								<a
+									href={`/articles/${getSlug(post.id)}`}
+									class="focus:outline-none"
+								>
+									<span class="absolute inset-0 z-20" />
+									{post.data.title}
+								</a>
+							</h2>
+
+							<p class="relative z-10 text-slate-600 leading-relaxed mb-6 line-clamp-3 pointer-events-none">
+								{post.data.abstract || post.data.description}
+							</p>
+                            
+                            <div class="flex gap-2 mb-6">
+                                <span class="relative z-10 text-xs font-mono font-bold px-2 py-1 bg-brand-50 text-brand-600 rounded">
+                                    {post.data.technicalDepth}
+                                </span>
+                            </div>
+						</div>
+
+						<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:translate-x-2 transition-transform duration-300 pointer-events-none">
+							Read paper
+							<svg
+								class="ml-2 h-4 w-4"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M17 8l4 4m0 0l-4 4m4-4H3"
+								/>
+							</svg>
+						</div>
+					</article>
+				))
+			}
+		</div>
+
+		<Pagination page={page} />
+	</main>
+</Layout>

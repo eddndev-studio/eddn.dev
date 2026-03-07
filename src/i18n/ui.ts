@@ -8,6 +8,7 @@ export const defaultLang = 'en';
 export const ui = {
   en: {
     'nav.blog': 'Blog',
+    'nav.articles': 'Articles',
     'nav.trajectory': 'Trajectory',
     'nav.leetcode': 'LeetCode',
     'home.greeting': "Hi, I'm eddndev",
@@ -63,6 +64,7 @@ export const ui = {
   },
   es: {
     'nav.blog': 'Blog',
+    'nav.articles': 'Artículos',
     'nav.trajectory': 'Trayectoria',
     'nav.leetcode': 'LeetCode',
     'home.greeting': 'Hola, soy eddndev',
