@@ -30,12 +30,11 @@ jobs:
 
       - name: Deploy Binary
         run: |
-          sudo mkdir -p /opt/view-counter
-          sudo cp services/view-counter/target/release/view-counter /opt/view-counter/
-          sudo chmod +x /opt/view-counter/view-counter
+          cp services/view-counter/target/release/view-counter /opt/view-counter/
+          chmod +x /opt/view-counter/view-counter
 
       - name: Start Service
         run: sudo systemctl start view-counter
         
       - name: Check Service Status
-        run: sudo systemctl status view-counter --no-pager
+        run: sudo systemctl status view-counter
