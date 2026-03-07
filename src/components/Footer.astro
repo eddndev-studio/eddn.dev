@@ -64,7 +64,7 @@ const t = useTranslations(lang);
                 <a href="https://github.com/eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">GITHUB</a>
                 <a href="https://www.linkedin.com/in/eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">LINKEDIN</a>
                 <a href="https://x.com/eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">X</a>
-                <a href="https://instagram.com/_eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">INSTAGRAM</a>
+                <a href="https://instagram.com/eddn.dev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">INSTAGRAM</a>
                 <a href="https://eddndev.com" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">EDDNDEV.COM</a>
                 <a href="https://achrony.me" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">ACHRONY.ME</a>
             </div>
@@ -96,13 +96,13 @@ const t = useTranslations(lang);
             emailCta.addEventListener('click', (e) => {
                 e.preventDefault();
                 const user = 'contacto';
-                const domain = 'eddn.dev';
+                const domain = 'eddndev.com';
                 window.location.href = `mailto:${user}@${domain}`;
             });
             // Optional: Set href on hover so status bar looks legit (but might trigger CF if it scans DOM aggressively, though usually it scans static HTML)
             emailCta.addEventListener('mouseover', () => {
                  const user = 'contacto';
-                 const domain = 'eddn.dev';
+                 const domain = 'eddndev.com';
                  emailCta.setAttribute('href', `mailto:${user}@${domain}`);
             });
         }
