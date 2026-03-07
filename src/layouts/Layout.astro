@@ -56,19 +56,21 @@ const {
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:site_name" content="eddn.dev" />
-		<meta property="og:image" content={`https://og.eddn.dev/generate?title=${encodeURIComponent(title)}`} />
+		
+		<!-- Open Graph Image Generation -->
+		<meta property="og:image" content={`https://og.eddn.dev/generate?title=${encodeURIComponent(title)}${Astro.url.pathname.includes('/blog/') ? '&og_type=Article' : Astro.url.pathname.includes('/leetcode/') ? '&og_type=Solution' : Astro.url.pathname.includes('/articles/') ? '&og_type=Paper' : '&og_type=Page'}`} />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
 		<meta property="og:image:type" content="image/png" />
-		<meta property="og:image:alt" content={`Portada del artículo: ${title}`} />
+		<meta property="og:image:alt" content={`Portada de: ${title}`} />
 
 		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:url" content={Astro.url} />
 		<meta property="twitter:title" content={title} />
 		<meta property="twitter:description" content={description} />
-		<meta property="twitter:image" content={`https://og.eddn.dev/generate?title=${encodeURIComponent(title)}`} />
-		<meta property="twitter:image:alt" content={`Portada del artículo: ${title}`} />
+		<meta property="twitter:image" content={`https://og.eddn.dev/generate?title=${encodeURIComponent(title)}${Astro.url.pathname.includes('/blog/') ? '&og_type=Article' : Astro.url.pathname.includes('/leetcode/') ? '&og_type=Solution' : Astro.url.pathname.includes('/articles/') ? '&og_type=Paper' : '&og_type=Page'}`} />
+		<meta property="twitter:image:alt" content={`Portada de: ${title}`} />
 
 		<ClientRouter />
 

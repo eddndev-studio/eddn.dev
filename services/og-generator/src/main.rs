@@ -10,7 +10,6 @@ use imageproc::drawing::draw_text_mut;
 use ab_glyph::{FontRef, PxScale};
 use serde::Deserialize;
 use std::{fs, io::Cursor, sync::Arc};
-use resvg::{tiny_skia, usvg};
 
 #[derive(Deserialize)]
 struct OgParams {
@@ -22,24 +21,29 @@ struct OgParams {
 }
 
 fn default_type() -> String {
-    "Article".to_string()
+    "Page".to_string()
 }
 
 // Shared application state to hold the font and template in memory
 struct AppState {
     font_bold_data: Vec<u8>,
-    template_svg: String,
+    template_img: RgbaImage,
 }
 
 #[tokio::main]
 async fn main() {
     // Load assets on startup
     let font_bold_data = fs::read("assets/JetBrainsMono-Bold.ttf").expect("Failed to read font file");
-    let template_svg = fs::read_to_string("assets/template.svg").expect("Failed to read SVG template");
+    
+    // Load the static PNG template once
+    let img_data = fs::read("assets/template.png").expect("Failed to read PNG template");
+    let template_img = image::load_from_memory(&img_data)
+        .expect("Failed to decode PNG")
+        .into_rgba8();
 
     let state = Arc::new(AppState {
         font_bold_data,
-        template_svg,
+        template_img,
     });
 
     let app = Router::new()
@@ -57,58 +61,56 @@ async fn generate_og(
 ) -> impl IntoResponse {
     let font = FontRef::try_from_slice(&state.font_bold_data).unwrap();
 
-    // 1. Render base SVG to pixel buffer
-    let mut opt = usvg::Options::default();
-    opt.fontdb_mut().load_system_fonts();
-    
-    let rtree = usvg::Tree::from_str(&state.template_svg, &opt).unwrap();
-    let pixmap_size = rtree.size().to_int_size();
-    let mut pixmap = tiny_skia::Pixmap::new(pixmap_size.width(), pixmap_size.height()).unwrap();
-    resvg::render(&rtree, tiny_skia::Transform::default(), &mut pixmap.as_mut());
+    // 1. Clone the base template for this request
+    let mut image = state.template_img.clone();
 
-    // 2. Convert to Image buffer
-    let mut image = RgbaImage::from_raw(pixmap.width(), pixmap.height(), pixmap.data().to_vec()).unwrap();
-
-    // 3. Draw dynamic text
+    // 2. Setup colors
     let title_color = Rgba([15, 23, 42, 255]); // slate-900
-    let accent = Rgba([139, 92, 246, 255]); // Brand color (Purple)
+    let brand_dark = Rgba([91, 33, 182, 255]); // brand-800 for the type label
     let gray = Rgba([100, 116, 139, 255]); // slate-500
+    let light_gray = Rgba([148, 163, 184, 255]); // slate-400 for bottom text
 
-    // Draw Title (wrapping logic simplified for demonstration)
-    let title_scale = PxScale::from(80.0);
-    let title_x = 80;
-    let title_y = 250;
+    let start_x = 100;
+
+    // 3. Draw Metadata (Type / Tag) above the title
+    let meta_scale = PxScale::from(28.0);
+    let type_text = format!("[ {} ]", params.og_type.to_uppercase());
+    draw_text_mut(&mut image, brand_dark, start_x, 220, meta_scale, &font, &type_text);
     
-    // Draw Title (multi-line rough approximation)
-    let max_chars_per_line = 25;
+    if !params.tag.is_empty() {
+        let tag_text = format!("#{}", params.tag.to_lowercase());
+        // Calculate rough width of type text to place tag next to it
+        let type_width = type_text.len() as i32 * 17; 
+        draw_text_mut(&mut image, gray, start_x + type_width + 20, 220, meta_scale, &font, &tag_text);
+    }
+
+    // 4. Draw Title (Multi-line)
+    let title_scale = PxScale::from(72.0);
+    let title_y = 280;
+    
+    let max_chars_per_line = 28;
     let words: Vec<&str> = params.title.split_whitespace().collect();
     let mut current_line = String::new();
     let mut y_offset = title_y;
     
     for word in words {
         if current_line.len() + word.len() > max_chars_per_line {
-            draw_text_mut(&mut image, title_color, title_x, y_offset, title_scale, &font, &current_line);
+            draw_text_mut(&mut image, title_color, start_x, y_offset, title_scale, &font, &current_line);
             current_line = String::new();
-            y_offset += 90;
+            y_offset += 85;
         }
         current_line.push_str(word);
         current_line.push(' ');
     }
     if !current_line.is_empty() {
-        draw_text_mut(&mut image, title_color, title_x, y_offset, title_scale, &font, &current_line);
+        draw_text_mut(&mut image, title_color, start_x, y_offset, title_scale, &font, &current_line);
     }
 
-    // Draw Metadata (Type / Tag)
-    let meta_scale = PxScale::from(32.0);
-    draw_text_mut(&mut image, gray, 80, 200, meta_scale, &font, &params.og_type.to_uppercase());
-    
-    if !params.tag.is_empty() {
-        let tag_text = format!("#{}", params.tag.to_lowercase());
-        // Simple fixed width calculation for the tag placement
-        draw_text_mut(&mut image, accent, 80 + (params.og_type.len() as i32 * 20) + 20, 200, meta_scale, &font, &tag_text);
-    }
+    // 5. Draw Footer (Branding)
+    let footer_scale = PxScale::from(24.0);
+    draw_text_mut(&mut image, light_gray, start_x, 540, footer_scale, &font, "eddn.dev // ARCHITECTURE. PERFORMANCE. SYSTEMS.");
 
-    // 4. Encode to WebP/PNG
+    // 6. Encode to PNG
     let mut buffer = Cursor::new(Vec::new());
     image.write_to(&mut buffer, ImageFormat::Png).unwrap();
 
