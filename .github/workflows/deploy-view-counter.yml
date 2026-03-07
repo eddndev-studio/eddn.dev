@@ -37,4 +37,4 @@ jobs:
         run: sudo systemctl start view-counter
         
       - name: Check Service Status
-        run: sudo systemctl status view-counter
+        run: sudo systemctl status view-counter --no-pager
