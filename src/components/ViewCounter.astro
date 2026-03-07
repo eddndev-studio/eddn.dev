@@ -1,0 +1,41 @@
+---
+export interface Props {
+	slug: string;
+}
+
+const { slug } = Astro.props;
+---
+
+<span class="view-counter inline-flex items-center gap-1.5 text-xs text-slate-400 font-mono" data-slug={slug} title="Total Views">
+	<svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+	<span class="views-text">--</span>
+</span>
+
+<script>
+	async function updateViews() {
+		const counters = document.querySelectorAll('.view-counter:not([data-fetched])');
+		for (const counter of counters) {
+			const slug = counter.getAttribute('data-slug');
+			if (!slug) continue;
+			
+			counter.setAttribute('data-fetched', 'true');
+			
+			try {
+				const apiUrl = import.meta.env.PUBLIC_VIEW_API_URL || 'http://localhost:3001/api/views';
+				const response = await fetch(`${apiUrl}/${slug}`, { method: 'POST' });
+				
+				if (response.ok) {
+					const data = await response.json();
+					const textEl = counter.querySelector('.views-text');
+					if (textEl) {
+						textEl.textContent = data.views.toLocaleString();
+					}
+				}
+			} catch (error) {
+				console.error('Failed to update views:', error);
+			}
+		}
+	}
+
+	document.addEventListener('astro:page-load', updateViews);
+</script>

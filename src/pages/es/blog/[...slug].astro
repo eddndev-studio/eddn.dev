@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Layout from "../../../layouts/Layout.astro";
+import ViewCounter from "../../../components/ViewCounter.astro";
 
 export async function getStaticPaths() {
 	const posts = await getCollection("blog");
@@ -61,6 +62,8 @@ if (translationKey) {
 						})
 					}
 				</time>
+				<div class="h-1 w-1 rounded-full bg-slate-300"></div>
+				<ViewCounter slug={`blog-${post.id.replace('/', '-')}`} />
 				{
 					post.data.updatedDate && (
 						<span class="text-xs text-slate-400 font-mono">

@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
+import ViewCounter from '../../../components/ViewCounter.astro';
 
 export async function getStaticPaths() {
 	const solutions = await getCollection('leetcode');
@@ -39,6 +40,8 @@ const difficultyColor = {
 					LEETCODE PROBLEM
 					<svg class="w-3 h-3 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
 				</a>
+				<div class="h-1 w-1 rounded-full bg-slate-300"></div>
+				<ViewCounter slug={`leetcode-${solution.id.replace('/', '-')}`} />
 			</div>
 			
 			<h1 
