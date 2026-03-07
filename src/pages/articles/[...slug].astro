@@ -1,0 +1,242 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+	const posts = await getCollection("articles");
+	const englishPosts = posts.filter((p) => p.id.startsWith("en/"));
+	return englishPosts.map((post) => {
+		const slug = post.id.replace(/^en\//, "").replace(/\.(md|mdx)$/, "");
+		return {
+			params: { slug },
+			props: post,
+		};
+	});
+}
+
+const post = Astro.props;
+const { Content } = await render(post);
+
+// Find translation
+const allPosts = await getCollection("articles");
+const translationKey = post.data.translationKey;
+let hreflangs = [
+	{
+		lang: "en",
+		href: `/articles/${post.id.replace(/^en\//, "").replace(/\.(md|mdx)$/, "")}/`,
+	},
+];
+
+if (translationKey) {
+	const spanishPost = allPosts.find(
+		(p) =>
+			p.id.startsWith("es/") && p.data.translationKey === translationKey,
+	);
+	if (spanishPost) {
+		const esSlug = spanishPost.id
+			.replace(/^es\//, "")
+			.replace(/\.(md|mdx)$/, "");
+		hreflangs.push({ lang: "es", href: `/es/articles/${esSlug}/` });
+	}
+}
+---
+
+<Layout
+	title={`${post.data.title} — eddn.dev`}
+	description={post.data.description}
+	hreflangs={hreflangs}
+>
+	<div class="max-w-7xl mx-auto px-6 py-24 lg:py-32">
+		<header class="mb-16 lg:mb-24 max-w-4xl">
+			<div class="flex items-center gap-4 mb-6">
+				<time
+					transition:name={`date-${post.id}`}
+					class="text-sm font-mono font-bold text-brand-500 uppercase tracking-widest"
+				>
+					{
+						post.data.pubDate.toLocaleDateString("en-US", {
+							year: "numeric",
+							month: "long",
+							day: "numeric",
+						})
+					}
+				</time>
+				{
+					post.data.updatedDate && (
+						<span class="text-xs text-slate-400 font-mono">
+							(Updated)
+						</span>
+					)
+				}
+                <span class="text-xs font-mono font-bold px-2 py-1 bg-brand-50 text-brand-600 rounded ml-4">
+                    {post.data.technicalDepth}
+                </span>
+			</div>
+
+			<h1
+				transition:name={`title-${post.id}`}
+				class="text-5xl sm:text-7xl font-black tracking-tighter text-slate-900 leading-[0.9] mb-8"
+			>
+				{post.data.title}
+			</h1>
+
+			{
+				post.data.tags && (
+					<div class="flex flex-wrap gap-x-4 gap-y-2 mb-8">
+						{post.data.tags.map((tag) => (
+							<span class="text-sm font-mono font-bold text-brand-600 hover:text-brand-700 transition-colors cursor-default">
+								#{tag}
+							</span>
+						))}
+					</div>
+				)
+			}
+            
+            {
+                post.data.abstract && (
+                    <div class="p-6 bg-slate-50 border-l-4 border-brand-500 mb-8">
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-widest mb-2">Abstract</h3>
+                        <p class="text-slate-700 leading-relaxed">{post.data.abstract}</p>
+                    </div>
+                )
+            }
+		</header>
+
+		<div
+			id="main-content-grid"
+			class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24"
+		>
+			<!-- Sidebar / Metadata -->
+			<aside
+				id="sidebar-container"
+				class="hidden lg:block lg:col-span-3 relative"
+			>
+				<div id="sidebar-inner" class="space-y-8">
+					<div
+						class="text-sm text-slate-500 leading-relaxed border-l-2 border-brand-200 pl-4"
+					>
+						<p>{post.data.description}</p>
+					</div>
+                    
+                    {
+                        post.data.references && post.data.references.length > 0 && (
+                            <div class="pt-6 border-t border-slate-200">
+                                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-widest mb-4">References</h4>
+                                <ul class="space-y-3">
+                                    {post.data.references.map((ref) => (
+                                        <li>
+                                            <a href={ref} target="_blank" rel="noopener noreferrer" class="text-xs text-brand-600 hover:underline break-all">
+                                                {new URL(ref).hostname}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )
+                    }
+
+					<div class="h-px bg-slate-200 w-12"></div>
+					<a
+						href="/articles/"
+						class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
+					>
+						<svg
+							class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg
+						>
+						Back to Articles
+					</a>
+				</div>
+			</aside>
+
+			<!-- Main Content -->
+			<article class="lg:col-span-8 lg:col-start-5">
+				<div
+					class="prose prose-lg prose-slate max-w-none
+					prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-slate-900
+					prose-p:leading-relaxed prose-p:text-slate-700
+					prose-a:text-brand-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
+					prose-strong:font-bold prose-strong:text-slate-900
+					prose-code:text-brand-600 prose-code:bg-brand-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
+					prose-pre:shadow-2xl prose-pre:rounded-xl"
+				>
+					<Content />
+				</div>
+
+				<div
+					class="mt-24 pt-12 border-t border-slate-200 flex justify-between items-center lg:hidden"
+				>
+					<a
+						href="/articles/"
+						class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
+					>
+						<svg
+							class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg
+						>
+						Back to Articles
+					</a>
+				</div>
+			</article>
+		</div>
+	</div>
+</Layout>
+
+<script>
+	import "../../utils/codeUtils";
+	import { initStickySidebar } from "../../utils/stickySidebar";
+
+	let cleanup: (() => void) | undefined;
+
+	function setupSticky() {
+		cleanup = initStickySidebar(
+			"#sidebar-inner",
+			"#main-content-grid",
+			128,
+		);
+	}
+
+	function teardownSticky() {
+		if (cleanup) cleanup();
+	}
+
+	document.addEventListener("astro:page-load", setupSticky);
+	document.addEventListener("astro:before-swap", teardownSticky);
+</script>
+
+<style is:global>
+	@reference "tailwindcss";
+
+	/* Custom styles for the markdown content */
+	/* Fixing contrast: forcing Nord background color for code blocks */
+	.prose pre {
+		@apply rounded-xl border border-slate-700/50 bg-[#2e3440]! p-6 text-white;
+	}
+
+	/* Ensure code text inside has good contrast if not handled by shiki theme fully */
+	.prose pre code {
+		background-color: transparent !important;
+		color: inherit !important;
+		font-family:
+			"JetBrains Mono", monospace; /* Optional: if you have a mono font */
+		font-size: 0.875rem;
+	}
+
+	.prose code {
+		@apply font-mono text-sm;
+	}
+</style>

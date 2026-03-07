@@ -30,4 +30,20 @@ const leetcode = defineCollection({
   }),
 });
 
-export const collections = { blog, leetcode };
+const articles = defineCollection({
+  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: "./src/content/articles" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+    translationKey: z.string().optional(),
+    abstract: z.string().optional(),
+    technicalDepth: z.enum(['Basic', 'Intermediate', 'Advanced']).default('Intermediate'),
+    references: z.array(z.string().url()).optional()
+  }),
+});
+
+export const collections = { blog, leetcode, articles };
