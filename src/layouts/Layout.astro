@@ -56,12 +56,14 @@ const {
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:site_name" content="eddn.dev" />
+		<meta property="og:image" content={`https://og.eddn.dev/generate?title=${encodeURIComponent(title)}`} />
 
 		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:url" content={Astro.url} />
 		<meta property="twitter:title" content={title} />
 		<meta property="twitter:description" content={description} />
+		<meta property="twitter:image" content={`https://og.eddn.dev/generate?title=${encodeURIComponent(title)}`} />
 
 		<ClientRouter />
 
