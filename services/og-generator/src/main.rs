@@ -46,8 +46,8 @@ async fn main() {
         .route("/generate", get(generate_og))
         .with_state(state);
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    println!("OG Generator listening on http://0.0.0.0:3000/generate");
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3005").await.unwrap();
+    println!("OG Generator listening on http://127.0.0.1:3005/generate");
     axum::serve(listener, app).await.unwrap();
 }
 
