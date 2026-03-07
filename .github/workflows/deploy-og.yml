@@ -30,11 +30,10 @@ jobs:
 
       - name: Deploy Binary and Assets
         run: |
-          sudo mkdir -p /opt/og-generator/assets
-          sudo cp services/og-generator/target/release/og-generator /opt/og-generator/
-          sudo cp -r services/og-generator/assets/* /opt/og-generator/assets/
-          sudo chown -R root:root /opt/og-generator
-          sudo chmod +x /opt/og-generator/og-generator
+          mkdir -p /opt/og-generator/assets
+          cp services/og-generator/target/release/og-generator /opt/og-generator/
+          cp -r services/og-generator/assets/* /opt/og-generator/assets/
+          chmod +x /opt/og-generator/og-generator
 
       - name: Start Service
         run: sudo systemctl start og-generator
