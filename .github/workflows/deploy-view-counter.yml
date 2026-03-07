@@ -1,0 +1,41 @@
+name: Deploy View Counter
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'services/view-counter/**'
+      - '.github/workflows/deploy-view-counter.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build & Deploy View Counter Service
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Release Binary
+        run: |
+          cd services/view-counter
+          cargo build --release
+
+      - name: Stop Service
+        run: sudo systemctl stop view-counter || true
+
+      - name: Deploy Binary
+        run: |
+          sudo mkdir -p /opt/view-counter
+          sudo cp services/view-counter/target/release/view-counter /opt/view-counter/
+          sudo chmod +x /opt/view-counter/view-counter
+
+      - name: Start Service
+        run: sudo systemctl start view-counter
+        
+      - name: Check Service Status
+        run: sudo systemctl status view-counter --no-pager
