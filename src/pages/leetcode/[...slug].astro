@@ -19,9 +19,9 @@ const solution = Astro.props;
 const { Content } = await render(solution);
 
 const difficultyColor = {
-	Easy: 'text-emerald-500 bg-emerald-50',
-	Medium: 'text-amber-500 bg-amber-50',
-	Hard: 'text-rose-500 bg-rose-50',
+	Easy: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-950',
+	Medium: 'text-amber-500 bg-amber-50 dark:bg-amber-950',
+	Hard: 'text-rose-500 bg-rose-50 dark:bg-rose-950',
 };
 ---
 
@@ -35,7 +35,7 @@ const difficultyColor = {
 				>
 					{solution.data.difficulty.toUpperCase()}
 				</span>
-				<div class="h-px bg-slate-200 w-8"></div>
+				<div class="h-px bg-slate-200 dark:bg-slate-700 w-8"></div>
 				<a href={solution.data.problemUrl} target="_blank" rel="noopener noreferrer" class="text-xs font-mono font-bold text-slate-400 hover:text-brand-600 transition-colors flex items-center gap-1 group">
 					LEETCODE PROBLEM
 					<svg class="w-3 h-3 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
@@ -46,7 +46,7 @@ const difficultyColor = {
 			
 			<h1 
 				transition:name={`title-${solution.id}`}
-				class="text-4xl sm:text-6xl font-black tracking-tighter text-slate-900 leading-[0.9] mb-8"
+				class="text-4xl sm:text-6xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.9] mb-8"
 			>
 				{solution.data.title}
 			</h1>
@@ -56,19 +56,19 @@ const difficultyColor = {
 			<!-- Sidebar / Complexity Stats -->
 			<aside id="sidebar-container" class="hidden lg:block lg:col-span-3 relative">
 				<div id="sidebar-inner" class="space-y-8">
-					<div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-6">
+					<div class="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-6">
 						<div>
 							<span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 block mb-2">Time Complexity</span>
-							<span class="font-bold text-2xl text-slate-900">{solution.data.complexity?.time || 'N/A'}</span>
+							<span class="font-bold text-2xl text-slate-900 dark:text-white">{solution.data.complexity?.time || 'N/A'}</span>
 						</div>
-						<div class="w-full h-px bg-slate-200"></div>
+						<div class="w-full h-px bg-slate-200 dark:bg-slate-700"></div>
 						<div>
 							<span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 block mb-2">Space Complexity</span>
-							<span class="font-bold text-2xl text-slate-900">{solution.data.complexity?.space || 'N/A'}</span>
+							<span class="font-bold text-2xl text-slate-900 dark:text-white">{solution.data.complexity?.space || 'N/A'}</span>
 						</div>
 					</div>
 
-					<a href="/leetcode/" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
+					<a href="/leetcode/" class="inline-flex items-center text-sm font-bold text-slate-900 dark:text-slate-100 hover:text-brand-600 transition-colors group">
 						<svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
 						Volver a Soluciones
 					</a>
@@ -77,30 +77,33 @@ const difficultyColor = {
 
 			<!-- Mobile Stats (Visible only on small screens) -->
 			<div class="lg:hidden grid grid-cols-2 gap-4">
-				<div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+				<div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800">
 					<span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 block mb-1">Time</span>
-					<span class="font-bold text-lg text-slate-900">{solution.data.complexity?.time || 'N/A'}</span>
+					<span class="font-bold text-lg text-slate-900 dark:text-white">{solution.data.complexity?.time || 'N/A'}</span>
 				</div>
-				<div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+				<div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800">
 					<span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 block mb-1">Space</span>
-					<span class="font-bold text-lg text-slate-900">{solution.data.complexity?.space || 'N/A'}</span>
+					<span class="font-bold text-lg text-slate-900 dark:text-white">{solution.data.complexity?.space || 'N/A'}</span>
 				</div>
 			</div>
 
 			<!-- Main Content -->
 			<article class="lg:col-span-8 lg:col-start-5">
-				<div class="prose prose-lg prose-slate max-w-none 
-					prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-slate-900
-					prose-p:leading-relaxed prose-p:text-slate-700
-					prose-a:text-brand-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
-					prose-strong:font-bold prose-strong:text-slate-900
-					prose-code:text-brand-600 prose-code:bg-brand-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
-					prose-pre:shadow-2xl prose-pre:rounded-xl">
+				<div class="prose prose-lg prose-slate max-w-none
+					prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-slate-900 dark:prose-headings:text-slate-100
+					prose-p:leading-relaxed prose-p:text-slate-700 dark:prose-p:text-slate-300
+					prose-a:text-brand-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline dark:prose-a:text-brand-400
+					prose-strong:font-bold prose-strong:text-slate-900 dark:prose-strong:text-slate-100
+					prose-code:text-brand-600 prose-code:bg-brand-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none dark:prose-code:text-brand-300 dark:prose-code:bg-brand-950
+					prose-pre:shadow-2xl prose-pre:rounded-xl
+					prose-li:text-slate-700 dark:prose-li:text-slate-300
+					prose-blockquote:text-slate-600 dark:prose-blockquote:text-slate-400 prose-blockquote:border-slate-300 dark:prose-blockquote:border-slate-600
+					prose-hr:border-slate-200 dark:prose-hr:border-slate-700">
 					<Content />
 				</div>
 
-				<div class="mt-24 pt-12 border-t border-slate-200 flex justify-between items-center lg:hidden">
-					<a href="/leetcode/" class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group">
+				<div class="mt-24 pt-12 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center lg:hidden">
+					<a href="/leetcode/" class="inline-flex items-center text-sm font-bold text-slate-900 dark:text-slate-100 hover:text-brand-600 transition-colors group">
 						<svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
 						Volver a Soluciones
 					</a>

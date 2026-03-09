@@ -35,18 +35,18 @@ const t = useTranslations(lang);
 						</span>
 
 						<h1
-							class="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 leading-[0.9]"
+							class="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.9]"
                             set:html={t('error.404.title')}
 						>
 						</h1>
 						
-						<p class="text-xl sm:text-2xl font-medium text-slate-800 leading-tight">
+						<p class="text-xl sm:text-2xl font-medium text-slate-800 dark:text-slate-200 leading-tight">
 							{t('error.404.subtitle')}
 						</p>
 					</div>
 
 					<p
-						class="text-lg sm:text-xl text-slate-600 font-light leading-relaxed max-w-2xl border-l-4 border-brand-200 pl-4"
+						class="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-light leading-relaxed max-w-2xl border-l-4 border-brand-200 dark:border-brand-800 pl-4"
 					>
                         {t('error.404.description')}
 					</p>
@@ -60,7 +60,7 @@ const t = useTranslations(lang);
 						</a>
 						<a
 							href={lang === 'es' ? "/es/blog/" : "/blog/"}
-							class="px-6 py-3 bg-white text-slate-900 font-bold rounded-full border border-slate-200 hover:bg-slate-50 transition-colors"
+							class="px-6 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-bold rounded-full border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
 						>
 							{t('error.404.blog_btn')}
 						</a>
