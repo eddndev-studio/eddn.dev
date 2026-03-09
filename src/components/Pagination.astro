@@ -30,7 +30,7 @@ const progress = (page.currentPage / page.lastPage) * 100;
     page.lastPage > 1 && (
         <nav class="mt-20 space-y-6">
             {/* Label + counter */}
-            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
                 <span class="font-mono text-xs uppercase tracking-widest text-slate-400">
                     Page
                 </span>
@@ -40,7 +40,7 @@ const progress = (page.currentPage / page.lastPage) * 100;
             </div>
 
             {/* Progress bar */}
-            <div class="h-0.5 bg-slate-200 overflow-hidden">
+            <div class="h-0.5 bg-slate-200 dark:bg-slate-700 overflow-hidden">
                 <div
                     class="h-full bg-brand-500 transition-all duration-500 ease-out"
                     style={`width: ${progress}%`}
@@ -54,14 +54,14 @@ const progress = (page.currentPage / page.lastPage) * 100;
                     {page.url.prev ? (
                         <a
                             href={ensureSlash(page.url.prev)}
-                            class="group inline-flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-slate-900 hover:text-brand-600 transition-colors"
+                            class="group inline-flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100 hover:text-brand-600 transition-colors"
                         >
-                            <span class="inline-block w-6 h-px bg-slate-400 group-hover:bg-brand-500 group-hover:w-10 transition-all duration-300" />
+                            <span class="inline-block w-6 h-px bg-slate-400 dark:bg-slate-500 group-hover:bg-brand-500 group-hover:w-10 transition-all duration-300" />
                             Prev
                         </a>
                     ) : (
-                        <span class="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-300 cursor-default">
-                            <span class="inline-block w-6 h-px bg-slate-200" />
+                        <span class="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-300 dark:text-slate-600 cursor-default">
+                            <span class="inline-block w-6 h-px bg-slate-200 dark:bg-slate-700" />
                             Prev
                         </span>
                     )}
@@ -76,7 +76,7 @@ const progress = (page.currentPage / page.lastPage) * 100;
                                 class={`group relative px-3 py-2 font-mono text-xs tracking-widest transition-colors ${
                                     pageNum === page.currentPage
                                         ? "text-brand-600 font-bold"
-                                        : "text-slate-400 hover:text-slate-900"
+                                        : "text-slate-400 hover:text-slate-900 dark:hover:text-white"
                                 }`}
                             >
                                 {pad(pageNum)}
@@ -94,15 +94,15 @@ const progress = (page.currentPage / page.lastPage) * 100;
                     {page.url.next ? (
                         <a
                             href={ensureSlash(page.url.next)}
-                            class="group inline-flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-slate-900 hover:text-brand-600 transition-colors"
+                            class="group inline-flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100 hover:text-brand-600 transition-colors"
                         >
                             Next
-                            <span class="inline-block w-6 h-px bg-slate-400 group-hover:bg-brand-500 group-hover:w-10 transition-all duration-300" />
+                            <span class="inline-block w-6 h-px bg-slate-400 dark:bg-slate-500 group-hover:bg-brand-500 group-hover:w-10 transition-all duration-300" />
                         </a>
                     ) : (
-                        <span class="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-300 cursor-default">
+                        <span class="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-300 dark:text-slate-600 cursor-default">
                             Next
-                            <span class="inline-block w-6 h-px bg-slate-200" />
+                            <span class="inline-block w-6 h-px bg-slate-200 dark:bg-slate-700" />
                         </span>
                     )}
                 </div>

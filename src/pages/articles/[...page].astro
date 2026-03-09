@@ -31,7 +31,7 @@ function getSlug(id: string) {
 	<main class="max-w-7xl mx-auto px-6 py-24">
 		<header class="mb-16">
 			<h1
-				class="text-6xl sm:text-8xl font-black tracking-tighter text-slate-900 leading-[0.85] mb-8"
+				class="text-6xl sm:text-8xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.85] mb-8"
 			>
 				TECH <br />
 				<span
@@ -39,7 +39,7 @@ function getSlug(id: string) {
 					>PAPERS.</span
 				>
 			</h1>
-			<p class="text-xl text-slate-600 font-light max-w-2xl">
+			<p class="text-xl text-slate-600 dark:text-slate-400 font-light max-w-2xl">
 				In-depth technical articles, architectural decisions, and system deep-dives.
 			</p>
 		</header>
@@ -47,7 +47,7 @@ function getSlug(id: string) {
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 			{
 				page.data.map((post) => (
-					<article class="group relative flex flex-col justify-between p-8 bg-white border border-slate-200 border-r-4 border-r-slate-200 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none h-full select-none">
+					<article class="group relative flex flex-col justify-between p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-r-4 border-r-slate-200 dark:border-r-slate-700 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none h-full select-none">
 						<div>
 							<time
 								transition:name={`date-${post.id}`}
@@ -62,7 +62,7 @@ function getSlug(id: string) {
 
 							<h2
 								transition:name={`title-${post.id}`}
-								class="text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand-600 transition-colors leading-tight"
+								class="text-2xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-brand-600 transition-colors leading-tight"
 							>
 								<a
 									href={`/articles/${getSlug(post.id)}`}
@@ -73,12 +73,12 @@ function getSlug(id: string) {
 								</a>
 							</h2>
 
-							<p class="relative z-10 text-slate-600 leading-relaxed mb-6 line-clamp-3 pointer-events-none">
+							<p class="relative z-10 text-slate-600 dark:text-slate-400 leading-relaxed mb-6 line-clamp-3 pointer-events-none">
 								{post.data.abstract || post.data.description}
 							</p>
                             
                             <div class="flex gap-2 mb-6">
-                                <span class="relative z-10 text-xs font-mono font-bold px-2 py-1 bg-brand-50 text-brand-600 rounded">
+                                <span class="relative z-10 text-xs font-mono font-bold px-2 py-1 bg-brand-50 dark:bg-brand-950 text-brand-600 rounded">
                                     {post.data.technicalDepth}
                                 </span>
                             </div>
