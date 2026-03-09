@@ -6,8 +6,8 @@ const lang = (Astro.currentLocale as keyof typeof import('../i18n/ui').ui) || 'e
 const t = useTranslations(lang);
 ---
 
-<footer class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-[100dvh] flex flex-col justify-center py-24 lg:py-32 border-t border-slate-200 dark:border-slate-800 overflow-hidden relative z-20">
-    <canvas id="footer-gol" class="absolute inset-0 w-full h-full opacity-30 pointer-events-none"></canvas>
+<footer class="bg-white dark:bg-[#010208] text-slate-900 dark:text-slate-100 min-h-[100dvh] flex flex-col justify-center py-24 lg:py-32 border-t border-slate-200 dark:border-slate-800 overflow-hidden relative z-20">
+    <canvas id="footer-gol" class="absolute inset-0 w-full h-full opacity-30 dark:opacity-10 pointer-events-none"></canvas>
     <div class="mx-auto max-w-7xl px-6 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
             
@@ -18,19 +18,19 @@ const t = useTranslations(lang);
                 <ul class="space-y-8">
                     <li class="group border-b border-slate-100 dark:border-slate-800 pb-4 hover:border-brand-500 transition-colors">
                         <a href={lang === 'es' ? "/es/blog/" : "/blog/"} class="flex items-baseline justify-between w-full">
-                            <span class="text-2xl lg:text-3xl font-bold text-slate-700 group-hover:text-slate-900 transition-colors">{t('nav.blog')}</span>
+                            <span class="text-2xl lg:text-3xl font-bold text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{t('nav.blog')}</span>
                             <span class="text-sm font-mono text-slate-400 group-hover:text-brand-500 transition-colors">{t('footer.blog_desc')}</span>
                         </a>
                     </li>
                     <li class="group border-b border-slate-100 dark:border-slate-800 pb-4 hover:border-brand-500 transition-colors">
                         <a href={lang === 'es' ? "/es/leetcode/" : "/leetcode/"} class="flex items-baseline justify-between w-full">
-                            <span class="text-2xl lg:text-3xl font-bold text-slate-700 group-hover:text-slate-900 transition-colors">{t('nav.leetcode')}</span>
+                            <span class="text-2xl lg:text-3xl font-bold text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{t('nav.leetcode')}</span>
                             <span class="text-sm font-mono text-slate-400 group-hover:text-brand-500 transition-colors">{t('footer.leetcode_desc')}</span>
                         </a>
                     </li>
                     <li class="group border-b border-slate-100 dark:border-slate-800 pb-4 hover:border-brand-500 transition-colors">
                         <a href={lang === 'es' ? "/es/trajectory/" : "/trajectory/"} class="flex items-baseline justify-between w-full">
-                            <span class="text-2xl lg:text-3xl font-bold text-slate-700 group-hover:text-slate-900 transition-colors">{t('nav.trajectory')}</span>
+                            <span class="text-2xl lg:text-3xl font-bold text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{t('nav.trajectory')}</span>
                             <span class="text-sm font-mono text-slate-400 group-hover:text-brand-500 transition-colors">{t('footer.trajectory_desc')}</span>
                         </a>
                     </li>
@@ -42,7 +42,7 @@ const t = useTranslations(lang);
                  <div>
                     <h3 class="text-5xl lg:text-7xl font-black tracking-tighter leading-[0.9] mb-8 uppercase" set:html={t('footer.talk_title')}>
                     </h3>
-                    <p class="text-slate-600 text-lg mb-12">
+                    <p class="text-slate-600 dark:text-slate-400 text-lg mb-12">
                         {t('footer.talk_desc')}
                     </p>
                  </div>
@@ -87,7 +87,8 @@ const t = useTranslations(lang);
         }
 
         // Initialize
-        gol = new GameOfLife(canvas, '#94a3b8');
+        const isDark = document.documentElement.classList.contains('dark');
+        gol = new GameOfLife(canvas, isDark ? '#334155' : '#94a3b8');
         gol.init();
         
         // Email Obfuscation Logic (Bypasses Cloudflare Email Protection)
