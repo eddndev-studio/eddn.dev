@@ -164,10 +164,10 @@ try {
 
 const getServerColor = (level: number) => {
   switch (level) {
-    case 1: return 'bg-brand-300';
-    case 2: return 'bg-brand-500';
-    case 3: return 'bg-brand-700';
-    case 4: return 'bg-brand-900';
+    case 1: return 'bg-brand-300 dark:bg-brand-900';
+    case 2: return 'bg-brand-500 dark:bg-brand-700';
+    case 3: return 'bg-brand-700 dark:bg-brand-500';
+    case 4: return 'bg-brand-900 dark:bg-brand-300';
     default: return 'bg-slate-200/50 dark:bg-slate-800/50';
   }
 };
@@ -290,10 +290,10 @@ const getServerColor = (level: number) => {
   <div class="flex items-center gap-2 text-xs text-slate-400 mt-4 justify-start font-mono">
       <span>{t('github.less')}</span>
       <div class="w-3 h-3 rounded-full bg-slate-200/50 dark:bg-slate-800/50"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-300"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-500"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-700"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-900"></div>
+      <div class="w-3 h-3 rounded-full bg-brand-300 dark:bg-brand-900"></div>
+      <div class="w-3 h-3 rounded-full bg-brand-500 dark:bg-brand-700"></div>
+      <div class="w-3 h-3 rounded-full bg-brand-700 dark:bg-brand-500"></div>
+      <div class="w-3 h-3 rounded-full bg-brand-900 dark:bg-brand-300"></div>
       <span>{t('github.more')}</span>
   </div>
 </section>
