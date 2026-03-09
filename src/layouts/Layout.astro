@@ -130,7 +130,10 @@ const {
 				// Add roughly one blob every 1200px of content
 				const blobCount = Math.max(2, Math.floor(pageHeight / 1200));
 
-				const colors = ['bg-brand-300', 'bg-brand-500', 'bg-slate-300'];
+				const isDark = document.documentElement.classList.contains('dark');
+			const colors = isDark
+				? ['bg-brand-800', 'bg-brand-900', 'bg-slate-800']
+				: ['bg-brand-300', 'bg-brand-500', 'bg-slate-300'];
 
 				for (let i = 0; i < blobCount; i++) {
 					const blob = document.createElement("div");
