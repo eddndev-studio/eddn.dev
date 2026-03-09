@@ -23,7 +23,7 @@ const navItems = [
     <!-- Logo -->
     <a href={lang === 'es' ? "/es/" : "/"} class="group flex items-center gap-1">
       <span
-        class="font-black tracking-tighter text-xl text-slate-900 group-hover:text-brand-600 transition-colors duration-300"
+        class="font-black tracking-tighter text-xl text-slate-900 dark:text-white group-hover:text-brand-600 transition-colors duration-300"
       >
         eddn.dev
       </span>
@@ -40,9 +40,9 @@ const navItems = [
             <li>
               <a
                 href={item.href}
-                class="group flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-slate-900 hover:text-brand-600 transition-colors duration-300"
+                class="group flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-slate-900 dark:text-slate-100 hover:text-brand-600 transition-colors duration-300"
               >
-                <span class="text-slate-400 group-hover:text-brand-400 transition-colors duration-300">
+                <span class="text-slate-400 dark:text-slate-500 group-hover:text-brand-400 transition-colors duration-300">
                   0{index + 1} //
                 </span>
                 {item.name}
@@ -51,33 +51,58 @@ const navItems = [
           ))
         }
       </ul>
-      <div class="h-4 w-px bg-slate-200"></div>
+      <div class="h-4 w-px bg-slate-200 dark:bg-slate-700"></div>
       <LanguagePicker />
+      <div class="h-4 w-px bg-slate-200 dark:bg-slate-700"></div>
+      <button
+        aria-label="Toggle theme"
+        class="theme-toggle group flex items-center justify-center w-8 h-8 text-slate-500 dark:text-slate-400 hover:text-brand-600 transition-colors"
+      >
+        <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </button>
     </div>
 
     <!-- Mobile Toggle -->
-    <button
-      id="menu-toggle"
-      aria-label="Toggle Menu"
-      class="md:hidden flex flex-col justify-center items-center w-12 h-12 gap-1.5 p-2 z-50 group border border-transparent transition-colors rounded-none"
-    >
-      <span
-        class="w-8 h-0.5 bg-slate-900 transition-all duration-300 ease-out origin-center group-[.is-open]:rotate-45 group-[.is-open]:translate-y-2"
-      ></span>
-      <span
-        class="w-8 h-0.5 bg-slate-900 transition-all duration-300 ease-out group-[.is-open]:opacity-0"
-      ></span>
-      <span
-        class="w-8 h-0.5 bg-slate-900 transition-all duration-300 ease-out origin-center group-[.is-open]:-rotate-45 group-[.is-open]:-translate-y-2"
-      ></span>
-    </button>
+    <div class="md:hidden flex items-center gap-2 z-50">
+      <button
+        aria-label="Toggle theme"
+        class="theme-toggle flex items-center justify-center w-10 h-10 text-slate-500 dark:text-slate-400 hover:text-brand-600 transition-colors"
+      >
+        <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </button>
+      <button
+        id="menu-toggle"
+        aria-label="Toggle Menu"
+        class="flex flex-col justify-center items-center w-12 h-12 gap-1.5 p-2 group border border-transparent transition-colors rounded-none"
+      >
+        <span
+          class="w-8 h-0.5 bg-slate-900 dark:bg-white transition-all duration-300 ease-out origin-center group-[.is-open]:rotate-45 group-[.is-open]:translate-y-2"
+        ></span>
+        <span
+          class="w-8 h-0.5 bg-slate-900 dark:bg-white transition-all duration-300 ease-out group-[.is-open]:opacity-0"
+        ></span>
+        <span
+          class="w-8 h-0.5 bg-slate-900 dark:bg-white transition-all duration-300 ease-out origin-center group-[.is-open]:-rotate-45 group-[.is-open]:-translate-y-2"
+        ></span>
+      </button>
+    </div>
   </nav>
 </header>
 
 <!-- Mobile Menu Overlay -->
 <div
   id="mobile-menu"
-  class="fixed inset-0 bg-white z-40 flex flex-col justify-center px-8 opacity-0 invisible transition-all duration-300 md:hidden overflow-hidden"
+  class="fixed inset-0 bg-white dark:bg-slate-950 z-40 flex flex-col justify-center px-8 opacity-0 invisible transition-all duration-300 md:hidden overflow-hidden"
 >
   <!-- Background Decoration -->
   <div class="absolute inset-0 z-0 opacity-30 pointer-events-none [mask-image:linear-gradient(to_top,white,transparent)]">
@@ -89,7 +114,7 @@ const navItems = [
       navItems.map((item, index) => (
         <a
           href={item.href}
-          class="flex items-baseline gap-4 text-4xl font-black tracking-tighter text-slate-900 hover:text-brand-600 transition-colors mobile-link group"
+          class="flex items-baseline gap-4 text-4xl font-black tracking-tighter text-slate-900 dark:text-white hover:text-brand-600 transition-colors mobile-link group"
         >
           <span class="text-sm font-mono text-brand-300 font-normal group-hover:text-brand-600 transition-colors">
             0{index + 1}
@@ -101,7 +126,7 @@ const navItems = [
   </div>
 
   <div
-    class="absolute bottom-12 left-8 right-8 pt-8 border-t border-slate-100 flex justify-between items-center font-mono text-xs text-slate-400 uppercase tracking-widest z-10"
+    class="absolute bottom-12 left-8 right-8 pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center font-mono text-xs text-slate-400 uppercase tracking-widest z-10"
   >
     <span>© 2025</span>
     <div class="px-4 py-2 -my-2">
@@ -127,14 +152,7 @@ const navItems = [
     let isFooterIntersecting = false;
 
     const updateHeaderState = () => {
-      // Transparent if at top OR touching footer
-      if (isAtTop || isFooterIntersecting) {
-        header.classList.remove('bg-brand-50/80', 'backdrop-blur-md', 'border-brand-100/50', 'border-b');
-        header.classList.add('bg-transparent', 'border-transparent');
-      } else {
-        header.classList.add('bg-brand-50/80', 'backdrop-blur-md', 'border-brand-100/50', 'border-b');
-        header.classList.remove('bg-transparent', 'border-transparent');
-      }
+      header.classList.toggle('header-scrolled', !(isAtTop || isFooterIntersecting));
     };
 
     // 1. Scroll Handler (Top Logic)
@@ -243,7 +261,66 @@ const navItems = [
     }
   }
 
+  // Theme toggle with circular mask view transition
+  function setupThemeToggle() {
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
+      btn.addEventListener('click', handleThemeToggle);
+    });
+  }
+
+  function handleThemeToggle(e: Event) {
+    const toggle = e.currentTarget as HTMLElement;
+    const isDark = document.documentElement.classList.contains('dark');
+    const newTheme = isDark ? 'light' : 'dark';
+
+    // Fallback for browsers without View Transition API
+    if (!document.startViewTransition) {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', newTheme);
+      return;
+    }
+
+    const rect = toggle.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    document.documentElement.classList.add('theme-transition');
+
+    const transition = document.startViewTransition(() => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', newTheme);
+    });
+
+    transition.ready.then(() => {
+      const maxRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${maxRadius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 600,
+          easing: 'ease-out',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      );
+    });
+
+    transition.finished.then(() => {
+      document.documentElement.classList.remove('theme-transition');
+    });
+  }
+
   // Bind on every navigation
-  document.addEventListener("astro:page-load", setupMenu);
+  document.addEventListener("astro:page-load", () => {
+    setupMenu();
+    setupThemeToggle();
+  });
   document.addEventListener("astro:before-swap", cleanupMenu);
 </script>

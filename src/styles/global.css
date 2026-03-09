@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-brand-50: #f5f3ff;
@@ -50,4 +51,38 @@ html.lenis, html.lenis body {
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+/* Dark mode body */
+.dark body {
+  background-color: #010208;
+  color: #e2e8f0;
+}
+
+/* Header scrolled state (dark-mode aware via CSS) */
+#main-header.header-scrolled {
+  background-color: rgb(245 243 255 / 0.8);
+  border-bottom-color: rgb(237 233 254 / 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark #main-header.header-scrolled {
+  background-color: rgb(2 6 23 / 0.85);
+  border-bottom-color: rgb(30 41 59 / 0.5);
+}
+
+/* Theme toggle — circular mask via View Transition API */
+html.theme-transition::view-transition-old(root),
+html.theme-transition::view-transition-new(root) {
+  animation: none !important;
+  mix-blend-mode: normal;
+}
+
+html.theme-transition::view-transition-new(root) {
+  z-index: 9999;
+}
+
+html.theme-transition::view-transition-old(root) {
+  z-index: 1;
 }

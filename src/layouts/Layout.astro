@@ -26,6 +26,14 @@ const {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
+		<script is:inline>
+			(function() {
+				var t = localStorage.getItem('theme');
+				if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme:dark)').matches)) {
+					document.documentElement.classList.add('dark');
+				}
+			})();
+		</script>
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 
@@ -247,6 +255,17 @@ const {
 				gsap.ticker.remove(update);
 				ScrollTrigger.getAll().forEach((t) => t.kill());
 			}
+
+			// Restore dark class after Astro view-transition DOM swap
+			document.addEventListener("astro:after-swap", () => {
+				const t = localStorage.getItem('theme');
+				const prefersDark = matchMedia('(prefers-color-scheme:dark)').matches;
+				if (t === 'dark' || (!t && prefersDark)) {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+			});
 
 			document.addEventListener("astro:page-load", init);
 			document.addEventListener("astro:before-swap", cleanup);
