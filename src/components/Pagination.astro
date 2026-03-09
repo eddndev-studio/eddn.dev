@@ -21,77 +21,91 @@ const getPageUrl = (pageNum: number) => {
     }
     return `${cleanBase === "/" ? "" : cleanBase}/${pageNum}/`;
 };
+
+const pad = (n: number) => String(n).padStart(2, '0');
+const progress = (page.currentPage / page.lastPage) * 100;
 ---
 
 {
     page.lastPage > 1 && (
-        <nav class="flex justify-between items-center mt-16 pt-8 border-t border-slate-200">
-            <div class="flex-1">
-                {page.url.prev && (
-                    <a
-                        href={ensureSlash(page.url.prev)}
-                        class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
-                    >
-                        <svg
-                            class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                            />
-                        </svg>
-                        Previous
-                    </a>
-                )}
+        <nav class="mt-20 space-y-6">
+            {/* Label + counter */}
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                <span class="font-mono text-xs uppercase tracking-widest text-slate-400">
+                    Page
+                </span>
+                <span class="font-mono text-xs tracking-widest text-slate-400">
+                    {pad(page.currentPage)} / {pad(page.lastPage)}
+                </span>
             </div>
 
-            <div class="hidden sm:flex space-x-2">
-                {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(
-                    (pageNum) => (
+            {/* Progress bar */}
+            <div class="h-0.5 bg-slate-200 overflow-hidden">
+                <div
+                    class="h-full bg-brand-500 transition-all duration-500 ease-out"
+                    style={`width: ${progress}%`}
+                />
+            </div>
+
+            {/* Navigation row */}
+            <div class="flex items-center justify-between">
+                {/* Previous */}
+                <div class="flex-1">
+                    {page.url.prev ? (
                         <a
-                            href={getPageUrl(pageNum)}
-                            class={`w-8 h-8 flex items-center justify-center text-sm font-bold rounded-none transition-colors ${
-                                pageNum === page.currentPage
-                                    ? "bg-brand-600 text-white"
-                                    : "text-slate-600 hover:bg-slate-100 hover:text-brand-600"
-                            }`}
+                            href={ensureSlash(page.url.prev)}
+                            class="group inline-flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-slate-900 hover:text-brand-600 transition-colors"
                         >
-                            {pageNum}
+                            <span class="inline-block w-6 h-px bg-slate-400 group-hover:bg-brand-500 group-hover:w-10 transition-all duration-300" />
+                            Prev
                         </a>
-                    ),
-                )}
-            </div>
-            <div class="sm:hidden font-mono text-sm text-slate-500">
-                {page.currentPage} / {page.lastPage}
-            </div>
+                    ) : (
+                        <span class="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-300 cursor-default">
+                            <span class="inline-block w-6 h-px bg-slate-200" />
+                            Prev
+                        </span>
+                    )}
+                </div>
 
-            <div class="flex-1 flex justify-end">
-                {page.url.next && (
-                    <a
-                        href={ensureSlash(page.url.next)}
-                        class="inline-flex items-center text-sm font-bold text-slate-900 hover:text-brand-600 transition-colors group"
-                    >
-                        Next
-                        <svg
-                            class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                {/* Page numbers — desktop */}
+                <div class="hidden sm:flex items-center gap-1">
+                    {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(
+                        (pageNum) => (
+                            <a
+                                href={getPageUrl(pageNum)}
+                                class={`group relative px-3 py-2 font-mono text-xs tracking-widest transition-colors ${
+                                    pageNum === page.currentPage
+                                        ? "text-brand-600 font-bold"
+                                        : "text-slate-400 hover:text-slate-900"
+                                }`}
+                            >
+                                {pad(pageNum)}
+                                {/* Active underline */}
+                                {pageNum === page.currentPage && (
+                                    <span class="absolute bottom-0 left-3 right-3 h-0.5 bg-brand-500" />
+                                )}
+                            </a>
+                        ),
+                    )}
+                </div>
+
+                {/* Next */}
+                <div class="flex-1 flex justify-end">
+                    {page.url.next ? (
+                        <a
+                            href={ensureSlash(page.url.next)}
+                            class="group inline-flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-slate-900 hover:text-brand-600 transition-colors"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3"
-                            />
-                        </svg>
-                    </a>
-                )}
+                            Next
+                            <span class="inline-block w-6 h-px bg-slate-400 group-hover:bg-brand-500 group-hover:w-10 transition-all duration-300" />
+                        </a>
+                    ) : (
+                        <span class="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-300 cursor-default">
+                            Next
+                            <span class="inline-block w-6 h-px bg-slate-200" />
+                        </span>
+                    )}
+                </div>
             </div>
         </nav>
     )

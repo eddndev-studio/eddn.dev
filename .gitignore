@@ -23,4 +23,4 @@ pnpm-debug.log*
 
 .gemini/
 gha-creds-*.json
-GEMINI.md
+GEMINI.mdog_test*.png
