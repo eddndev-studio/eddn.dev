@@ -9,7 +9,6 @@ complexity:
   space: "O(N), donde N es el numero total de elementos en la coleccion"
 ---
 
-# Malabarismo con Duplicados en Tiempo Constante
 
 ## El Problema
 Disenar una estructura de datos `RandomizedCollection` que soporte tres operaciones en tiempo O(1) promedio: `insert(val)` que inserta un elemento `val` y retorna `true` si el elemento no estaba presente, `remove(val)` que elimina una instancia de `val` y retorna `true` si el elemento estaba presente, y `getRandom()` que retorna un elemento aleatorio de la coleccion donde la probabilidad de cada elemento es proporcional a la cantidad de veces que aparece.

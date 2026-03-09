@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Counting Crowns Without Building Thrones
 
 ## The Problem
 Given an integer `n`, return the number of distinct ways to place `n` queens on an `n x n` chessboard so that no two queens attack each other. Unlike its sibling N-Queens I, we don't need to return the board configurations -- just the count.

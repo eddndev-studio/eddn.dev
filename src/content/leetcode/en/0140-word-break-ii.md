@@ -9,7 +9,6 @@ complexity:
   space: "O(N * 2^N)"
 ---
 
-# Splitting a String into Every Possible Sentence
 
 ## The Problem
 Given a string `s` and a dictionary of strings `wordDict`, add spaces in `s` to construct sentences where each word is a valid dictionary word. Return all such possible sentences in any order.

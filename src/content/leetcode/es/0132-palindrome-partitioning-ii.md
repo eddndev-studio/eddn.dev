@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Rompiendo Espejos con el Menor Numero de Golpes
 
 ## El Problema
 Dada una cadena `s`, devolver el numero minimo de cortes necesarios para que cada subcadena resultante de la particion sea un palindromo.

@@ -9,7 +9,6 @@ complexity:
   space: "O(M * N)"
 ---
 
-# When Patterns Come Alive
 
 ## The Problem
 Given a string `s` and a pattern `p`, implement regular expression matching with support for `'.'` (matches any single character) and `'*'` (matches zero or more of the preceding element). The matching must cover the **entire** input string, not just a part of it.

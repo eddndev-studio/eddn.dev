@@ -9,7 +9,6 @@ complexity:
   space: "O(W * L) donde W es el numero de palabras"
 ---
 
-# Cazando Palabras en un Laberinto de Letras
 
 ## El Problema
 Dada una cuadricula `board` de `m x n` caracteres y una lista de palabras `words`, devolver todas las palabras de la lista que se pueden encontrar en la cuadricula. Cada palabra debe formarse a partir de letras en celdas adyacentes (horizontal o verticalmente), y la misma celda no puede usarse mas de una vez en una misma palabra.

@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Contando Coronas Sin Construir Tronos
 
 ## El Problema
 Dado un entero `n`, devolver la cantidad de formas distintas de colocar `n` reinas en un tablero de `n x n` de manera que ninguna reina ataque a otra. A diferencia de N-Queens I, no necesitamos devolver las configuraciones del tablero -- solo el conteo.

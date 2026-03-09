@@ -9,7 +9,6 @@ complexity:
   space: "O(m * n)"
 ---
 
-# Maximum Side Length of a Square: Sumas Prefijas y Crecimiento Incremental
 
 ## El Problema
 Dada una matriz `mat` de `m x n` y un entero `threshold`, necesitamos encontrar la longitud maxima del lado de una submatriz cuadrada cuya suma de elementos sea menor o igual a `threshold`. Si no existe tal cuadrado, devolvemos 0.

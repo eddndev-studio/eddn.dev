@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# El Arte de Olvidar lo que Menos Importa
 
 ## El Problema
 Disenar e implementar una estructura de datos para una cache LFU (Least Frequently Used). Debe soportar las operaciones `get` y `put`, ambas en tiempo O(1). Cuando la cache alcanza su capacidad y se debe insertar una nueva clave, se desaloja la clave usada con menor frecuencia. Si hay un empate en frecuencia, se elimina la clave menos recientemente usada entre ellas.

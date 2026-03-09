@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Weaving Intervals from Chaos
 
 ## The Problem
 Design a data structure that receives a stream of non-negative integers and summarizes them as a list of disjoint intervals. Implement the `SummaryRanges` class with two operations: `addNum(value)` which adds the integer `value` to the stream, and `getIntervals()` which returns a summary of the integers in the stream as a list of disjoint intervals `[start, end]`, sorted by `start`.

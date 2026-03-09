@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Two Shots at the Market: Maximizing Profit with a Pair of Trades
 
 ## The Problem
 You are given an array `prices` where `prices[i]` is the price of a given stock on the `i`th day. Find the maximum profit you can achieve. You may complete at most two transactions. Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).

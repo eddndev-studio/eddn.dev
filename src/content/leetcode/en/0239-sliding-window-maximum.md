@@ -9,7 +9,6 @@ complexity:
   space: "O(K) where K is the window size"
 ---
 
-# The Sentinel at the Front of the Line
 
 ## The Problem
 Given an array of integers `nums` and a sliding window of size `k` that moves from the very left of the array to the very right, return an array containing the maximum value in each window position. You can only see the `k` numbers in the window, and the window moves one position to the right each time.

@@ -9,7 +9,6 @@ complexity:
   space: "O(N) donde N es el numero total de elementos insertados"
 ---
 
-# El Equilibrista entre Dos Montanas
 
 ## El Problema
 Disenar una estructura de datos que soporte dos operaciones sobre un flujo de enteros: agregar un numero al flujo (`addNum`) y encontrar la mediana de todos los elementos vistos hasta el momento (`findMedian`). La mediana es el valor central cuando la lista esta ordenada; si la cantidad de elementos es par, es el promedio de los dos valores centrales.

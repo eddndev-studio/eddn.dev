@@ -9,7 +9,6 @@ complexity:
   space: "O(N) for the recursion depth"
 ---
 
-# Injecting Operators into Numerical Chaos
 
 ## The Problem
 Given a string `num` that contains only digits and an integer `target`, return all possibilities of inserting the binary operators `+`, `-`, and `*` between the digits of `num` so that the resulting expression evaluates to `target`. Operands in the returned expressions must not contain leading zeros.

@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Minimize Maximum Pair Sum in Array: Emparejar Extremos
 
 ## El Problema
 Dado un arreglo `nums` de longitud par, debemos emparejarlo en `n / 2` pares. Queremos minimizar la **suma maxima** entre todos los pares. La suma de un par es simplemente la suma de sus dos elementos. Devolver el valor minimo posible de la suma maxima de pares.

@@ -9,7 +9,6 @@ complexity:
   space: "O(N) for the heap and the critical points"
 ---
 
-# Drawing Silhouettes Against the Horizon
 
 ## The Problem
 Given a list of buildings represented as `[left, right, height]`, return the skyline formed by these buildings as a list of key points `[x, height]`. Each key point marks where the skyline changes height. The output should contain no consecutive entries with the same height.

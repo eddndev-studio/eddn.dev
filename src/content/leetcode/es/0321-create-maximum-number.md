@@ -9,7 +9,6 @@ complexity:
   space: "O(M + N)"
 ---
 
-# Forjando el Numero Mas Grande con Dos Mazos
 
 ## El Problema
 Dados dos arreglos de enteros `nums1` y `nums2` de longitudes `m` y `n` respectivamente, y un entero `k` donde `k <= m + n`, crear el numero maximo de longitud `k` usando digitos de ambos arreglos. El orden relativo de los digitos del mismo arreglo debe preservarse. Devolver el arreglo de `k` digitos que represente el numero mas grande posible.

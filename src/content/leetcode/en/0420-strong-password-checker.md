@@ -9,7 +9,6 @@ complexity:
   space: "O(N) for storing the repeating sequences"
 ---
 
-# The Locksmith's Three-Way Balancing Act
 
 ## The Problem
 Given a string `password`, return the minimum number of steps required to make it a strong password. A strong password has at least 6 characters, at most 20 characters, contains at least one lowercase letter, at least one uppercase letter, at least one digit, and does not contain three repeating characters in a row. In one step, you can insert a character, delete a character, or replace a character.

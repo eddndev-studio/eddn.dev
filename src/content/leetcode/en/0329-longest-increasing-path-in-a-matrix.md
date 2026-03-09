@@ -9,7 +9,6 @@ complexity:
   space: "O(M * N)"
 ---
 
-# Rivers Carving Through the Grid
 
 ## The Problem
 Given an `m x n` integers matrix, return the length of the longest increasing path. From each cell, you can move in four directions: left, right, up, or down. You may not move diagonally or move outside the boundary. Each step must go to a cell with a strictly greater value.

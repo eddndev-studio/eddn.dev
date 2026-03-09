@@ -9,7 +9,6 @@ complexity:
   space: "O(N^2)"
 ---
 
-# La Rana que Calcula Antes de Saltar
 
 ## El Problema
 Una rana esta cruzando un rio. El rio esta dividido en unidades y en algunas de ellas hay piedras. La rana puede saltar sobre una piedra, pero no debe caer al agua. Dada una lista de posiciones de piedras ordenadas en orden ascendente, determinar si la rana puede cruzar el rio aterrizando en la ultima piedra. Inicialmente, la rana esta en la primera piedra y asume que el primer salto debe ser de 1 unidad. Si el ultimo salto de la rana fue de `k` unidades, su proximo salto debe ser de `k - 1`, `k` o `k + 1` unidades. La rana solo puede saltar hacia adelante.

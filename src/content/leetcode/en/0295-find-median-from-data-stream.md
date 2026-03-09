@@ -9,7 +9,6 @@ complexity:
   space: "O(N) where N is the total number of inserted elements"
 ---
 
-# The Balancing Act between Two Mountains
 
 ## The Problem
 Design a data structure that supports two operations on a stream of integers: adding a number to the stream (`addNum`) and finding the median of all elements seen so far (`findMedian`). The median is the middle value when the list is sorted; if the count of elements is even, it is the average of the two middle values.

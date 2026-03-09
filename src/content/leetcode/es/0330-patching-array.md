@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Llenando los Huecos en la Recta Numerica
 
 ## El Problema
 Dado un arreglo ordenado de enteros `nums` y un entero `n`, agregar el minimo numero de parches (elementos) al arreglo de manera que cualquier numero en el rango `[1, n]` pueda formarse como la suma de algunos elementos del arreglo. Devolver el numero minimo de parches requeridos.

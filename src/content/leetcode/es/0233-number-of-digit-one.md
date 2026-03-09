@@ -9,7 +9,6 @@ complexity:
   space: "O(1) espacio extra constante"
 ---
 
-# Contando Cada Uno Escondido
 
 ## El Problema
 Dado un entero `n`, contar el numero total de veces que el digito `1` aparece en todos los enteros no negativos menores o iguales a `n`. Por ejemplo, dado `n = 13`, los enteros del 1 al 13 son `1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13`, y el digito `1` aparece un total de 6 veces.

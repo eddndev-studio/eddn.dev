@@ -9,7 +9,6 @@ complexity:
   space: "O(M * N)"
 ---
 
-# Rios Tallando la Cuadricula
 
 ## El Problema
 Dada una matriz de enteros de `m x n`, devolver la longitud del camino creciente mas largo. Desde cada celda, se puede mover en cuatro direcciones: izquierda, derecha, arriba o abajo. No se permite moverse diagonalmente ni fuera de los limites. Cada paso debe ir a una celda con un valor estrictamente mayor.

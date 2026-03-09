@@ -9,7 +9,6 @@ complexity:
   space: "O(n)"
 ---
 
-# Merge Intervals: Ordenar Primero, Preguntar Despues
 
 ## El Problema
 Dado un arreglo de `intervals` donde `intervals[i] = [start_i, end_i]`, fusionar todos los intervalos que se solapan y devolver un arreglo de intervalos no solapados que cubran todos los intervalos de la entrada.

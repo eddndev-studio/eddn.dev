@@ -9,7 +9,6 @@ complexity:
   space: "O(K)"
 ---
 
-# K Asaltos en el Ring del Trading: Exprimiendo la Ganancia Maxima con Transacciones Limitadas
 
 ## El Problema
 Se te da un entero `k` y un arreglo `prices` donde `prices[i]` es el precio de una accion en el dia `i`. Encuentra la ganancia maxima que puedes obtener. Puedes completar como maximo `k` transacciones (una transaccion es una compra seguida de una venta). Nota: No puedes participar en multiples transacciones simultaneamente (es decir, debes vender la accion antes de comprar otra).

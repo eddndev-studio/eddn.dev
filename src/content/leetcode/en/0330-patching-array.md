@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Filling the Gaps in the Number Line
 
 ## The Problem
 Given a sorted integer array `nums` and an integer `n`, add the minimum number of patches (elements) to the array such that any number in the range `[1, n]` can be formed by the sum of some elements in the array. Return the minimum number of patches required.

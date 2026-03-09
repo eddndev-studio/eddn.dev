@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Repartiendo la Carga sin Romper la Balanza
 
 ## El Problema
 Dado un arreglo de enteros `nums` y un entero `k`, dividir `nums` en `k` subarreglos contiguos no vacios de tal forma que la suma mas grande entre estos subarreglos sea minimizada. Devolver la suma mas grande minimizada.

@@ -9,7 +9,6 @@ complexity:
   space: "O(N * M)"
 ---
 
-# Charting Every Shortcut Between Words
 
 ## The Problem
 Given a `beginWord`, an `endWord`, and a `wordList`, return all the shortest transformation sequences from `beginWord` to `endWord`, where each step changes exactly one letter and every intermediate word must exist in `wordList`. If no such transformation exists, return an empty list.

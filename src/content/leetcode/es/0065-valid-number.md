@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# La Gramatica de los Numeros
 
 ## El Problema
 Dada una cadena `s`, determinar si representa un numero valido. Un numero valido puede ser un entero o un decimal, opcionalmente seguido de una parte exponencial (`e` o `E`). Los enteros y decimales pueden ir precedidos por un signo (`+` o `-`). Los decimales deben contener al menos un digito y exactamente un punto. La parte exponencial consiste en `e` o `E` seguido de un entero (que a su vez puede tener signo).

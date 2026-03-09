@@ -9,7 +9,6 @@ complexity:
   space: "O(N) para el arreglo de sumas prefijo y el buffer de mezcla"
 ---
 
-# Cazando Sumas Entre las Lineas
 
 ## El Problema
 Dado un arreglo de enteros `nums` y dos enteros `lower` y `upper`, devolver la cantidad de sumas de rango que se encuentran en `[lower, upper]` inclusive. Una suma de rango `S(i, j)` se define como la suma de los elementos en `nums` entre los indices `i` y `j` inclusive, donde `i <= j`.

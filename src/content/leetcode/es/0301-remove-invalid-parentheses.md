@@ -9,7 +9,6 @@ complexity:
   space: "O(N) por la profundidad de la recursion y la expresion construida"
 ---
 
-# Podando Parentesis Enfermos del Arbol
 
 ## El Problema
 Dada una cadena `s` que contiene parentesis y letras, eliminar el numero minimo de parentesis invalidos para que la cadena resultante sea valida. Devolver todas las cadenas unicas posibles. Una cadena de parentesis es valida si cada parentesis de apertura `(` tiene su correspondiente cierre `)` y estan correctamente anidados.

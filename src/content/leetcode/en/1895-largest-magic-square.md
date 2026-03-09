@@ -9,7 +9,6 @@ complexity:
   space: "O(m * n)"
 ---
 
-# Largest Magic Square: Prefix Sums in Four Directions
 
 ## The Problem
 Given an `m x n` grid of integers, find the largest square subgrid that forms a magic square. A magic square is a square where the sum of every row, every column, and both diagonals are all equal. Return the side length of the largest such square. Every 1x1 subgrid is trivially a magic square, so the answer is at least 1.

@@ -9,7 +9,6 @@ complexity:
   space: "O(M + N)"
 ---
 
-# Forging the Largest Number from Two Decks
 
 ## The Problem
 Given two integer arrays `nums1` and `nums2` of lengths `m` and `n` respectively, and an integer `k` where `k <= m + n`, create the maximum number of length `k` from digits of the two arrays. The relative order of the digits from the same array must be preserved. Return the array of `k` digits representing the largest possible number.

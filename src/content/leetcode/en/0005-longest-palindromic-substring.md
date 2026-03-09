@@ -9,7 +9,6 @@ complexity:
   space: "O(n)"
 ---
 
-# Longest Palindromic Substring: Expanding From the Center
 
 ## The Problem
 Given a string `s`, find the longest palindromic substring contained within it.

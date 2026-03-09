@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Palindrome Number
 
 ## Problem
 Given an integer `x`, return `true` if `x` is a palindrome, meaning it reads the same forwards and backwards.

@@ -9,7 +9,6 @@ complexity:
   space: "O(N) para almacenar las secuencias repetidas"
 ---
 
-# El Acto de Equilibrio del Cerrajero en Tres Frentes
 
 ## El Problema
 Dada una cadena `password`, devolver el numero minimo de pasos requeridos para convertirla en una contraseña fuerte. Una contraseña fuerte tiene al menos 6 caracteres, como maximo 20 caracteres, contiene al menos una letra minuscula, al menos una letra mayuscula, al menos un digito, y no contiene tres caracteres repetidos consecutivos. En un paso, se puede insertar un caracter, eliminar un caracter o reemplazar un caracter.

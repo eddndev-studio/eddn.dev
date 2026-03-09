@@ -9,7 +9,6 @@ complexity:
   space: "O(N * K)"
 ---
 
-# Cuando Dos Palabras se Completan
 
 ## El Problema
 Dada una lista de palabras unicas, encontrar todos los pares de indices distintos `(i, j)` tales que la concatenacion de `words[i] + words[j]` forme un palindromo.

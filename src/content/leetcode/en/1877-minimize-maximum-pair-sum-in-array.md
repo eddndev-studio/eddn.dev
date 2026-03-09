@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Minimize Maximum Pair Sum in Array: Pairing the Extremes
 
 ## The Problem
 Given an array `nums` of even length, we need to pair it into `n / 2` pairs. We want to minimize the **maximum pair sum** across all pairs. The pair sum is simply the sum of the two elements in a pair. Return the minimum possible value of the maximum pair sum.

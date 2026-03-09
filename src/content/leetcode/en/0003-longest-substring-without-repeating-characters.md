@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Longest Substring Without Repeating Characters: The Sliding Window and the Static Array Trick
 
 ## The Problem
 Given a string `s`, find the length of the longest substring without repeating characters.

@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# The Jigsaw of Axis-Aligned Pieces
 
 ## The Problem
 Given an array `rectangles` where `rectangles[i] = [xi, yi, ai, bi]` represents an axis-aligned rectangle with bottom-left corner `(xi, yi)` and top-right corner `(ai, bi)`, return `true` if all the rectangles together form an exact cover of a rectangular region with no overlaps and no gaps.

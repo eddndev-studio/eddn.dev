@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Munecas Rusas en Papel
 
 ## El Problema
 Dado un arreglo 2D de enteros `envelopes` donde `envelopes[i] = [wi, hi]` representa el ancho y alto de un sobre, devolver el numero maximo de sobres que se pueden anidar estilo muneca rusa. Un sobre cabe dentro de otro si y solo si tanto su ancho como su alto son estrictamente menores que los del otro sobre. No se permite rotar los sobres.

@@ -9,7 +9,6 @@ complexity:
   space: "O(E)"
 ---
 
-# Pasajero sin Escalas: Desenredando el Camino de Euler
 
 ## El Problema
 Dado un conjunto de boletos de avion representados como pares `[from, to]`, reconstruir el itinerario en orden. Todos los boletos pertenecen a una persona que parte desde `"JFK"`. El itinerario debe usar todos los boletos exactamente una vez. Si existen multiples itinerarios validos, devolver el que tenga el menor orden lexicografico.

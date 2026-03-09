@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Minimum Deletions to Make String Balanced: Tracking the Cost as You Go
 
 ## The Problem
 Given a string `s` consisting only of characters `'a'` and `'b'`, you can delete any number of characters from `s` to make the remaining string balanced. A string is balanced if there is no pair of indices `(i, j)` such that `i < j`, `s[i] = 'b'`, and `s[j] = 'a'`. In other words, all `'a'`s must come before all `'b'`s. Return the minimum number of deletions needed.

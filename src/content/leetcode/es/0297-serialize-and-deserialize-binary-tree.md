@@ -9,7 +9,6 @@ complexity:
   space: "O(N) para almacenar la cadena serializada y la pila de recursion"
 ---
 
-# Empaquetando Arboles en Cadenas y Resucitandolos
 
 ## El Problema
 Disenar un algoritmo para serializar y deserializar un arbol binario. La serializacion es el proceso de convertir una estructura de datos en una secuencia de bits para que pueda almacenarse o transmitirse y reconstruirse posteriormente. No hay restriccion sobre como debe funcionar el algoritmo de serializacion/deserializacion, solo se requiere que un arbol binario pueda ser serializado a una cadena y que esta cadena pueda ser deserializada de vuelta a la estructura original del arbol.

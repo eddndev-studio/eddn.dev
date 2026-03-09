@@ -9,7 +9,6 @@ complexity:
   space: "O(1) constant extra space"
 ---
 
-# Counting Every Hidden One
 
 ## The Problem
 Given an integer `n`, count the total number of times the digit `1` appears in all non-negative integers less than or equal to `n`. For example, given `n = 13`, the integers from 1 to 13 are `1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13`, and the digit `1` appears a total of 6 times.

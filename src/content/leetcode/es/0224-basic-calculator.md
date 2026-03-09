@@ -9,7 +9,6 @@ complexity:
   space: "O(N) para la pila en el peor caso de parentesis anidados"
 ---
 
-# Desenredando Parentesis: Una Calculadora Desde Cero
 
 ## El Problema
 Dada una cadena `s` que representa una expresion matematica valida con digitos, `+`, `-`, parentesis `(` y `)`, y espacios, evaluar la expresion y devolver su resultado. No se permite usar funciones de evaluacion integradas como `eval()`.

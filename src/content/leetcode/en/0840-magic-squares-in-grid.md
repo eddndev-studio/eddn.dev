@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Magic Squares In Grid: The Center Tells You Everything
 
 ## The Problem
 Given a `grid` of integers, count how many 3x3 sub-grids are magic squares. A 3x3 magic square is a 3x3 grid filled with distinct numbers from 1 to 9 such that every row, column, and both diagonals all sum to the same number (15).

@@ -9,7 +9,6 @@ complexity:
   space: "O(N^2)"
 ---
 
-# The Last Balloon Standing
 
 ## The Problem
 Given an array of integers `nums` representing balloons, where each balloon has a number painted on it. We are asked to burst all the balloons. When bursting balloon `i`, we collect `nums[i-1] * nums[i] * nums[i+1]` coins. If `i-1` or `i+1` go out of bounds of the array, they are treated as having a `1`. Find the maximum coins we can collect by bursting all the balloons.

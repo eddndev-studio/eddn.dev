@@ -9,7 +9,6 @@ complexity:
   space: "O(M)"
 ---
 
-# Contando Fantasmas Dentro de una Cadena
 
 ## El Problema
 Dadas dos cadenas `s` y `t`, devolver el numero de subsecuencias distintas de `s` que son iguales a `t`. Una subsecuencia es una secuencia que se puede derivar de otra eliminando algunos elementos (o ninguno) sin cambiar el orden de los elementos restantes. Se garantiza que la respuesta cabe en un entero con signo de 32 bits.

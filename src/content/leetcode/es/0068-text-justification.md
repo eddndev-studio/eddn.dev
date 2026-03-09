@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# El Arte de Componer Texto a Mano
 
 ## El Problema
 Dada una lista de palabras y un ancho maximo `maxWidth`, formatear el texto de manera que cada linea tenga exactamente `maxWidth` caracteres y este completamente justificada (alineada tanto a la izquierda como a la derecha). Las palabras deben empaquetarse con un algoritmo greedy: en cada linea caben tantas palabras como sea posible, y los espacios sobrantes se distribuyen lo mas uniformemente posible entre los huecos. La ultima linea debe estar alineada a la izquierda, con espacios al final para completar el ancho.

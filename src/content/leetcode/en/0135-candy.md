@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Distributing Candy with Fairness
 
 ## The Problem
 There are `n` children standing in a line. Each child is assigned a rating value given in the integer array `ratings`. We want to distribute candies to these children following two rules: each child must receive at least one candy, and a child with a higher rating than an immediate neighbor must receive more candies than that neighbor. Return the minimum total number of candies needed.

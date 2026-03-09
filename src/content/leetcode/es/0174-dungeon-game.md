@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# El Caballero que Caminaba Hacia Atras
 
 ## El Problema
 Los demonios habian capturado a la princesa y la encerraron en la esquina inferior derecha de una mazmorra. La mazmorra consiste en una cuadricula de `M x N` habitaciones. Nuestro valiente caballero se encuentra inicialmente en la habitacion superior izquierda y debe abrirse camino hasta la princesa. El caballero tiene un punto de salud inicial y en cada habitacion gana o pierde puntos de salud segun el valor de esa habitacion (positivo para orbes magicos, negativo para demonios). La salud del caballero debe ser al menos 1 en todo momento. Debemos determinar la salud minima inicial con la que el caballero puede rescatar a la princesa.

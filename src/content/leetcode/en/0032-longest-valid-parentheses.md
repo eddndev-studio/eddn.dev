@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# The Art of Closing What You Open
 
 ## The Problem
 Given a string containing only the characters `'('` and `')'`, find the length of the longest valid (well-formed) parentheses substring. A valid substring is one where every opening parenthesis has a corresponding closing parenthesis, in the correct order.

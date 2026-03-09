@@ -9,7 +9,6 @@ complexity:
   space: "O(n)"
 ---
 
-# Minimum Absolute Difference
 
 ## Problema
 Dado un array de enteros distintos `arr`, encontrar todos los pares de elementos que tengan la diferencia absoluta mínima entre cualquier par de elementos del array. Devolver una lista de pares ordenados de menor a mayor, donde cada par `[a, b]` cumple que `a < b`.

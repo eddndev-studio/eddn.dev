@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Coronando Reinas con Bits
 
 ## El Problema
 Dado un entero `n`, encontrar todas las formas de colocar `n` reinas en un tablero de ajedrez de `n x n` tal que ninguna reina ataque a otra. Dos reinas se atacan si comparten la misma fila, columna o diagonal. Devolver todas las configuraciones validas.

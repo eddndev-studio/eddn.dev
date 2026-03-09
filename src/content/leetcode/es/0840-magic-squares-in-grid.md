@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Magic Squares In Grid: El Centro lo Dice Todo
 
 ## El Problema
 Dada una cuadricula `grid` de enteros, contar cuantos subcuadrados de 3x3 son cuadrados magicos. Un cuadrado magico de 3x3 es una cuadricula de 3x3 rellena con numeros distintos del 1 al 9 tal que cada fila, columna y ambas diagonales suman lo mismo (15).

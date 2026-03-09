@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Longest Substring Without Repeating Characters: La Ventana Deslizante y el Truco del Array Estático
 
 ## El Problema
 Dada una cadena `s`, encontrar la longitud de la subcadena más larga sin caracteres repetidos.

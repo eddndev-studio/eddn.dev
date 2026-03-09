@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Reverse Integer: Invertir Dígitos sin Explotar
 
 ## El Problema
 Dado un entero con signo de 32 bits, devolver el número con sus dígitos invertidos. Si el resultado se desborda fuera del rango de un entero con signo de 32 bits (`[-2^31, 2^31 - 1]`), devolver `0`.

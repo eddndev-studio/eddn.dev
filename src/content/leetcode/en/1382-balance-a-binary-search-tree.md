@@ -9,7 +9,6 @@ complexity:
   space: "O(n)"
 ---
 
-# Balance a Binary Search Tree: Flatten and Rebuild
 
 ## The Problem
 Given the root of a binary search tree (BST), we need to return a **balanced** binary search tree with the same node values. A BST is balanced if the depth of the two subtrees of every node never differs by more than 1. If there is more than one valid answer, any of them is accepted.

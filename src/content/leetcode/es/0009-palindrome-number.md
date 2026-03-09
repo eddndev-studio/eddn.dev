@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Palindrome Number
 
 ## Problema
 Dado un entero `x`, devolver `true` si `x` es un palíndromo, es decir, si se lee igual de izquierda a derecha que de derecha a izquierda.

@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# The Number Nobody Invited
 
 ## The Problem
 Given an unsorted integer array `nums`, find the smallest missing positive integer. The algorithm must run in O(N) time and use O(1) auxiliary space.

@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Taming the Wildcard
 
 ## The Problem
 Given a string `s` and a pattern `p`, implement wildcard pattern matching with support for `'?'` (matches any single character) and `'*'` (matches any sequence of characters, including the empty sequence). The matching must cover the **entire** input string, not just a part of it.

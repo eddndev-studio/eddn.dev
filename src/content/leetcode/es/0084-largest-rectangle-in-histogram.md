@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# El Rascacielos Escondido en el Histograma
 
 ## El Problema
 Dado un arreglo de enteros `heights` que representa las alturas de barras en un histograma donde cada barra tiene ancho 1, encontrar el area del rectangulo mas grande que se puede formar dentro del histograma.

@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Atrapando la Lluvia entre Muros
 
 ## El Problema
 Dado un arreglo de enteros no negativos `height` donde cada elemento representa la altura de una barra de ancho 1, calcular cuanta agua puede quedar atrapada entre las barras despues de llover.

@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# La Conspiracion de los Puntos Colineales
 
 ## El Problema
 Dado un arreglo de `points` donde `points[i] = [xi, yi]` representa un punto en el plano X-Y, devolver el numero maximo de puntos que se encuentran sobre la misma linea recta.

@@ -9,7 +9,6 @@ complexity:
   space: "O(E)"
 ---
 
-# Non-Stop Passenger: Unraveling the Eulerian Path
 
 ## The Problem
 Given a list of airline tickets represented as pairs `[from, to]`, reconstruct the itinerary in order. All tickets belong to a person who departs from `"JFK"`. The itinerary must use all tickets exactly once. If there are multiple valid itineraries, return the one with the smallest lexicographic order.

@@ -9,7 +9,6 @@ complexity:
   space: "O(N) para el buffer temporal de mezcla y el rastreo de indices"
 ---
 
-# Contando Inversiones por el Espejo Retrovisor
 
 ## El Problema
 Dado un arreglo de enteros `nums`, devolver un nuevo arreglo `counts` donde `counts[i]` es la cantidad de elementos a la derecha de `nums[i]` que son estrictamente menores que `nums[i]`.

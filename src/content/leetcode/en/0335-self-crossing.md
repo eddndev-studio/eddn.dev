@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# The Spiral That Bites Its Own Tail
 
 ## The Problem
 You are given an array of integers `distance`. Starting at the origin on a 2D plane, you move `distance[0]` meters north, then `distance[1]` meters west, then `distance[2]` meters south, then `distance[3]` meters east, and so on, cycling through directions. Return `true` if your path crosses itself at any point, and `false` otherwise.

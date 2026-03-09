@@ -9,7 +9,6 @@ complexity:
   space: "O(N * K)"
 ---
 
-# When Two Words Complete Each Other
 
 ## The Problem
 Given a list of unique words, find all pairs of distinct indices `(i, j)` such that the concatenation of `words[i] + words[j]` forms a palindrome.

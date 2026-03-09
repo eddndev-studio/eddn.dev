@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Hunting the Needle in a Twisted Haystack
 
 ## The Problem
 Given a sorted array of integers `nums` that has been rotated between 1 and `n` times, and which **may contain duplicates**, find the minimum element. The array was originally sorted in ascending order and then rotated at some unknown pivot.

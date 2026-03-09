@@ -9,7 +9,6 @@ complexity:
   space: "O(m * n)"
 ---
 
-# Largest Magic Square: Sumas Prefijas en Cuatro Direcciones
 
 ## El Problema
 Dada una cuadricula `grid` de `m x n` enteros, encontrar la submatriz cuadrada mas grande que forme un cuadrado magico. Un cuadrado magico es un cuadrado donde la suma de cada fila, cada columna y ambas diagonales son iguales. Devolver la longitud del lado del cuadrado mas grande. Cada submatriz de 1x1 es trivialmente un cuadrado magico, asi que la respuesta es al menos 1.
