@@ -247,8 +247,8 @@ const getServerColor = (level: number) => {
             grid.addEventListener('mouseout', onMouseLeave);
         }
 
-        // 3. Data Refresh Logic (Client Side) - REMOVED per user request
-        // The component now relies solely on build-time data.
+        // Initial scroll to end (show most recent activity)
+        scrollToEnd();
     }
 
     // Run on page load
