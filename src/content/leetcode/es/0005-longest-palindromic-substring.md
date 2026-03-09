@@ -9,7 +9,6 @@ complexity:
   space: "O(n)"
 ---
 
-# Longest Palindromic Substring: Expandiendo Desde el Centro
 
 ## El Problema
 Dada una cadena `s`, encontrar la subcadena palindrómica más larga contenida en ella.

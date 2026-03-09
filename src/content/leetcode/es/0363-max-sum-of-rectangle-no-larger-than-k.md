@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# El Tesoro Acotado en la Cuadricula
 
 ## El Problema
 Dada una matriz `m x n` llamada `matrix` y un entero `k`, devolver la suma maxima de un rectangulo en la matriz tal que dicha suma no sea mayor que `k`. Se garantiza que existira un rectangulo con suma no mayor que `k`.

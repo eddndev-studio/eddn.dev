@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# El Arte de Cerrar lo que se Abre
 
 ## El Problema
 Dada una cadena que contiene solo los caracteres `'('` y `')'`, encontrar la longitud de la subcadena de parentesis validos mas larga. Una subcadena valida es aquella donde cada parentesis de apertura tiene su correspondiente parentesis de cierre, en el orden correcto.

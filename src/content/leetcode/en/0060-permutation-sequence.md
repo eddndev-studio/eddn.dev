@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Skipping Millions of Permutations with Factorials
 
 ## The Problem
 Given two integers `n` and `k`, return the k-th permutation sequence of the numbers `[1, 2, ..., n]`. The set of permutations is ordered lexicographically, and `k` is 1-indexed.

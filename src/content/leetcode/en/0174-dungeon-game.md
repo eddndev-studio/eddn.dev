@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# The Knight Who Walked Backwards
 
 ## The Problem
 Demons have captured the princess and imprisoned her in the bottom-right corner of a dungeon. The dungeon consists of an `M x N` grid of rooms. Our brave knight starts in the top-left room and must fight his way to the princess. The knight has an initial health point total, and in each room he either gains or loses health depending on the room's value (positive for magic orbs, negative for demons). The knight's health must remain at least 1 at all times. We need to determine the minimum initial health required for the knight to rescue the princess.

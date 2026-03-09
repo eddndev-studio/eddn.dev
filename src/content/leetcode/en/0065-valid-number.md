@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# The Grammar of Numbers
 
 ## The Problem
 Given a string `s`, determine if it represents a valid number. A valid number can be an integer or a decimal, optionally followed by an exponent part (`e` or `E`). Integers and decimals may be preceded by a sign (`+` or `-`). Decimals must contain at least one digit and exactly one dot. The exponent part consists of `e` or `E` followed by an integer (which itself may be signed).

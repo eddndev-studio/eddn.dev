@@ -9,7 +9,6 @@ complexity:
   space: "O(N * 2^N)"
 ---
 
-# Dividiendo una Cadena en Todas las Oraciones Posibles
 
 ## El Problema
 Dada una cadena `s` y un diccionario de palabras `wordDict`, agregar espacios en `s` para construir oraciones donde cada palabra sea una palabra valida del diccionario. Devolver todas las oraciones posibles en cualquier orden.

@@ -9,7 +9,6 @@ complexity:
   space: "O(m * n)"
 ---
 
-# Maximum Side Length of a Square: Prefix Sums Meet Greedy Growth
 
 ## The Problem
 Given an `m x n` matrix `mat` and an integer `threshold`, we need to find the maximum side length of a square submatrix whose sum of elements is less than or equal to `threshold`. If no such square exists, we return 0.

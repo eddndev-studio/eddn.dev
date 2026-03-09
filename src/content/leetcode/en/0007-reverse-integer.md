@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Reverse Integer: Flipping Digits Without Blowing Up
 
 ## The Problem
 Given a signed 32-bit integer, return the number with its digits reversed. If the result overflows beyond the range of a signed 32-bit integer (`[-2^31, 2^31 - 1]`), return `0`.

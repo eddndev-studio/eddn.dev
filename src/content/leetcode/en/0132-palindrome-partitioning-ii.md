@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Breaking Mirrors with the Fewest Strikes
 
 ## The Problem
 Given a string `s`, return the minimum number of cuts needed so that every substring of the partition is a palindrome.

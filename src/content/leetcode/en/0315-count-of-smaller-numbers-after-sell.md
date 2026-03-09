@@ -9,7 +9,6 @@ complexity:
   space: "O(N) for the temporary merge buffer and index tracking"
 ---
 
-# Counting Inversions in the Rearview Mirror
 
 ## The Problem
 Given an integer array `nums`, return a new array `counts` where `counts[i]` is the number of elements to the right of `nums[i]` that are strictly smaller than `nums[i]`.

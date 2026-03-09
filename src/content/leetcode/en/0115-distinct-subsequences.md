@@ -9,7 +9,6 @@ complexity:
   space: "O(M)"
 ---
 
-# Counting Ghosts Inside a String
 
 ## The Problem
 Given two strings `s` and `t`, return the number of distinct subsequences of `s` which equals `t`. A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements. The answer is guaranteed to fit in a 32-bit signed integer.

@@ -9,7 +9,6 @@ complexity:
   space: "O(M)"
 ---
 
-# Resolviendo Sudoku con Bits y Backtracking
 
 ## El Problema
 Dado un tablero de Sudoku parcialmente lleno de 9x9, llenarlo de forma que cada fila, cada columna y cada subcuadro de 3x3 contenga los digitos del 1 al 9 exactamente una vez. Se garantiza que el puzzle tiene exactamente una solucion.

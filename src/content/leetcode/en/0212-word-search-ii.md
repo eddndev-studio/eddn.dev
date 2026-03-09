@@ -9,7 +9,6 @@ complexity:
   space: "O(W * L) where W is the number of words"
 ---
 
-# Hunting Words Through a Maze of Letters
 
 ## The Problem
 Given an `m x n` `board` of characters and a list of `words`, return all words from the list that can be found in the grid. Each word must be formed from letters in horizontally or vertically adjacent cells, and the same cell may not be used more than once within a single word.

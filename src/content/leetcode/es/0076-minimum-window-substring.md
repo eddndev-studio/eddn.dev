@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# La Ventana Mas Pequena que lo Contiene Todo
 
 ## El Problema
 Dadas dos cadenas `s` y `t`, encontrar la subcadena minima de `s` que contenga todos los caracteres de `t` (incluyendo duplicados). Si no existe tal ventana, devolver una cadena vacia.

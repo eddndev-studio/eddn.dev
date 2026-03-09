@@ -9,7 +9,6 @@ complexity:
   space: "O(N) for the stack in the worst case of nested parentheses"
 ---
 
-# Untangling Parentheses: A Calculator From Scratch
 
 ## The Problem
 Given a string `s` representing a valid mathematical expression with digits, `+`, `-`, parentheses `(` and `)`, and spaces, evaluate the expression and return its result. Using built-in evaluation functions like `eval()` is not allowed.

@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Plus One
 
 ## Problem
 Given a large integer represented as an array of digits `digits`, where each element is a single digit of the number, add one to the number and return the resulting array. The digits are stored left to right, from most significant to least significant.

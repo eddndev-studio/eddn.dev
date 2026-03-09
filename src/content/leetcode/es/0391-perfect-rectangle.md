@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# El Rompecabezas de Piezas Alineadas
 
 ## El Problema
 Dado un arreglo `rectangles` donde `rectangles[i] = [xi, yi, ai, bi]` representa un rectangulo alineado con los ejes con esquina inferior izquierda `(xi, yi)` y esquina superior derecha `(ai, bi)`, devolver `true` si todos los rectangulos juntos forman una cobertura exacta de una region rectangular sin solapamientos ni huecos.

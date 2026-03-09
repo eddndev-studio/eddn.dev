@@ -9,7 +9,6 @@ complexity:
   space: "O(N) for storing the serialized string and the recursion stack"
 ---
 
-# Packing Trees into Strings and Bringing Them Back to Life
 
 ## The Problem
 Design an algorithm to serialize and deserialize a binary tree. Serialization is the process of converting a data structure into a sequence of bits so that it can be stored or transmitted and reconstructed later. There is no restriction on how the serialization/deserialization algorithm should work, only that a binary tree can be serialized to a string and that this string can be deserialized back to the original tree structure.

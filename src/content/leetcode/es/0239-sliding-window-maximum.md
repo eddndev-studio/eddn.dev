@@ -9,7 +9,6 @@ complexity:
   space: "O(K) donde K es el tamano de la ventana"
 ---
 
-# El Centinela al Frente de la Fila
 
 ## El Problema
 Dado un arreglo de enteros `nums` y una ventana deslizante de tamano `k` que se mueve desde el extremo izquierdo del arreglo hasta el extremo derecho, devolver un arreglo que contenga el valor maximo en cada posicion de la ventana. Solo se pueden ver los `k` numeros dentro de la ventana, y esta se mueve una posicion a la derecha en cada paso.

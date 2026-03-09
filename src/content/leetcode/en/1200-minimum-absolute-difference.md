@@ -9,7 +9,6 @@ complexity:
   space: "O(n)"
 ---
 
-# Minimum Absolute Difference
 
 ## Problem
 Given an array of distinct integers `arr`, find all pairs of elements with the minimum absolute difference between any two elements in the array. Return a list of pairs sorted in ascending order, where each pair `[a, b]` satisfies `a < b`.

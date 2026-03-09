@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# The Art of Forgetting What Matters Least
 
 ## The Problem
 Design and implement a data structure for a Least Frequently Used (LFU) cache. It should support `get` and `put` operations, both in O(1) time. When the cache reaches capacity and a new key must be inserted, the least frequently used key is evicted. If there is a tie in frequency, the least recently used key among them is removed.

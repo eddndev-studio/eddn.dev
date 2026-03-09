@@ -9,7 +9,6 @@ complexity:
   space: "O(min(N, indexDiff)) para el mapa de cubetas"
 ---
 
-# Cazando Casi-Duplicados Con Cubetas Invisibles
 
 ## El Problema
 Dado un arreglo de enteros `nums` y dos enteros `indexDiff` y `valueDiff`, devolver `true` si existen dos indices distintos `i` y `j` tales que `abs(i - j) <= indexDiff` y `abs(nums[i] - nums[j]) <= valueDiff`.

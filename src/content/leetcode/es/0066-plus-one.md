@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Plus One
 
 ## Problema
 Dado un entero grande representado como un array de dígitos `digits`, donde cada elemento es un dígito del número, sumar uno al número y devolver el array resultante. Los dígitos se almacenan de izquierda a derecha, del más significativo al menos significativo.

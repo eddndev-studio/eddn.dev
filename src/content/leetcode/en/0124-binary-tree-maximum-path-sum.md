@@ -9,7 +9,6 @@ complexity:
   space: "O(H)"
 ---
 
-# The Golden Trail Hidden in the Tree
 
 ## The Problem
 Given the `root` of a binary tree, return the maximum path sum of any **non-empty** path in the tree. A path is defined as a sequence of nodes where each pair of adjacent nodes has an edge connecting them. A node can only appear in the path at most once. The path does not need to pass through the root.

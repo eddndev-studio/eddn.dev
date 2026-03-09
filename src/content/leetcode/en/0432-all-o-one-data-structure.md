@@ -9,7 +9,6 @@ complexity:
   space: "O(N), where N is the number of distinct keys in the structure"
 ---
 
-# The Ledger That Never Loses Track
 
 ## The Problem
 Design an `AllOne` data structure that supports four operations, all in O(1) time: `inc(key)` which increments the count of `key` by 1 (or inserts it with count 1 if it does not exist), `dec(key)` which decrements the count of `key` by 1 (removing it if it reaches 0), `getMaxKey()` which returns any key with the maximum count, and `getMinKey()` which returns any key with the minimum count.

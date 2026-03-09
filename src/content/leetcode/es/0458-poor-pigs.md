@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Cerditos, Veneno y la Geometria de la Informacion
 
 ## El Problema
 Hay `buckets` cubetas de liquido, exactamente una de ellas esta envenenada. Para averiguar cual es la cubeta envenenada, se pueden alimentar cerdos con el liquido. Un cerdo muere si bebe del veneno, y tarda exactamente `minutesToDie` minutos en morir. Dado un tiempo total de `minutesToTest` minutos para realizar las pruebas, retornar el numero minimo de cerdos necesarios para identificar con certeza la cubeta envenenada.

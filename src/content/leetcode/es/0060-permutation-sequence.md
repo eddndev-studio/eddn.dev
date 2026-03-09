@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Saltando Millones de Permutaciones con Factoriales
 
 ## El Problema
 Dados dos enteros `n` y `k`, devolver la k-esima secuencia de permutacion de los numeros `[1, 2, ..., n]`. El conjunto de permutaciones esta ordenado lexicograficamente, y `k` empieza en 1.

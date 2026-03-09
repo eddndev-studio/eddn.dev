@@ -9,7 +9,6 @@ complexity:
   space: "O(N^2)"
 ---
 
-# The Frog That Calculates Before It Leaps
 
 ## The Problem
 A frog is crossing a river. The river is divided into units and some of the units have stones. The frog can jump on a stone, but it must not land in the water. Given a list of stone positions sorted in ascending order, determine if the frog can cross the river by landing on the last stone. Initially, the frog is on the first stone and assumes the first jump must be 1 unit. If the frog's last jump was `k` units, its next jump must be either `k - 1`, `k`, or `k + 1` units. The frog can only jump in the forward direction.

@@ -9,7 +9,6 @@ complexity:
   space: "O(1) for the same reason"
 ---
 
-# Teaching a Machine to Read Numbers Aloud
 
 ## The Problem
 Given a non-negative integer `num`, convert it to its English words representation. The input is guaranteed to be less than 2^31 - 1 (at most 2,147,483,647). For example, `1234567` becomes `"One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"`, and `0` becomes `"Zero"`.

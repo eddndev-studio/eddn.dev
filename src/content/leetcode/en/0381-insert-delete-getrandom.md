@@ -9,7 +9,6 @@ complexity:
   space: "O(N), where N is the total number of elements in the collection"
 ---
 
-# Juggling Duplicates in Constant Time
 
 ## The Problem
 Design a `RandomizedCollection` data structure that supports three operations in average O(1) time: `insert(val)` which inserts an element `val` and returns `true` if the element was not already present, `remove(val)` which removes one instance of `val` and returns `true` if the element was present, and `getRandom()` which returns a random element from the collection where the probability of each element is proportional to the number of times it appears.

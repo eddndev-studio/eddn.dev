@@ -9,7 +9,6 @@ complexity:
   space: "O(N^3)"
 ---
 
-# Desenredando el Arbol de Recursion
 
 ## El Problema
 Dadas dos cadenas `s1` y `s2` de la misma longitud, determinar si `s2` es una version "scrambled" de `s1`. Una cadena scrambled se forma dividiendo recursivamente la cadena en dos partes no vacias en cualquier posicion, opcionalmente intercambiandolas, y luego continuando el proceso en las subcadenas resultantes.

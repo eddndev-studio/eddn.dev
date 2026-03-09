@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Trapping the Rain Between Walls
 
 ## The Problem
 Given an array of non-negative integers `height` where each element represents the height of a bar with width 1, compute how much water can be trapped between the bars after raining.

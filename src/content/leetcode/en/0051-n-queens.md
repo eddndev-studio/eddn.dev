@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Crowning Queens with Bits
 
 ## The Problem
 Given an integer `n`, find all ways to place `n` queens on an `n x n` chessboard such that no two queens attack each other. Two queens attack each other if they share the same row, column, or diagonal. Return all valid configurations.

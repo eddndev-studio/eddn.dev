@@ -9,7 +9,6 @@ complexity:
   space: "O(N) for the recursion depth and the expression being built"
 ---
 
-# Pruning Sick Parentheses from the Tree
 
 ## The Problem
 Given a string `s` containing parentheses and letters, remove the minimum number of invalid parentheses to make the string valid. Return all possible unique strings. A parentheses string is valid if every opening `(` has a matching closing `)` and they are properly nested.

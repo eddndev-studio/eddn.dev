@@ -9,7 +9,6 @@ complexity:
   space: "O(N) for the combined string and the LPS array"
 ---
 
-# The Broken Mirror: Building Palindromes with KMP
 
 ## The Problem
 Given a string `s`, find the shortest palindrome that can be formed by adding characters **only to the beginning** of `s`. In other words, we must prepend the fewest characters possible to turn `s` into a palindrome.

@@ -9,7 +9,6 @@ complexity:
   space: "O(N), donde N es el numero de claves distintas en la estructura"
 ---
 
-# El Libro de Cuentas que Nunca Pierde el Hilo
 
 ## El Problema
 Disenar una estructura de datos `AllOne` que soporte cuatro operaciones, todas en tiempo O(1): `inc(key)` que incrementa el conteo de la clave `key` en 1 (o la inserta con conteo 1 si no existe), `dec(key)` que decrementa el conteo de `key` en 1 (eliminandola si llega a 0), `getMaxKey()` que retorna cualquier clave con el conteo maximo, y `getMinKey()` que retorna cualquier clave con el conteo minimo.

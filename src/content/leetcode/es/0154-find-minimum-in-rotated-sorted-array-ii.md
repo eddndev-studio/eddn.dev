@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Cazando la Aguja en un Pajar Retorcido
 
 ## El Problema
 Dado un arreglo ordenado de enteros `nums` que ha sido rotado entre 1 y `n` veces, y que **puede contener duplicados**, encontrar el elemento minimo. El arreglo fue originalmente ordenado en orden ascendente y luego rotado en algun pivote desconocido.

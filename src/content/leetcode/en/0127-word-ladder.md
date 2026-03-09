@@ -9,7 +9,6 @@ complexity:
   space: "O(M^2 * N)"
 ---
 
-# Crossing the Bridge One Letter at a Time
 
 ## The Problem
 Given two words, `beginWord` and `endWord`, and a dictionary `wordList`, return the number of words in the **shortest transformation sequence** from `beginWord` to `endWord`, such that every adjacent pair of words differs by exactly one letter, and every intermediate word must exist in `wordList`. Return `0` if no such sequence exists. Note that `beginWord` does not need to be in `wordList`.

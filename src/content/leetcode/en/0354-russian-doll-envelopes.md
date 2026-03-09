@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Paper Nesting Dolls
 
 ## The Problem
 Given a 2D array of integers `envelopes` where `envelopes[i] = [wi, hi]` represents the width and height of an envelope, return the maximum number of envelopes you can Russian doll (i.e., put one inside the other). An envelope can fit into another if and only if both its width and height are strictly less than the other envelope's width and height. You cannot rotate an envelope.

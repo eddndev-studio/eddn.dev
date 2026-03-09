@@ -9,7 +9,6 @@ complexity:
   space: "O(N * M)"
 ---
 
-# Cartografiando Todos los Atajos entre Palabras
 
 ## El Problema
 Dada una palabra inicial `beginWord`, una palabra final `endWord`, y una lista de palabras `wordList`, devolver todas las secuencias de transformacion mas cortas desde `beginWord` hasta `endWord`, donde cada paso cambia exactamente una letra y cada palabra intermedia debe existir en `wordList`. Si no existe ninguna transformacion posible, devolver una lista vacia.

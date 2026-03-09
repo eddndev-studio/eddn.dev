@@ -9,7 +9,6 @@ complexity:
   space: "O(1) por la misma razon"
 ---
 
-# Ensenarle a una Maquina a Leer Numeros en Voz Alta
 
 ## El Problema
 Dado un entero no negativo `num`, convertirlo a su representacion en palabras en ingles. La entrada esta garantizada a ser menor que 2^31 - 1 (como maximo 2,147,483,647). Por ejemplo, `1234567` se convierte en `"One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"`, y `0` se convierte en `"Zero"`.

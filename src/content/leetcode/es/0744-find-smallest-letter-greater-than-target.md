@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Find Smallest Letter Greater Than Target
 
 ## Problema
 Dado un array de caracteres `letters` ordenado en orden ascendente y un carácter `target`, devolver el menor carácter en `letters` que sea estrictamente mayor que `target`. Si no existe tal carácter, devolver el primer elemento del array (el array se considera circular).

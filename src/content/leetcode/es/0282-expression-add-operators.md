@@ -9,7 +9,6 @@ complexity:
   space: "O(N) por la profundidad de la recursion"
 ---
 
-# Insertando Operadores en el Caos Numerico
 
 ## El Problema
 Dada una cadena `num` que contiene solo digitos y un entero `target`, devolver todas las posibilidades de insertar los operadores binarios `+`, `-` y `*` entre los digitos de `num` para que la expresion resultante se evalue al valor `target`. Los operandos en las expresiones retornadas no deben contener ceros a la izquierda.

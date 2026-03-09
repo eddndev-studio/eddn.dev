@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Tejiendo Intervalos desde el Caos
 
 ## El Problema
 Disenar una estructura de datos que reciba un flujo de enteros no negativos y los resuma como una lista de intervalos disjuntos. Implementar la clase `SummaryRanges` con dos operaciones: `addNum(value)` que agrega el entero `value` al flujo, y `getIntervals()` que devuelve un resumen de los enteros en el flujo como una lista de intervalos disjuntos `[start, end]`, ordenados por `start`.

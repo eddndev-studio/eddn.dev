@@ -9,7 +9,6 @@ complexity:
   space: "O(M)"
 ---
 
-# Solving Sudoku with Bits and Backtracking
 
 ## The Problem
 Given a partially filled 9x9 Sudoku board, fill it so that each row, each column, and each 3x3 sub-box contains the digits 1 through 9 exactly once. The puzzle is guaranteed to have exactly one solution.

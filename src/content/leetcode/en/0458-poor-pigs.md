@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Piglets, Poison, and the Geometry of Information
 
 ## The Problem
 There are `buckets` buckets of liquid, exactly one of which is poisoned. To figure out which one is poisoned, you can feed pigs the liquid. A pig dies if it drinks the poison, and it takes exactly `minutesToDie` minutes to die. Given a total of `minutesToTest` minutes to conduct the tests, return the minimum number of pigs needed to determine with certainty which bucket is poisoned.

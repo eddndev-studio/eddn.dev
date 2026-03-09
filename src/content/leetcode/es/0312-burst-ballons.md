@@ -9,7 +9,6 @@ complexity:
   space: "O(N^2)"
 ---
 
-# El Ultimo Globo en Reventar
 
 ## El Problema
 Dado un arreglo de enteros `nums` que representa globos, donde cada globo tiene un numero pintado. Se nos pide reventar todos los globos. Al reventar el globo `i`, se obtienen `nums[i-1] * nums[i] * nums[i+1]` monedas. Si `i-1` o `i+1` estan fuera de los limites del arreglo, se tratan como si tuvieran un `1`. Encontrar el maximo de monedas que se pueden obtener reventando todos los globos.

@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# El Cartografo del Diccionario Infinito
 
 ## El Problema
 Dados dos enteros `n` y `k`, encontrar el k-esimo numero mas pequeno en orden lexicografico dentro del rango `[1, n]`. Por ejemplo, si `n = 13` y `k = 2`, los numeros en orden lexicografico son `[1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9]`, y el segundo es `10`.

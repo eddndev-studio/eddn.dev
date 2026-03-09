@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# The Cartographer of the Infinite Dictionary
 
 ## The Problem
 Given two integers `n` and `k`, find the k-th smallest number in lexicographical order within the range `[1, n]`. For example, if `n = 13` and `k = 2`, the numbers in lexicographical order are `[1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9]`, and the second one is `10`.

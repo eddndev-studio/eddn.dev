@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Domando el Comodin
 
 ## El Problema
 Dada una cadena `s` y un patron `p`, implementar el matching de patrones wildcard con soporte para `'?'` (coincide con cualquier caracter individual) y `'*'` (coincide con cualquier secuencia de caracteres, incluyendo la secuencia vacia). El matching debe cubrir **toda** la cadena de entrada, no solo una parte.

@@ -9,7 +9,6 @@ complexity:
   space: "O(n)"
 ---
 
-# Balanced Binary Tree
 
 ## Problema
 Dado un árbol binario, determinar si está balanceado en altura. Un árbol binario balanceado en altura es aquel en el que, para cada nodo, la diferencia entre las alturas de sus subárboles izquierdo y derecho no excede 1.

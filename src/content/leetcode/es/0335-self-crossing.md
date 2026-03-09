@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# La Espiral que Muerde su Propia Cola
 
 ## El Problema
 Se te da un arreglo de enteros `distance`. Partiendo del origen en un plano 2D, te mueves `distance[0]` metros al norte, luego `distance[1]` metros al oeste, luego `distance[2]` metros al sur, luego `distance[3]` metros al este, y asi sucesivamente, ciclando entre las direcciones. Devolver `true` si el camino se cruza a si mismo en algun punto, y `false` en caso contrario.

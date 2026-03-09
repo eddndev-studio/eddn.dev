@@ -9,7 +9,6 @@ complexity:
   space: "O(M^2 * N)"
 ---
 
-# Cruzando el Puente Una Letra a la Vez
 
 ## El Problema
 Dadas dos palabras, `beginWord` y `endWord`, y un diccionario `wordList`, devolver el numero de palabras en la **secuencia de transformacion mas corta** desde `beginWord` hasta `endWord`, tal que cada par adyacente de palabras difiere en exactamente una letra, y cada palabra intermedia debe existir en `wordList`. Devolver `0` si no existe tal secuencia. Notar que `beginWord` no necesita estar en `wordList`.

@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# Repartiendo Dulces con Justicia
 
 ## El Problema
 Hay `n` ninos parados en fila. A cada nino se le asigna un valor de calificacion dado en el arreglo entero `ratings`. Queremos distribuir dulces a estos ninos siguiendo dos reglas: cada nino debe recibir al menos un dulce, y un nino con una calificacion mayor que la de un vecino inmediato debe recibir mas dulces que ese vecino. Devolver el numero minimo total de dulces necesarios.

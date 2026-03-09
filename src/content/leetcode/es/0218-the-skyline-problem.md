@@ -9,7 +9,6 @@ complexity:
   space: "O(N) para el heap y los puntos criticos"
 ---
 
-# Dibujando Siluetas Contra el Horizonte
 
 ## El Problema
 Dada una lista de edificios representados como `[left, right, height]`, devolver la linea del horizonte (skyline) formada por estos edificios como una lista de puntos clave `[x, height]`. Cada punto clave marca donde la linea del horizonte cambia de altura. La salida no debe contener entradas consecutivas con la misma altura.

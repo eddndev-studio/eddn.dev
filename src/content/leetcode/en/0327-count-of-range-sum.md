@@ -9,7 +9,6 @@ complexity:
   space: "O(N) for the prefix sum array and the merge buffer"
 ---
 
-# Hunting Sums Between the Lines
 
 ## The Problem
 Given an integer array `nums` and two integers `lower` and `upper`, return the number of range sums that lie in `[lower, upper]` inclusive. A range sum `S(i, j)` is defined as the sum of the elements in `nums` between indices `i` and `j` inclusive, where `i <= j`.

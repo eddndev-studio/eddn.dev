@@ -9,7 +9,6 @@ complexity:
   space: "O(n)"
 ---
 
-# Balance a Binary Search Tree: Aplanar y Reconstruir
 
 ## El Problema
 Dado el nodo raiz de un arbol binario de busqueda (BST), necesitamos devolver un arbol binario de busqueda **balanceado** con los mismos valores de nodo. Un arbol binario de busqueda esta balanceado si la profundidad de los dos subarboles de cada nodo nunca difiere en mas de 1. Si hay mas de una respuesta, cualquier respuesta valida es aceptada.

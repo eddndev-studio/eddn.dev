@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# The Smallest Window That Holds Everything
 
 ## The Problem
 Given two strings `s` and `t`, find the minimum window substring of `s` such that every character in `t` (including duplicates) is included in the window. If no such window exists, return an empty string.

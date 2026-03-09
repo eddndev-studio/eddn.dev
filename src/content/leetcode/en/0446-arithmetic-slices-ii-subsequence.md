@@ -9,7 +9,6 @@ complexity:
   space: "O(N^2), for the hash maps stored at each index"
 ---
 
-# Counting Ghosts in the Sequence
 
 ## The Problem
 Given an integer array `nums`, return the number of all arithmetic subsequences of `nums`. A sequence is arithmetic if it consists of at least three elements and the difference between consecutive elements is the same. A subsequence is a sequence derived from the array by deleting some or no elements without changing the order of the remaining elements.

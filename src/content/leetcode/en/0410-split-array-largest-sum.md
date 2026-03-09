@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Splitting the Load Without Breaking the Scale
 
 ## The Problem
 Given an integer array `nums` and an integer `k`, split `nums` into `k` non-empty contiguous subarrays such that the largest sum among these subarrays is minimized. Return the minimized largest sum.

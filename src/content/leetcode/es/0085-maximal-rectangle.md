@@ -9,7 +9,6 @@ complexity:
   space: "O(C)"
 ---
 
-# El Rectangulo Escondido a Simple Vista
 
 ## El Problema
 Dada una matriz binaria de `rows x cols` llena de `'0'`s y `'1'`s, encontrar el area del rectangulo mas grande que contenga solo `'1'`s.

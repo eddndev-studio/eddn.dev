@@ -9,7 +9,6 @@ complexity:
   space: "O(n)"
 ---
 
-# Balanced Binary Tree
 
 ## Problem
 Given a binary tree, determine if it is height-balanced. A height-balanced binary tree is one in which, for every node, the difference between the heights of its left and right subtrees does not exceed 1.

@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# El Numero que Nadie Invito
 
 ## El Problema
 Dado un arreglo de enteros sin ordenar `nums`, encontrar el menor entero positivo que no esta presente en el arreglo. El algoritmo debe ejecutarse en tiempo O(N) y usar espacio constante O(1).

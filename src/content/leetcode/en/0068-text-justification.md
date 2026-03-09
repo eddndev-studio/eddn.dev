@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# The Art of Typesetting by Hand
 
 ## The Problem
 Given a list of words and a maximum width `maxWidth`, format the text such that each line has exactly `maxWidth` characters and is fully justified (aligned on both left and right). Words should be packed using a greedy algorithm: each line should contain as many words as possible, and extra spaces should be distributed as evenly as possible among the gaps. The last line must be left-aligned, padded with trailing spaces to fill the width.

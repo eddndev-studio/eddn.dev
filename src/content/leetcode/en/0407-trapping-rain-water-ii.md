@@ -9,7 +9,6 @@ complexity:
   space: "O(M * N)"
 ---
 
-# Flooding the Terrain from the Edges
 
 ## The Problem
 Given an `m x n` integer matrix `heightMap` representing the height of each cell in an elevation map, compute the volume of water it can trap after raining.

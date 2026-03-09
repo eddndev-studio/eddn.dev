@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Minimum Deletions to Make String Balanced: Rastreando el Costo Sobre la Marcha
 
 ## El Problema
 Dada una cadena `s` que consiste unicamente de los caracteres `'a'` y `'b'`, se puede eliminar cualquier cantidad de caracteres de `s` para que la cadena restante quede balanceada. Una cadena esta balanceada si no existe ningun par de indices `(i, j)` tal que `i < j`, `s[i] = 'b'` y `s[j] = 'a'`. En otras palabras, todas las `'a'`s deben aparecer antes que todas las `'b'`s. Devolver el numero minimo de eliminaciones necesarias.

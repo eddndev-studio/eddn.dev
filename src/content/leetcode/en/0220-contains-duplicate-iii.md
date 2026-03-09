@@ -9,7 +9,6 @@ complexity:
   space: "O(min(N, indexDiff)) for the bucket map"
 ---
 
-# Catching Near-Duplicates With Invisible Buckets
 
 ## The Problem
 Given an integer array `nums` and two integers `indexDiff` and `valueDiff`, return `true` if there exist two distinct indices `i` and `j` such that `abs(i - j) <= indexDiff` and `abs(nums[i] - nums[j]) <= valueDiff`.

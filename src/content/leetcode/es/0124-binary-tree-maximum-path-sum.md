@@ -9,7 +9,6 @@ complexity:
   space: "O(H)"
 ---
 
-# El Sendero de Oro Escondido en el Arbol
 
 ## El Problema
 Dado el nodo `root` de un arbol binario, devolver la suma maxima de camino de cualquier camino **no vacio** en el arbol. Un camino se define como una secuencia de nodos donde cada par de nodos adyacentes tiene una arista que los conecta. Un nodo solo puede aparecer en el camino como maximo una vez. El camino no necesita pasar por la raiz.

@@ -9,7 +9,6 @@ complexity:
   space: "O(N^2), por los hash maps almacenados en cada indice"
 ---
 
-# Contando Fantasmas en la Secuencia
 
 ## El Problema
 Dado un arreglo de enteros `nums`, retornar la cantidad de todas las subsecuencias aritmeticas de `nums`. Una secuencia es aritmetica si tiene al menos tres elementos y la diferencia entre elementos consecutivos es la misma. Una subsecuencia es una secuencia derivada del arreglo eliminando algunos o ningun elemento sin cambiar el orden de los restantes.

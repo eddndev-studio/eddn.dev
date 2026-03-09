@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Find Smallest Letter Greater Than Target
 
 ## Problem
 Given an array of characters `letters` sorted in ascending order and a character `target`, return the smallest character in `letters` that is strictly greater than `target`. If no such character exists, return the first element of the array (the array wraps around).

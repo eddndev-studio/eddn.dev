@@ -9,7 +9,6 @@ complexity:
   space: "O(M * N)"
 ---
 
-# Inundando el Terreno desde los Bordes
 
 ## El Problema
 Dada una matriz `heightMap` de `m x n` enteros no negativos que representan la altura de cada celda en un mapa de elevacion, calcular el volumen de agua que puede quedar atrapado despues de llover.

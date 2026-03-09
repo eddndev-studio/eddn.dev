@@ -9,7 +9,6 @@ complexity:
   space: "O(N)"
 ---
 
-# The Skyscraper Hidden in the Histogram
 
 ## The Problem
 Given an array of integers `heights` representing the heights of bars in a histogram where each bar has width 1, find the area of the largest rectangle that can be formed within the histogram.

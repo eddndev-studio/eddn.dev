@@ -9,7 +9,6 @@ complexity:
   space: "O(N) para la cadena combinada y el arreglo LPS"
 ---
 
-# El Espejo Roto: Construyendo Palindromos con KMP
 
 ## El Problema
 Dada una cadena `s`, encontrar el palindromo mas corto que se puede formar agregando caracteres **unicamente al inicio** de `s`. Es decir, debemos prepender la menor cantidad de caracteres posible para convertir `s` en un palindromo.

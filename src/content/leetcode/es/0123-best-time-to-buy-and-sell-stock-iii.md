@@ -9,7 +9,6 @@ complexity:
   space: "O(1)"
 ---
 
-# Dos Oportunidades en el Mercado: Maximizando Ganancias con un Par de Operaciones
 
 ## El Problema
 Se te da un arreglo `prices` donde `prices[i]` es el precio de una accion en el dia `i`. Encuentra la ganancia maxima que puedes obtener. Puedes completar como maximo dos transacciones. Nota: No puedes participar en multiples transacciones simultaneamente (es decir, debes vender la accion antes de comprar otra).

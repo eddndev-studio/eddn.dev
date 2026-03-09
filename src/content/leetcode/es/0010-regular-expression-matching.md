@@ -9,7 +9,6 @@ complexity:
   space: "O(M * N)"
 ---
 
-# Cuando los Patrones Cobran Vida
 
 ## El Problema
 Dada una cadena `s` y un patrón `p`, implementar el matching de expresiones regulares con soporte para `'.'` (coincide con cualquier carácter individual) y `'*'` (coincide con cero o más del elemento precedente). El matching debe cubrir **toda** la cadena de entrada, no solo una parte.
