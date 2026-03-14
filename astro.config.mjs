@@ -6,6 +6,7 @@ import { transformerMetaHighlight, transformerNotationFocus } from '@shikijs/tra
 
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import achGrammar from './src/styles/achronyme.tmLanguage.json';
 
 // https://astro.build/config
 export default defineConfig({
@@ -26,6 +27,9 @@ export default defineConfig({
     shikiConfig: {
       theme: 'nord',
       wrap: true,
+      langs: [
+        { ...achGrammar, name: 'ach', aliases: ['achronyme'] },
+      ],
       transformers: [
         transformerMetaHighlight(),
         transformerNotationFocus(),

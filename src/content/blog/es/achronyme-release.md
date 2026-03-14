@@ -16,7 +16,7 @@ Achronyme es un lenguaje de programacion donde la misma sintaxis puede ejecutars
 
 Asi se ve probar un compromiso Poseidon:
 
-```
+```ach
 let secret = 0p12345
 let blinding = 0p98765
 

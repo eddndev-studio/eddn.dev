@@ -16,7 +16,7 @@ Achronyme is a programming language where the same syntax can run as a general-p
 
 Here's what proving a Poseidon commitment looks like:
 
-```
+```ach
 let secret = 0p12345
 let blinding = 0p98765
 
