@@ -1,44 +1,102 @@
 ---
-title: "Achronyme: First Release"
-description: "Celebramos el lanzamiento de la beta 0.1.0-beta2 de Achronyme, marcando un hito con funciones de primera clase, estructuras dinámicas y soporte oficial para editores."
-pubDate: "2026-03-03"
+title: "Achronyme: Un Lenguaje para Pruebas Zero-Knowledge"
+description: "Presentamos Achronyme — escribe codigo legible, genera pruebas criptograficas. Un lenguaje, dos modos de ejecucion, cero ceremonia."
+pubDate: "2026-03-14"
 tags: ["achronyme", "release", "zk", "rust", "compiler"]
 translationKey: "achronyme-0-1-0-beta2"
 ---
 
-Hoy me emociona anunciar el lanzamiento de **Achronyme 0.1.0-beta2**. Este no es solo un lanzamiento más; representa un hito fundamental en el desarrollo del lenguaje. Hemos pasado de un motor experimental a la primera versión verdaderamente utilizable para escribir circuitos Zero-Knowledge y lógica de propósito general, todo respaldado por un naciente ecosistema de herramientas.
+Si alguna vez escribiste un circuito ZK, conoces el dolor. Escribes constraints en un DSL, generas witnesses en JavaScript, descargas un archivo Powers of Tau, ejecutas un trusted setup, invocas snarkjs tres veces por separado, y rezas para que todo cuadre. Siete pasos, tres herramientas, dos lenguajes — solo para probar que conoces un numero.
 
-## Un Lenguaje Completo
+Construi Achronyme para simplificar esto.
 
-En las fases anteriores, Achronyme era capaz de compilar matemáticas básicas, pero carecía de la ergonomía que esperamos de un lenguaje moderno. Con esta beta, hemos introducido características clave que transforman la experiencia de desarrollo:
+## Que es Achronyme?
 
-- **Funciones de Primera Clase y Closures:** Ahora puedes definir funciones de usuario, pasarlas como argumentos y aprovechar la captura léxica de variables (*Upvalues*) con estado mutable compartido. Incluso soportamos recursividad completa y funciones anidadas.
-- **Estructuras de Datos Dinámicas:** Hemos añadido soporte nativo para **Listas** (`[1, 2, 3]`) y **Mapas** (`{"clave": "valor"}`), permitiendo una manipulación de datos mucho más rica dentro de la máquina virtual.
-- **Flujo de Control Avanzado:** Integración de bucles `while`, iteradores `for x in list`, y expresiones `if`/`else` que devuelven valores, junto con saltos estructurados (`break`, `continue`).
+Achronyme es un lenguaje de programacion donde la misma sintaxis puede ejecutarse como programa de proposito general o compilarse a restricciones aritmeticas para pruebas zero-knowledge.
 
-Estas adiciones hacen que escribir scripts complejos y preparar testigos (witnesses) para tus circuitos ZK sea una experiencia fluida y familiar.
+Asi se ve probar un compromiso Poseidon:
 
-## El Ecosistema de Editores
+```
+let secret = 0p12345
+let blinding = 0p98765
 
-Un lenguaje no está completo sin las herramientas adecuadas. Escribir código en el bloc de notas está bien para un prototipo, pero para un proyecto serio necesitas asistencia.
+let p = prove {
+    witness secret
+    witness blinding
+    public commitment
+    assert_eq(poseidon(secret, blinding), commitment)
+}
 
-Es por eso que junto con esta versión, introducimos el primer soporte de herramientas para editores del ecosistema. Hemos desarrollado un **Language Server Protocol (LSP)** (`ach-lsp`) y una extensión oficial para **VS Code** (ubicada en nuestro repositorio `achronyme-editor`).
+print(proof_json(p))    // Prueba Groth16, verificable on-chain
+assert(verify_proof(p)) // verificada
+```
 
-Ahora, al escribir código Achronyme, obtienes:
-- Resaltado de sintaxis preciso.
-- Detección de errores en tiempo real.
-- Una mejor experiencia de depuración gracias a nuestra nueva "Debug Symbol Table", que mapea nombres de variables en binarios `.achb` para reportes de error detallados ("Happy Path" O(1)).
+Seis lineas. Un archivo. El bloque `prove {}` compila un circuito, captura variables del scope, genera un witness, y retorna una prueba criptografica — todo inline. Sin ceremonia.
 
-## Motor ZK y Rendimiento
+Compara con el equivalente en Circom: escribir un template, compilar a WASM, generar witness con JavaScript, descargar ptau, ejecutar trusted setup, probar, verificar. Siete pasos con tres herramientas distintas.
 
-Bajo el capó, el motor criptográfico sigue madurando. Hemos solidificado nuestro pipeline SSA IR (Intermediate Representation) con múltiples pases de optimización (Constant folding, Dead code elimination, Boolean propagation).
+## Doble Ejecucion
 
-Además, el rendimiento de nuestra VM personalizada escrita en Rust es excepcional. En pruebas de bucles calientes (hot loops), Achronyme VM es aproximadamente un **50% más rápido que Python 3**, procesando 10 millones de iteraciones en ~0.41 segundos. Todo esto manteniendo la seguridad de memoria mediante estrategias como "Stack Pinning" y un recolector de basura Mark-and-Sweep rigurosamente probado con nuestro modo `--stress-gc`.
+La idea central es doble ejecucion desde el mismo codigo fuente:
 
-## ¿Qué sigue?
+**Modo VM** (`ach run`) te da un lenguaje de programacion real — closures, recursion, GC mark-sweep, arrays, maps, strings, 43 funciones nativas. Escribe algoritmos, manipula datos, prepara inputs.
 
-La beta 0.1.0-beta2 es un punto de inflexión. Tenemos un lenguaje expresivo, herramientas de desarrollo integradas y un pipeline de pruebas robusto con más de 970 pruebas unitarias y 90 de integración.
+**Modo Circuito** (`ach circuit`) compila la misma sintaxis a restricciones R1CS o Plonkish sobre BN254. Los loops se desenrollan estaticamente, `if/else` se convierte en `mux`, las funciones se inlinean en cada call site. La salida es un sistema de restricciones plano listo para generar pruebas.
 
-El siguiente paso es refinar los backends de pruebas (R1CS/Groth16 y Plonkish/KZG-PlonK) y expandir la biblioteca estándar. Te invito a descargar esta versión, probar la extensión de VS Code y empezar a escribir tus propios circuitos Zero-Knowledge.
+El bloque `prove {}` conecta ambos: se ejecuta dentro de la VM pero compila su cuerpo como circuito.
 
-¡El futuro de Achronyme está aquí y es más rápido, seguro y utilizable que nunca!
+## Provers Nativos
+
+Achronyme incluye backends nativos de Groth16 (ark-groth16) y PlonK (halo2-KZG) compilados directamente en el binario. Sin Node.js, sin snarkjs, sin dependencias externas. Las pruebas se generan en proceso.
+
+```bash
+# Groth16 (por defecto)
+ach run my_proof.ach
+
+# PlonK
+ach run my_proof.ach --prove-backend plonkish
+
+# Compilar circuito + generar verificador Solidity
+ach circuit vote.ach --inputs "..." --solidity Verifier.sol
+```
+
+Los archivos `.r1cs` y `.wtns` de salida tambien son compatibles con snarkjs, asi que puedes usar herramientas externas si lo prefieres.
+
+## Que Incluye
+
+Esto no es un prototipo. La version actual (v0.1.0-beta.7) incluye:
+
+- **1,300+ tests unitarios y 150+ tests de integracion** — cada feature se prueba en ambos modos de ejecucion
+- **SSA IR con 4 pases de optimizacion** — constant folding, dead code elimination, boolean propagation, taint analysis
+- **Diagnosticos estilo rustc** — errores con snippets de codigo, sugerencias "did you mean?", codigos de warning
+- **Sistema de modulos** — `import`/`export`, deteccion de dependencias circulares, cache de modulos
+- **Extension VS Code** — syntax highlighting y deteccion de errores en tiempo real via LSP
+- **Script de instalacion** — un solo comando para empezar
+
+## Empieza
+
+```bash
+curl -fsSL https://achrony.me/install.sh | sh
+```
+
+Esto instala el binario `ach` en `~/.local/bin`. Luego:
+
+```bash
+ach --version          # verificar
+ach run script.ach     # ejecutar un programa
+ach circuit circ.ach   # compilar un circuito
+ach disassemble f.ach  # inspeccionar bytecode o IR
+```
+
+El codigo fuente esta en [github.com/achronyme/achronyme](https://github.com/achronyme/achronyme). Docs en [docs.achrony.me](https://docs.achrony.me). Extension VS Code en [achronyme-editor](https://github.com/achronyme/achronyme-editor).
+
+## Que Sigue
+
+El roadmap hacia 1.0:
+
+- **0.1.0** — primer release estable (stdlib, imports pulidos)
+- **0.2.0** — LSP completions, go-to-definition, hover docs
+- **0.3.0** — playground en el navegador (compilador + VM en WASM)
+- **1.0.0** — API estable, soporte multi-curva
+
+Si escribes circuitos ZK y estas cansado de la ceremonia, dale una oportunidad a Achronyme. Me encantaria saber que piensas.
