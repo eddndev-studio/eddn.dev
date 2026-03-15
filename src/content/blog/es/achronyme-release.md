@@ -35,9 +35,11 @@ Seis lineas. Un archivo. El bloque `prove {}` compila un circuito, captura varia
 
 Compara con el equivalente en Circom: escribir un template, compilar a WASM, generar witness con JavaScript, descargar ptau, ejecutar trusted setup, probar, verificar. Siete pasos con tres herramientas distintas.
 
+La razon por la que esto funciona es que Achronyme no separa "el lenguaje en el que piensas" del "lenguaje que entiende el prover." El mismo codigo fuente cumple ambos roles.
+
 ## Doble Ejecucion
 
-La idea central es doble ejecucion desde el mismo codigo fuente:
+Esto es posible gracias a la doble ejecucion — el mismo codigo, dos destinos:
 
 **Modo VM** (`ach run`) te da un lenguaje de programacion real — closures, recursion, GC mark-sweep, arrays, maps, strings, 43 funciones nativas. Escribe algoritmos, manipula datos, prepara inputs.
 
@@ -64,14 +66,14 @@ Los archivos `.r1cs` y `.wtns` de salida tambien son compatibles con snarkjs, as
 
 ## Que Incluye
 
-Esto no es un prototipo. La version actual (v0.1.0-beta.7) incluye:
+Esto no es un prototipo. La version actual (v0.1.0-beta.7) es el resultado de meses de trabajo en correctitud, experiencia de desarrollo y herramientas:
 
-- **1,300+ tests unitarios y 150+ tests de integracion** — cada feature se prueba en ambos modos de ejecucion
-- **SSA IR con 4 pases de optimizacion** — constant folding, dead code elimination, boolean propagation, taint analysis
-- **Diagnosticos estilo rustc** — errores con snippets de codigo, sugerencias "did you mean?", codigos de warning
-- **Sistema de modulos** — `import`/`export`, deteccion de dependencias circulares, cache de modulos
-- **Extension VS Code** — syntax highlighting y deteccion de errores en tiempo real via LSP
-- **Script de instalacion** — un solo comando para empezar
+- **1,300+ tests unitarios y 150+ tests de integracion** — cada feature se prueba en ambos modos de ejecucion, cada commit pasa por CI
+- **SSA IR con 4 pases de optimizacion** — taint analysis detecta variables sub-restringidas antes de que pierdas 20 minutos en una prueba fallida; boolean propagation elimina constraints redundantes automaticamente
+- **Diagnosticos estilo rustc** — cuando algo falla, obtienes snippets de codigo, sugerencias "did you mean?" y codigos de warning — no un indice de constraint crudo
+- **Sistema de modulos** — `import`/`export` con deteccion de dependencias circulares, para que los circuitos puedan compartir codigo sin copiar y pegar
+- **Extension VS Code** — syntax highlighting y deteccion de errores en tiempo real via LSP, porque escribir constraints a ciegas es como se crean los bugs
+- **Script de instalacion** — un solo comando, sin necesidad de toolchain de Rust
 
 ## Empieza
 
@@ -99,4 +101,4 @@ El roadmap hacia 1.0:
 - **0.3.0** — playground en el navegador (compilador + VM en WASM)
 - **1.0.0** — API estable, soporte multi-curva
 
-Si escribes circuitos ZK y estas cansado de la ceremonia, dale una oportunidad a Achronyme. Me encantaria saber que piensas.
+Si escribes circuitos ZK y estas cansado de la ceremonia, intenta portar uno de tus circuitos existentes a Achronyme y ve como se siente. Si algo se rompe o no tiene sentido, [abre un issue](https://github.com/achronyme/achronyme/issues) — ese es el feedback mas util en esta etapa.

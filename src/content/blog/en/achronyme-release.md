@@ -35,9 +35,11 @@ Six lines. One file. The `prove {}` block compiles a circuit, captures variables
 
 Compare that to the Circom equivalent: write a template, compile to WASM, generate witness with JavaScript, download ptau, run trusted setup, prove, verify. Seven steps across three different tools.
 
+The reason this works is that Achronyme doesn't separate "the language you think in" from "the language the prover understands." The same source code serves both roles.
+
 ## Dual Execution
 
-The core idea is dual execution from the same source:
+That's possible because of dual execution — the same source, two targets:
 
 **VM mode** (`ach run`) gives you a real programming language — closures, recursion, mark-sweep GC, arrays, maps, strings, 43 native functions. Write algorithms, manipulate data, prepare inputs.
 
@@ -64,14 +66,14 @@ The `.r1cs` and `.wtns` output files are also snarkjs-compatible, so you can use
 
 ## What's Included
 
-This isn't a prototype. The current release (v0.1.0-beta.7) ships with:
+This isn't a prototype. The current release (v0.1.0-beta.7) is the result of months of work on correctness, developer experience, and tooling:
 
-- **1,300+ unit tests and 150+ integration tests** — every feature is tested across both execution modes
-- **SSA IR with 4 optimization passes** — constant folding, dead code elimination, boolean propagation, taint analysis
-- **Rustc-style diagnostics** — errors with source snippets, "did you mean?" suggestions, warning codes
-- **Module system** — `import`/`export`, circular dependency detection, module caching
-- **VS Code extension** — syntax highlighting and real-time error detection via LSP
-- **Install script** — one command to get started
+- **1,300+ unit tests and 150+ integration tests** — every feature is tested across both execution modes, every commit runs CI
+- **SSA IR with 4 optimization passes** — taint analysis catches under-constrained variables before you waste 20 minutes on a failed proof; boolean propagation eliminates redundant constraints automatically
+- **Rustc-style diagnostics** — when something goes wrong, you get source snippets, "did you mean?" suggestions, and warning codes — not a raw constraint index
+- **Module system** — `import`/`export` with circular dependency detection, so circuits can share code without copy-pasting
+- **VS Code extension** — syntax highlighting and real-time error detection via LSP, because writing constraints blind is how bugs happen
+- **Install script** — one command, no Rust toolchain required
 
 ## Get Started
 
@@ -99,4 +101,4 @@ The roadmap toward 1.0:
 - **0.3.0** — browser playground (WASM compiler + VM)
 - **1.0.0** — stable API freeze, multi-curve support
 
-If you write ZK circuits and you're tired of the ceremony, give Achronyme a try. I'd love to hear what you think.
+If you write ZK circuits and you're tired of the ceremony, try porting one of your existing circuits to Achronyme and see how it feels. If something breaks or doesn't make sense, [open an issue](https://github.com/achronyme/achronyme/issues) — that's the most useful feedback at this stage.
