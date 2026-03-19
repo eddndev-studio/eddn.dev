@@ -64,6 +64,9 @@ export const ui = {
     'bio.link.instagram': 'Instagram',
     'bio.link.tiktok': 'TikTok',
     'bio.link.threads': 'Threads',
+    'search.placeholder': 'Search articles, solutions...',
+    'search.no_results': 'No results found.',
+    'search.close': 'Close',
   },
   es: {
     'nav.blog': 'Blog',
@@ -123,6 +126,9 @@ export const ui = {
     'bio.link.instagram': 'Instagram',
     'bio.link.tiktok': 'TikTok',
     'bio.link.threads': 'Threads',
+    'search.placeholder': 'Buscar artículos, soluciones...',
+    'search.no_results': 'No se encontraron resultados.',
+    'search.close': 'Cerrar',
   },
 } as const;
 

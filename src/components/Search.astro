@@ -1,0 +1,147 @@
+---
+import { useTranslations } from '../i18n/ui';
+
+const lang = (Astro.currentLocale as keyof typeof import('../i18n/ui').ui) || 'en';
+const t = useTranslations(lang);
+---
+
+<!-- Search Modal -->
+<div
+  id="search-modal"
+  class="fixed inset-0 z-[60] opacity-0 invisible transition-all duration-200"
+  role="dialog"
+  aria-modal="true"
+  aria-label={t('search.placeholder')}
+>
+  <!-- Backdrop -->
+  <div id="search-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+  <!-- Modal -->
+  <div class="relative z-10 max-w-2xl mx-auto mt-12 sm:mt-20 px-4 sm:px-6">
+    <div class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-none overflow-hidden">
+      <!-- Input -->
+      <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 px-5 h-14">
+        <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          id="search-input"
+          type="text"
+          placeholder={t('search.placeholder')}
+          autocomplete="off"
+          class="flex-1 bg-transparent text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none font-mono"
+        />
+        <kbd class="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold text-slate-400 border border-slate-200 dark:border-slate-700 rounded">
+          ESC
+        </kbd>
+      </div>
+
+      <!-- Results -->
+      <div id="search-results" class="max-h-[60vh] overflow-y-auto">
+        <div id="search-empty" class="px-5 py-12 text-center text-sm text-slate-400 font-mono hidden">
+          {t('search.no_results')}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let pagefind: any = null;
+  let debounceTimer: ReturnType<typeof setTimeout>;
+
+  function initSearch() {
+    const modal = document.getElementById('search-modal');
+    const backdrop = document.getElementById('search-backdrop');
+    const input = document.getElementById('search-input') as HTMLInputElement;
+    const results = document.getElementById('search-results');
+    const empty = document.getElementById('search-empty');
+    const searchBtns = document.querySelectorAll('.search-trigger');
+
+    if (!modal || !input || !results || !empty) return;
+
+    const open = async () => {
+      modal.classList.remove('opacity-0', 'invisible');
+      modal.classList.add('opacity-100', 'visible');
+      document.body.style.overflow = 'hidden';
+      input.focus();
+
+      if (!pagefind) {
+        try {
+          const path = `${window.location.origin}/pagefind/pagefind.js`;
+          pagefind = await import(/* @vite-ignore */ path);
+          await pagefind.init();
+        } catch {
+          // Pagefind not available in dev mode
+        }
+      }
+    };
+
+    const close = () => {
+      modal.classList.remove('opacity-100', 'visible');
+      modal.classList.add('opacity-0', 'invisible');
+      document.body.style.overflow = '';
+      input.value = '';
+      results.querySelectorAll('.search-result').forEach(el => el.remove());
+      empty.classList.add('hidden');
+    };
+
+    const search = async (query: string) => {
+      if (!pagefind || !query.trim()) {
+        results.querySelectorAll('.search-result').forEach(el => el.remove());
+        empty.classList.add('hidden');
+        return;
+      }
+
+      const response = await pagefind.search(query);
+      results.querySelectorAll('.search-result').forEach(el => el.remove());
+
+      if (response.results.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+
+      const top = response.results.slice(0, 8);
+      const data = await Promise.all(top.map((r: any) => r.data()));
+
+      for (const item of data) {
+        const a = document.createElement('a');
+        a.href = item.url;
+        a.className = 'search-result block px-5 py-4 border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors group';
+        a.innerHTML = `
+          <div class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-600 transition-colors">${item.meta?.title || item.url}</div>
+          <div class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">${item.excerpt}</div>
+          <div class="text-[10px] font-mono text-slate-400 mt-1.5">${item.url}</div>
+        `;
+        a.addEventListener('click', close);
+        results.appendChild(a);
+      }
+    };
+
+    // Events
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => search(input.value), 200);
+    });
+
+    backdrop?.addEventListener('click', close);
+
+    searchBtns.forEach(btn => btn.addEventListener('click', open));
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        const isOpen = modal.classList.contains('visible');
+        isOpen ? close() : open();
+      }
+      if (e.key === 'Escape' && modal.classList.contains('visible')) {
+        close();
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initSearch);
+</script>

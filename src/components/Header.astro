@@ -55,6 +55,16 @@ const navItems = [
       <LanguagePicker />
       <div class="h-4 w-px bg-slate-200 dark:bg-slate-700"></div>
       <button
+        aria-label="Search"
+        class="search-trigger group flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-brand-600 transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <kbd class="hidden lg:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold text-slate-400 border border-slate-200 dark:border-slate-700 rounded">⌘K</kbd>
+      </button>
+      <div class="h-4 w-px bg-slate-200 dark:bg-slate-700"></div>
+      <button
         aria-label="Toggle theme"
         class="theme-toggle group flex items-center justify-center w-8 h-8 text-slate-500 dark:text-slate-400 hover:text-brand-600 transition-colors"
       >
@@ -69,6 +79,14 @@ const navItems = [
 
     <!-- Mobile Toggle -->
     <div class="md:hidden flex items-center gap-2 z-50">
+      <button
+        aria-label="Search"
+        class="search-trigger flex items-center justify-center w-10 h-10 text-slate-500 dark:text-slate-400 hover:text-brand-600 transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
       <button
         aria-label="Toggle theme"
         class="theme-toggle flex items-center justify-center w-10 h-10 text-slate-500 dark:text-slate-400 hover:text-brand-600 transition-colors"

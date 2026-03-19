@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import Search from "../components/Search.astro";
 import { ClientRouter } from "astro:transitions";
 
 interface Props {
@@ -105,7 +106,8 @@ const {
 	<body class="selection:bg-brand-500/30 overflow-x-hidden relative">
 		<div id="ambient-blobs" class="pointer-events-none absolute left-0 top-0 w-full h-full z-[-1] overflow-hidden"></div>
 		<Header />
-		<main class="pt-16">
+		<Search />
+		<main class="pt-16" data-pagefind-body>
 			<slot />
 		</main>
 		<Footer />
