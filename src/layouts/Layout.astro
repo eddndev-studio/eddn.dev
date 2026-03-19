@@ -54,6 +54,10 @@ const {
 			))
 		}
 
+		<!-- RSS Feeds -->
+		<link rel="alternate" type="application/rss+xml" title="eddn.dev (EN)" href={new URL('/rss.xml', Astro.site)} />
+		<link rel="alternate" type="application/rss+xml" title="eddn.dev (ES)" href={new URL('/es/rss.xml', Astro.site)} />
+
 		<!-- Pagination SEO -->
 		{prevUrl && <link rel="prev" href={new URL(prevUrl, Astro.site)} />}
 		{nextUrl && <link rel="next" href={new URL(nextUrl, Astro.site)} />}
