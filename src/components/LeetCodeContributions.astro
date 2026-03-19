@@ -71,19 +71,19 @@ try {
        ranking = user.profile?.ranking ?? 0;
        const stats = user.submitStatsGlobal?.acSubmissionNum ?? [];
        let totalAccepted = 0;
-       let totalSubmissions = 0;
+       let totalAttempts = 0;
        for (const s of stats) {
          if (s.difficulty === 'Easy') easySolved = s.count;
          else if (s.difficulty === 'Medium') mediumSolved = s.count;
          else if (s.difficulty === 'Hard') hardSolved = s.count;
          if (s.difficulty === 'All') {
            totalAccepted = s.count;
-           totalSubmissions = s.submissions;
+           totalAttempts = s.submissions;
          }
        }
        totalSolved = totalAccepted;
-       acceptanceRate = totalSubmissions > 0
-         ? Math.round((totalAccepted / totalSubmissions) * 10000) / 100
+       acceptanceRate = totalAttempts > 0
+         ? Math.round((totalAccepted / totalAttempts) * 10000) / 100
          : 0;
 
        const rawCalendarData = user.submissionCalendar;
