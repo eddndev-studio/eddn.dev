@@ -20,6 +20,8 @@ const {
 	prevUrl,
 	nextUrl,
 } = Astro.props;
+
+const lang = Astro.currentLocale || 'en';
 ---
 
 <!doctype html>
@@ -107,7 +109,7 @@ const {
 		<div id="ambient-blobs" class="pointer-events-none absolute left-0 top-0 w-full h-full z-[-1] overflow-hidden"></div>
 		<Header />
 		<Search />
-		<main class="pt-16" data-pagefind-body>
+		<main class="pt-16" data-pagefind-body data-pagefind-filter={`lang:${lang}`}>
 			<slot />
 		</main>
 		<Footer />

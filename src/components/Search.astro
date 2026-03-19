@@ -5,7 +5,7 @@ const lang = (Astro.currentLocale as keyof typeof import('../i18n/ui').ui) || 'e
 const t = useTranslations(lang);
 ---
 
-<el-dialog>
+<el-dialog data-search-lang={lang}>
   <dialog id="search-dialog" class="backdrop:bg-transparent bg-transparent p-0 m-0 max-w-none max-h-none w-full h-full open:flex items-start justify-center pt-12 sm:pt-20 px-4 sm:px-6">
     <el-dialog-backdrop
       class="fixed inset-0 bg-black/50 backdrop-blur-sm transition duration-200 data-closed:opacity-0"
@@ -102,7 +102,8 @@ const t = useTranslations(lang);
         return;
       }
 
-      const response = await pagefind.search(query);
+      const searchLang = dialog.getAttribute('data-search-lang') || 'en';
+      const response = await pagefind.search(query, { filters: { lang: searchLang } });
       results.querySelectorAll('.search-result').forEach(el => el.remove());
 
       if (response.results.length === 0) return;
