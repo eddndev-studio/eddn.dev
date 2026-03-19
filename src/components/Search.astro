@@ -6,12 +6,12 @@ const t = useTranslations(lang);
 ---
 
 <el-dialog>
-  <dialog id="search-dialog" class="backdrop:bg-transparent bg-transparent p-0 m-0 max-w-none max-h-none w-full h-full overflow-visible">
+  <dialog id="search-dialog" class="backdrop:bg-transparent bg-transparent p-0 m-0 max-w-none max-h-none w-full h-full open:flex items-start justify-center pt-12 sm:pt-20 px-4 sm:px-6">
     <el-dialog-backdrop
       class="fixed inset-0 bg-black/50 backdrop-blur-sm transition duration-200 data-closed:opacity-0"
     />
-    <el-dialog-panel class="fixed inset-0 flex items-start justify-center pt-12 sm:pt-20 px-4 sm:px-6">
-      <div class="w-full max-w-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+    <el-dialog-panel class="relative z-10 w-full max-w-2xl">
+      <div class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
         <el-command-palette id="search-palette">
           <!-- Input -->
           <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 px-5 h-14">
@@ -31,7 +31,7 @@ const t = useTranslations(lang);
           </div>
 
           <!-- Results -->
-          <el-command-list class="max-h-[60vh] overflow-y-auto block" id="search-results">
+          <el-command-list class="block max-h-[60vh] overflow-y-auto" id="search-results" data-lenis-prevent>
           </el-command-list>
 
           <el-no-results hidden class="px-5 py-12 text-center text-sm text-slate-400 font-mono block">
