@@ -83,12 +83,14 @@ const t = useTranslations(lang);
     };
 
     const open = async () => {
+      (window as any).__lenis?.stop();
       dialog.show();
       await loadPagefind();
     };
 
     const close = () => {
       dialog.hide();
+      (window as any).__lenis?.start();
       input.value = '';
       results.querySelectorAll('.search-result').forEach(el => el.remove());
       palette.reset?.();
@@ -144,8 +146,9 @@ const t = useTranslations(lang);
       }
     });
 
-    // Clean results on close
+    // Clean results on close (ESC, click outside, etc.)
     dialog.addEventListener('close', () => {
+      (window as any).__lenis?.start();
       input.value = '';
       results.querySelectorAll('.search-result').forEach(el => el.remove());
       palette.reset?.();
