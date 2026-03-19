@@ -83,6 +83,7 @@ const navItems = [
       <button
         id="menu-toggle"
         aria-label="Toggle Menu"
+        aria-expanded="false"
         class="flex flex-col justify-center items-center w-12 h-12 gap-1.5 p-2 group border border-transparent transition-colors rounded-none"
       >
         <span
@@ -106,7 +107,7 @@ const navItems = [
 >
   <!-- Background Decoration -->
   <div class="absolute inset-0 z-0 opacity-30 pointer-events-none [mask-image:linear-gradient(to_top,white,transparent)]">
-    <canvas id="menu-canvas" class="w-full h-full"></canvas>
+    <canvas id="menu-canvas" class="w-full h-full" aria-hidden="true"></canvas>
   </div>
 
   <div class="relative z-10 flex flex-col gap-6 max-w-lg">
@@ -206,16 +207,18 @@ const navItems = [
 
     const closeMenu = () => {
       toggle.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
       menu.classList.remove("opacity-100", "visible");
       menu.classList.add("opacity-0", "invisible");
       body.style.overflow = "";
-      
+
       // Pause animation
       menuVisual?.stop();
     };
 
     const openMenu = () => {
       toggle.classList.add("is-open");
+      toggle.setAttribute("aria-expanded", "true");
       menu.classList.remove("opacity-0", "invisible");
       menu.classList.add("opacity-100", "visible");
       body.style.overflow = "hidden";
