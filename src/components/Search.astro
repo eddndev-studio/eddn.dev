@@ -44,9 +44,8 @@ const t = useTranslations(lang);
 </el-dialog>
 
 <script>
-  import '@tailwindplus/elements';
-
   let pagefind: any = null;
+  let elementsLoaded = false;
   let debounceTimer: ReturnType<typeof setTimeout>;
 
   function initSearch() {
@@ -58,19 +57,17 @@ const t = useTranslations(lang);
 
     if (!dialog || !palette || !results || !input) return;
 
-    // Bypass command palette's built-in filtering — Pagefind handles it
-    function setupPalette() {
-      if (palette.setFilterCallback) {
+    const loadDeps = async () => {
+      // Lazy-load Tailwind Plus Elements on first open
+      if (!elementsLoaded) {
+        await import('@tailwindplus/elements');
+        elementsLoaded = true;
+        // Wait for custom elements to upgrade
+        await customElements.whenDefined('el-dialog');
         palette.setFilterCallback(() => true);
-      } else {
-        window.addEventListener('elements:ready', () => {
-          palette.setFilterCallback(() => true);
-        });
       }
-    }
-    setupPalette();
 
-    const loadPagefind = async () => {
+      // Lazy-load Pagefind
       if (!pagefind) {
         try {
           const path = `${window.location.origin}/pagefind/pagefind.js`;
@@ -84,8 +81,8 @@ const t = useTranslations(lang);
 
     const open = async () => {
       (window as any).__lenis?.stop();
+      await loadDeps();
       dialog.show();
-      await loadPagefind();
     };
 
     const close = () => {
