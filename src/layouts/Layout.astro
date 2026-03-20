@@ -111,18 +111,6 @@ const lang = Astro.currentLocale || 'en';
 		<Footer />
 
 		<script>
-			import Lenis from "lenis";
-			import { gsap } from "gsap";
-			import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-			gsap.registerPlugin(ScrollTrigger);
-
-			let lenis: Lenis;
-
-			const update = (time: number) => {
-				lenis?.raf(time * 1000);
-			};
-
 			function generateBlobs() {
 				const container = document.getElementById("ambient-blobs");
 				if (!container) return;
@@ -131,36 +119,28 @@ const lang = Astro.currentLocale || 'en';
 				container.innerHTML = '';
 
 				const pageHeight = document.documentElement.scrollHeight;
-				// Add roughly one blob every 1200px of content
 				const blobCount = Math.max(2, Math.floor(pageHeight / 1200));
 
 				const isDark = document.documentElement.classList.contains('dark');
-			const colors = isDark
-				? ['bg-brand-800', 'bg-brand-900', 'bg-slate-800']
-				: ['bg-brand-300', 'bg-brand-500', 'bg-slate-300'];
+				const colors = isDark
+					? ['bg-brand-800', 'bg-brand-900', 'bg-slate-800']
+					: ['bg-brand-300', 'bg-brand-500', 'bg-slate-300'];
 
 				for (let i = 0; i < blobCount; i++) {
 					const blob = document.createElement("div");
-					
-					// Deterministic size pattern between 450px and 650px
+
 					const sizes = [450, 600, 500, 650, 550];
 					const size = sizes[i % sizes.length];
-					
-					// Deterministic color pattern
 					const color = colors[i % colors.length];
-					
-					// Deterministic vertical jitter to break perfect symmetry
+
 					const jitters = [100, -150, 200, -100, 150];
 					const topPosition = (pageHeight / blobCount) * i + jitters[i % jitters.length];
-					
-					// Alternate between left and right sides
+
 					const isLeft = i % 2 === 0;
-					
-					// Predictable horizontal offset to vary how much of the blob is visible
 					const horizontalOffsets = [3, 2.5, 4, 3.5, 2.8];
 					const offsetDivisor = horizontalOffsets[i % horizontalOffsets.length];
-					const horizontalPosition = isLeft 
-						? `left: -${size / offsetDivisor}px;` 
+					const horizontalPosition = isLeft
+						? `left: -${size / offsetDivisor}px;`
 						: `right: -${size / offsetDivisor}px;`;
 
 					blob.className = `absolute rounded-full opacity-20 blur-[120px] ${color}`;
@@ -173,95 +153,40 @@ const lang = Astro.currentLocale || 'en';
 				}
 			}
 
-			function init() {
-				// Initialize Lenis
-				lenis = new Lenis({
-					duration: 1.2,
-					easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-					touchMultiplier: 2,
+			function applyStagger(elements: NodeListOf<Element>, cls: string, staggerMs: number, baseMs = 0) {
+				elements.forEach((el, i) => {
+					(el as HTMLElement).style.setProperty('--delay', `${baseMs + i * staggerMs}ms`);
+					el.classList.add(cls);
+					el.addEventListener('animationend', () => {
+						el.classList.remove(cls);
+						(el as HTMLElement).style.removeProperty('--delay');
+					}, { once: true });
 				});
-				(window as any).__lenis = lenis;
-
-				// GSAP & Lenis integration
-				lenis.on("scroll", ScrollTrigger.update);
-				gsap.ticker.add(update);
-				gsap.ticker.lagSmoothing(0);
-
-				// Global Animations
-				animateContent();
-
-				// Ambient Background Blobs
-				// Use setTimeout to ensure the DOM is fully painted and scrollHeight is accurate
-				setTimeout(generateBlobs, 100);
 			}
 
 			function animateContent() {
 				// 1. Hero / Header Reveal
-				// Targets direct children of the main header
-				const heroElements =
-					document.querySelectorAll("main > header > *");
+				const heroElements = document.querySelectorAll("main > header > *");
 				if (heroElements.length) {
-					gsap.fromTo(
-						heroElements,
-						{ y: 20, opacity: 0 },
-						{
-							y: 0,
-							opacity: 1,
-							duration: 0.8,
-							stagger: 0.1,
-							ease: "power3.out",
-							clearProps: "all",
-						},
-					);
+					applyStagger(heroElements, 'anim-fade-up', 100);
 				}
 
 				// 2. Grid Items (Blog Posts, Cards)
-				// Targets children of any generic grid container
-				const gridItems = document.querySelectorAll(
-					".grid > article, .grid > a, .grid > div",
-				);
+				const gridItems = document.querySelectorAll(".grid > article, .grid > a, .grid > div");
 				if (gridItems.length) {
-					gsap.fromTo(
-						gridItems,
-						{ y: 10 },
-						{
-							y: 0,
-							duration: 0.4,
-							stagger: 0.05,
-							ease: "power2.out",
-							delay: 0.1,
-							clearProps: "all",
-						},
-					);
+					applyStagger(gridItems, 'anim-fade-up-sm', 50, 100);
 				}
 
 				// 3. List/Table Items (LeetCode Rows, Trajectory Timeline)
-				const listItems = document.querySelectorAll(
-					"tbody > tr, .space-y-12 > .relative",
-				);
+				const listItems = document.querySelectorAll("tbody > tr, .space-y-12 > .relative");
 				if (listItems.length) {
-					gsap.fromTo(
-						listItems,
-						{ x: -10, opacity: 0 },
-						{
-							x: 0,
-							opacity: 1,
-							duration: 0.5,
-							stagger: 0.05,
-							ease: "power2.out",
-							delay: 0.3,
-							clearProps: "all",
-						},
-					);
+					applyStagger(listItems, 'anim-slide-left', 50, 300);
 				}
 			}
 
-			function cleanup() {
-				if (lenis) {
-					lenis.destroy();
-				}
-				gsap.ticker.remove(update);
-				ScrollTrigger.getAll().forEach((t) => t.kill());
+			function init() {
+				animateContent();
+				setTimeout(generateBlobs, 100);
 			}
 
 			// Restore dark class after Astro view-transition DOM swap
@@ -276,7 +201,27 @@ const lang = Astro.currentLocale || 'en';
 			});
 
 			document.addEventListener("astro:page-load", init);
-			document.addEventListener("astro:before-swap", cleanup);
 		</script>
+
+		<style is:global>
+			@keyframes fade-up {
+				from { opacity: 0; transform: translateY(20px); }
+			}
+			@keyframes fade-up-sm {
+				from { transform: translateY(10px); }
+			}
+			@keyframes slide-left {
+				from { opacity: 0; transform: translateX(-10px); }
+			}
+			.anim-fade-up {
+				animation: fade-up 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) var(--delay, 0ms) both;
+			}
+			.anim-fade-up-sm {
+				animation: fade-up-sm 0.4s ease-out var(--delay, 0ms) both;
+			}
+			.anim-slide-left {
+				animation: slide-left 0.5s ease-out var(--delay, 0ms) both;
+			}
+		</style>
 	</body>
 </html>

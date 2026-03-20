@@ -35,7 +35,7 @@ const t = useTranslations(lang);
           </div>
 
           <!-- Results -->
-          <el-command-list class="block max-h-[60vh] overflow-y-auto" id="search-results" data-lenis-prevent>
+          <el-command-list class="block max-h-[60vh] overflow-y-auto" id="search-results">
           </el-command-list>
 
           <el-no-results hidden class="px-5 py-12 text-center text-sm text-slate-400 font-mono block">
@@ -88,14 +88,12 @@ const t = useTranslations(lang);
     };
 
     const open = async () => {
-      (window as any).__lenis?.stop();
       await loadDeps();
       dialog.show();
     };
 
     const close = () => {
       dialog.hide();
-      (window as any).__lenis?.start();
       input.value = '';
       clearResults();
       palette.reset?.();
@@ -185,7 +183,6 @@ const t = useTranslations(lang);
 
     // Clean results on close (ESC, click outside, etc.)
     dialog.addEventListener('close', () => {
-      (window as any).__lenis?.start();
       input.value = '';
       clearResults();
       palette.reset?.();
