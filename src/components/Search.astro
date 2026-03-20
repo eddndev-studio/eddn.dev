@@ -5,7 +5,11 @@ const lang = (Astro.currentLocale as keyof typeof import('../i18n/ui').ui) || 'e
 const t = useTranslations(lang);
 ---
 
-<el-dialog data-search-lang={lang}>
+<el-dialog data-search-lang={lang} data-search-labels={JSON.stringify({
+  Blog: t('search.group.Blog'),
+  Article: t('search.group.Article'),
+  Solution: t('search.group.Solution'),
+})}>
   <dialog id="search-dialog" class="backdrop:bg-transparent bg-transparent p-0 m-0 max-w-none max-h-none w-full h-full open:flex items-start justify-center pt-12 sm:pt-20 px-4 sm:px-6">
     <el-dialog-backdrop
       class="fixed inset-0 bg-black/50 backdrop-blur-sm transition duration-200 data-closed:opacity-0"
@@ -48,6 +52,8 @@ const t = useTranslations(lang);
   let elementsLoaded = false;
   let debounceTimer: ReturnType<typeof setTimeout>;
 
+  const groupOrder = ['Blog', 'Article', 'Solution'] as const;
+
   function initSearch() {
     const dialog = document.querySelector('#search-dialog')?.closest('el-dialog') as any;
     const palette = document.getElementById('search-palette') as any;
@@ -56,6 +62,8 @@ const t = useTranslations(lang);
     const searchBtns = document.querySelectorAll('.search-trigger');
 
     if (!dialog || !palette || !results || !input) return;
+
+    const labels: Record<string, string> = JSON.parse(dialog.getAttribute('data-search-labels') || '{}');
 
     const loadDeps = async () => {
       // Lazy-load Tailwind Plus Elements on first open
@@ -89,36 +97,67 @@ const t = useTranslations(lang);
       dialog.hide();
       (window as any).__lenis?.start();
       input.value = '';
-      results.querySelectorAll('.search-result').forEach(el => el.remove());
+      clearResults();
       palette.reset?.();
+    };
+
+    const clearResults = () => {
+      results.querySelectorAll('.search-group, .search-result').forEach(el => el.remove());
+    };
+
+    const createResultLink = (item: any, closeFn: () => void): HTMLAnchorElement => {
+      const a = document.createElement('a');
+      a.href = item.url;
+      a.className = 'search-result block px-5 py-4 border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-900 focus:bg-slate-50 dark:focus:bg-slate-900 transition-colors outline-none group';
+      a.innerHTML = `
+        <div class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-600 group-focus:text-brand-600 transition-colors">${item.meta?.title || item.url}</div>
+        <div class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">${item.excerpt}</div>
+      `;
+      a.addEventListener('click', closeFn);
+      return a;
     };
 
     const search = async (query: string) => {
       if (!pagefind || !query.trim()) {
-        results.querySelectorAll('.search-result').forEach(el => el.remove());
+        clearResults();
         return;
       }
 
       const searchLang = dialog.getAttribute('data-search-lang') || 'en';
       const response = await pagefind.search(query, { filters: { lang: searchLang } });
-      results.querySelectorAll('.search-result').forEach(el => el.remove());
+      clearResults();
 
       if (response.results.length === 0) return;
 
-      const top = response.results.slice(0, 8);
+      const top = response.results.slice(0, 12);
       const data = await Promise.all(top.map((r: any) => r.data()));
 
+      // Group results by type
+      const grouped: Record<string, any[]> = {};
       for (const item of data) {
-        const a = document.createElement('a');
-        a.href = item.url;
-        a.className = 'search-result block px-5 py-4 border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-900 focus:bg-slate-50 dark:focus:bg-slate-900 transition-colors outline-none group';
-        a.innerHTML = `
-          <div class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-600 group-focus:text-brand-600 transition-colors">${item.meta?.title || item.url}</div>
-          <div class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">${item.excerpt}</div>
-          <div class="text-[10px] font-mono text-slate-400 mt-1.5">${item.url}</div>
-        `;
-        a.addEventListener('click', close);
-        results.appendChild(a);
+        const type = item.filters?.type?.[0] || 'Other';
+        if (!grouped[type]) grouped[type] = [];
+        grouped[type].push(item);
+      }
+
+      // Render groups in order
+      for (const type of groupOrder) {
+        const items = grouped[type];
+        if (!items || items.length === 0) continue;
+
+        const group = document.createElement('el-command-group');
+        group.className = 'search-group block';
+
+        const heading = document.createElement('div');
+        heading.className = 'px-5 py-2 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 sticky top-0';
+        heading.textContent = labels[type] || type;
+        group.appendChild(heading);
+
+        for (const item of items) {
+          group.appendChild(createResultLink(item, close));
+        }
+
+        results.appendChild(group);
       }
     };
 
@@ -148,7 +187,7 @@ const t = useTranslations(lang);
     dialog.addEventListener('close', () => {
       (window as any).__lenis?.start();
       input.value = '';
-      results.querySelectorAll('.search-result').forEach(el => el.remove());
+      clearResults();
       palette.reset?.();
     });
   }

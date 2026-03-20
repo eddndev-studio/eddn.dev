@@ -67,6 +67,9 @@ export const ui = {
     'search.placeholder': 'Search articles, solutions...',
     'search.no_results': 'No results found.',
     'search.close': 'Close',
+    'search.group.Blog': 'Blog',
+    'search.group.Article': 'Articles',
+    'search.group.Solution': 'Solutions',
   },
   es: {
     'nav.blog': 'Blog',
@@ -129,6 +132,9 @@ export const ui = {
     'search.placeholder': 'Buscar artículos, soluciones...',
     'search.no_results': 'No se encontraron resultados.',
     'search.close': 'Cerrar',
+    'search.group.Blog': 'Blog',
+    'search.group.Article': 'Artículos',
+    'search.group.Solution': 'Soluciones',
   },
 } as const;
 
