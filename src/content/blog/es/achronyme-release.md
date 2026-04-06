@@ -19,11 +19,9 @@ Asi se ve probar un compromiso Poseidon:
 ```ach
 let secret = 0p12345
 let blinding = 0p98765
+let commitment = poseidon(secret, blinding)
 
-let p = prove {
-    witness secret
-    witness blinding
-    public commitment
+let p = prove(commitment: Public) {
     assert_eq(poseidon(secret, blinding), commitment)
 }
 
@@ -31,7 +29,7 @@ print(proof_json(p))    // Prueba Groth16, verificable on-chain
 assert(verify_proof(p)) // verificada
 ```
 
-Seis lineas. Un archivo. El bloque `prove {}` compila un circuito, captura variables del scope, genera un witness, y retorna una prueba criptografica — todo inline. Sin ceremonia.
+Un archivo. El bloque `prove(...)` compila un circuito, captura variables del scope como witnesses, genera un witness, y retorna una prueba criptografica — todo inline. Sin ceremonia.
 
 Compara con el equivalente en Circom: escribir un template, compilar a WASM, generar witness con JavaScript, descargar ptau, ejecutar trusted setup, probar, verificar. Siete pasos con tres herramientas distintas.
 
@@ -41,7 +39,7 @@ La razon por la que esto funciona es que Achronyme no separa "el lenguaje en el 
 
 Esto es posible gracias a la doble ejecucion — el mismo codigo, dos destinos:
 
-**Modo VM** (`ach run`) te da un lenguaje de programacion real — closures, recursion, GC mark-sweep, arrays, maps, strings, 43 funciones nativas. Escribe algoritmos, manipula datos, prepara inputs.
+**Modo VM** (`ach run`) te da un lenguaje de programacion real — closures, recursion, GC mark-sweep, arrays, maps, strings, funciones nativas. Escribe algoritmos, manipula datos, prepara inputs.
 
 **Modo Circuito** (`ach circuit`) compila la misma sintaxis a restricciones R1CS o Plonkish sobre BN254. Los loops se desenrollan estaticamente, `if/else` se convierte en `mux`, las funciones se inlinean en cada call site. La salida es un sistema de restricciones plano listo para generar pruebas.
 
@@ -66,13 +64,14 @@ Los archivos `.r1cs` y `.wtns` de salida tambien son compatibles con snarkjs, as
 
 ## Que Incluye
 
-Esto no es un prototipo. La version actual (v0.1.0-beta.7) es el resultado de meses de trabajo en correctitud, experiencia de desarrollo y herramientas:
+Esto no es un prototipo. La version actual (v0.1.0-beta.19) es el resultado de meses de trabajo en correctitud, experiencia de desarrollo y herramientas:
 
-- **1,300+ tests unitarios y 150+ tests de integracion** — cada feature se prueba en ambos modos de ejecucion, cada commit pasa por CI
-- **SSA IR con 4 pases de optimizacion** — taint analysis detecta variables sub-restringidas antes de que pierdas 20 minutos en una prueba fallida; boolean propagation elimina constraints redundantes automaticamente
+- **2,100+ tests** — cada feature se prueba en ambos modos de ejecucion, cada commit pasa por CI
+- **SSA IR con pases de optimizacion** — taint analysis detecta variables sub-restringidas antes de que pierdas 20 minutos en una prueba fallida; boolean propagation elimina constraints redundantes automaticamente
 - **Diagnosticos estilo rustc** — cuando algo falla, obtienes snippets de codigo, sugerencias "did you mean?" y codigos de warning — no un indice de constraint crudo
 - **Sistema de modulos** — `import`/`export` con deteccion de dependencias circulares, para que los circuitos puedan compartir codigo sin copiar y pegar
-- **Extension VS Code** — syntax highlighting y deteccion de errores en tiempo real via LSP, porque escribir constraints a ciegas es como se crean los bugs
+- **Extension VS Code** — syntax highlighting, completions, go-to-definition, hover docs y deteccion de errores en tiempo real via LSP
+- **Soporte multi-curva** — BN254, BLS12-381 y Goldilocks como campos prime seleccionables
 - **Script de instalacion** — un solo comando, sin necesidad de toolchain de Rust
 
 ## Empieza
@@ -94,11 +93,9 @@ El codigo fuente esta en [github.com/achronyme/achronyme](https://github.com/ach
 
 ## Que Sigue
 
-El roadmap hacia 1.0:
+El roadmap:
 
-- **0.1.0** — primer release estable (stdlib, imports pulidos)
-- **0.2.0** — LSP completions, go-to-definition, hover docs
-- **0.3.0** — playground en el navegador (compilador + VM en WASM)
-- **1.0.0** — API estable, soporte multi-curva
+- **0.1.0** — release estable con frontend Circom, playground en el navegador, y todas las features core pulidas
+- **Futuro** — soporte multilenguaje (Cairo, Noir), zkML
 
 Si escribes circuitos ZK y estas cansado de la ceremonia, intenta portar uno de tus circuitos existentes a Achronyme y ve como se siente. Si algo se rompe o no tiene sentido, [abre un issue](https://github.com/achronyme/achronyme/issues) — ese es el feedback mas util en esta etapa.
