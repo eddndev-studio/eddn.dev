@@ -193,15 +193,15 @@ La definición completa del circuito viaja dentro del binario `.achb`. Sin archi
 
 Tracemos una prueba de compromiso Poseidon a través de todo el pipeline.
 
-**Código fuente:**
+**Código fuente** (de `test/prove/prove_with_poseidon.ach`):
 
 ```ach
-let secret = 0p1
-let blinding = 0p2
+let a = 0p1
+let b = 0p2
 let h = 0p7853200120776062878684798364095072458815029376092732009249414926327459813530
 
 prove(h: Public) {
-    assert_eq(poseidon(secret, blinding), h)
+    assert_eq(poseidon(a, b), h)
 }
 ```
 
@@ -212,31 +212,34 @@ ProveIR {
     public_inputs: [{ name: "h" }],
     witness_inputs: [],
     captures: [
-        { name: "secret",   usage: CircuitInput },
-        { name: "blinding", usage: CircuitInput },
+        { name: "a", usage: CircuitInput },
+        { name: "b", usage: CircuitInput },
     ],
     body: [
         AssertEq {
-            lhs: PoseidonHash(Capture("secret"), Capture("blinding")),
+            lhs: PoseidonHash(Capture("a"), Capture("b")),
             rhs: Input("h"),
         }
     ]
 }
 ```
 
-**Serializado:** ~200 bytes, almacenado en `K[3]` en el constant pool.
+**Serializado:** almacenado como bytes en el constant pool.
 
-**Fase B** (instanciación con `{ secret: 1, blinding: 2 }`):
+**Fase B** (instanciación con `{ a: 1, b: 2 }`) — esta es la salida real de `--dump-ir` del compilador:
 
 ```
-%0 = Input("secret", Witness)      // secret = 1
-%1 = Input("blinding", Witness)    // blinding = 2
-%2 = Input("h", Public)            // proporcionado por el verificador
-%3 = PoseidonHash(%0, %1)          // poseidon(1, 2)
-%4 = AssertEq(%3, %2)              // constraint: hash == h
+%0 = Input("h", public)
+%1 = Input("a", witness)
+%2 = Input("b", witness)
+%3 = PoseidonHash(%1, %2)
+%4 = AssertEq(%3, %0)
+5 instructions, 3 inputs, 1 constraints
 ```
 
-**Fase C** (optimización): Sin reducciones — el circuito ya es mínimo. 5 instrucciones, ~400 constraints R1CS (dominados por los internos de la permutación Poseidon).
+Los inputs públicos se emiten primero, luego los witnesses. El circuito completo son 5 instrucciones — el hash Poseidon y una constraint de igualdad.
+
+**Fase C** (optimización): Sin reducciones — el circuito ya es mínimo. ~400 constraints R1CS en la Fase D (dominados por los internos de la permutación Poseidon).
 
 **Fases D-H:** Compilación a R1CS, asignación de witness, generación de prueba Groth16. La prueba se retorna a la VM como un `Value::Proof`.
 
