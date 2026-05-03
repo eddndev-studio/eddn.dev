@@ -1,12 +1,12 @@
 ---
 title: "Achronyme: A Language for Zero-Knowledge Proofs"
-description: "Introducing Achronyme — write readable code, generate cryptographic proofs. One language, two execution targets, zero ceremony."
+description: "Introducing Achronyme: write readable code, generate cryptographic proofs. One language, two execution targets, zero ceremony."
 pubDate: "2026-03-14"
 tags: ["achronyme", "release", "zk", "rust", "compiler"]
 translationKey: "achronyme-0-1-0-beta2"
 ---
 
-If you've ever written a ZK circuit, you know the pain. You write constraints in one DSL, generate witnesses in JavaScript, download a Powers of Tau file, run a trusted setup, invoke snarkjs three separate times, and pray everything lines up. Seven steps, three tools, two languages — just to prove you know a number.
+If you've ever written a ZK circuit, you know the pain. You write constraints in one DSL, generate witnesses in JavaScript, download a Powers of Tau file, run a trusted setup, invoke snarkjs three separate times, and pray everything lines up. Seven steps, three tools, two languages, just to prove you know a number.
 
 I built Achronyme to make this simpler.
 
@@ -29,7 +29,7 @@ print(proof_json(p))    // Groth16 proof, verifiable on-chain
 assert(verify_proof(p)) // verified
 ```
 
-One file. The `prove(...)` block compiles a circuit, captures variables from scope as witnesses, generates a witness, and returns a cryptographic proof — all inline. No ceremony.
+One file. The `prove(...)` block compiles a circuit, captures variables from scope as witnesses, generates a witness, and returns a cryptographic proof, all inline. No ceremony.
 
 Compare that to the Circom equivalent: write a template, compile to WASM, generate witness with JavaScript, download ptau, run trusted setup, prove, verify. Seven steps across three different tools.
 
@@ -37,9 +37,9 @@ The reason this works is that Achronyme doesn't separate "the language you think
 
 ## Dual Execution
 
-That's possible because of dual execution — the same source, two targets:
+That's possible because of dual execution: the same source, two targets:
 
-**VM mode** (`ach run`) gives you a real programming language — closures, recursion, mark-sweep GC, arrays, maps, strings, native functions. Write algorithms, manipulate data, prepare inputs.
+**VM mode** (`ach run`) gives you a real programming language: closures, recursion, mark-sweep GC, arrays, maps, strings, native functions. Write algorithms, manipulate data, prepare inputs.
 
 **Circuit mode** (`ach circuit`) compiles the same syntax to R1CS or Plonkish constraints over BN254. Loops unroll statically, `if/else` becomes `mux`, functions inline at every call site. The output is a flat constraint system ready for proof generation.
 
@@ -66,13 +66,13 @@ The `.r1cs` and `.wtns` output files are also snarkjs-compatible, so you can use
 
 This isn't a prototype. The current release (v0.1.0-beta.19) is the result of months of work on correctness, developer experience, and tooling:
 
-- **2,100+ tests** — every feature is tested across both execution modes, every commit runs CI
-- **SSA IR with optimization passes** — taint analysis catches under-constrained variables before you waste 20 minutes on a failed proof; boolean propagation eliminates redundant constraints automatically
-- **Rustc-style diagnostics** — when something goes wrong, you get source snippets, "did you mean?" suggestions, and warning codes — not a raw constraint index
-- **Module system** — `import`/`export` with circular dependency detection, so circuits can share code without copy-pasting
-- **VS Code extension** — syntax highlighting, completions, go-to-definition, hover docs, and real-time error detection via LSP
-- **Multi-curve support** — BN254, BLS12-381, and Goldilocks as selectable prime fields
-- **Install script** — one command, no Rust toolchain required
+- **4,000+ tests**: every feature is tested across both execution modes, every commit runs CI
+- **SSA IR with optimization passes**: taint analysis catches under-constrained variables before you waste 20 minutes on a failed proof; boolean propagation eliminates redundant constraints automatically
+- **Rustc-style diagnostics**: when something goes wrong, you get source snippets, "did you mean?" suggestions, and warning codes, not a raw constraint index
+- **Module system**: `import`/`export` with circular dependency detection, so circuits can share code without copy-pasting
+- **VS Code extension**: syntax highlighting, completions, go-to-definition, hover docs, and real-time error detection via LSP
+- **Multi-curve support**: BN254, BLS12-381, and Goldilocks as selectable prime fields
+- **Install script**: one command, no Rust toolchain required
 
 ## Get Started
 
@@ -95,7 +95,7 @@ The source is at [github.com/achronyme/achronyme](https://github.com/achronyme/a
 
 The roadmap:
 
-- **0.1.0** — stable release with Circom frontend, browser playground, and all core features polished
-- **Future** — multi-language support (Cairo, Noir), zkML
+- **0.1.0**: stable release with Circom frontend, browser playground, and all core features polished
+- **Future**: multi-language support (Cairo, Noir), zkML
 
-If you write ZK circuits and you're tired of the ceremony, try porting one of your existing circuits to Achronyme and see how it feels. If something breaks or doesn't make sense, [open an issue](https://github.com/achronyme/achronyme/issues) — that's the most useful feedback at this stage.
+If you write ZK circuits and you're tired of the ceremony, try porting one of your existing circuits to Achronyme and see how it feels. If something breaks or doesn't make sense, [open an issue](https://github.com/achronyme/achronyme/issues): that's the most useful feedback at this stage.

@@ -30,4 +30,4 @@ El 2026 es un lienzo en blanco (o mejor dicho, un `main` branch vacío esperando
 
 ¡Feliz Año Nuevo!
 
-**— Edd.**
+**Edd.**

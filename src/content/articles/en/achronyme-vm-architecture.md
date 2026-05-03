@@ -31,7 +31,7 @@ How the VM handles memory and passes variables into the *Execute* phase defines 
 
 ## The Stack Bottleneck
 
-When I implemented Achronyme's first proof of concept, I used a Stack VM—the *de facto* standard for nascent projects due to its simplicity when compiling. In this model, instructions do not have explicit operands; they assume the data they need is at the top of a LIFO (Last-In-First-Out) data structure: the operand stack.
+When I implemented Achronyme's first proof of concept, I used a Stack VM, the *de facto* standard for nascent projects due to its simplicity when compiling. In this model, instructions do not have explicit operands; they assume the data they need is at the top of a LIFO (Last-In-First-Out) data structure: the operand stack.
 
 To understand the problem, let's look at how a simple mathematical addition (`a = b + c`) is compiled.
 

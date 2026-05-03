@@ -30,4 +30,4 @@ Thank you for being part of this journey. Whether you are here for the first tim
 
 Happy New Year!
 
-**— Edd.**
+**Edd.**

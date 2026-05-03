@@ -28,4 +28,4 @@ A todos los que leen esto, gracias por estar aquí. Este sitio será testigo de 
 
 Les deseo un 2026 lleno de retos que valgan la pena y de compilaciones exitosas.
 
-**— Edd.**
+**Edd.**

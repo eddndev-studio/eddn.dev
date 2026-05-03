@@ -28,4 +28,4 @@ To everyone reading this, thank you for being here. This site will witness that 
 
 I wish you a 2026 full of worthwhile challenges and successful builds.
 
-**— Edd.**
+**Edd.**
