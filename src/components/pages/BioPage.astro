@@ -23,21 +23,21 @@ const links = [
 ---
 
 <Layout title={`${t('bio.title')} - eddn.dev`}>
-	<main class="relative w-full max-w-2xl mx-auto px-6 py-16 sm:py-24 min-h-[80vh] flex flex-col items-center justify-center">
-        <!-- Background blob purely for aesthetic -->
+	<div class="relative w-full max-w-2xl mx-auto px-6 py-16 sm:py-24 min-h-[80vh] flex flex-col items-center justify-center">
+        <!-- Generative backdrop (color emitted by the simulation itself) -->
         <div class="absolute inset-0 -z-10 opacity-40 pointer-events-none [mask-image:radial-gradient(closest-side,white,transparent)]">
             <canvas id="bio-canvas" class="w-full h-full" aria-hidden="true"></canvas>
         </div>
 
         <div class="w-full flex flex-col items-center space-y-8 relative z-10 text-center">
             <div class="space-y-4">
-                <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white dark:border-slate-950 shadow-xl mx-auto bg-slate-900 flex items-center justify-center">
+                <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-canvas ring-1 ring-hairline mx-auto bg-canvas-soft flex items-center justify-center">
                     <img src="https://www.gravatar.com/avatar/12a95befeeeb1620b43b8afd2e95e9fc14d6020246317c2ee59ff8ef344915d3?s=256" alt="eddn.dev profile" class="w-full h-full object-cover" />
                 </div>
-                
+
                 <div>
-                    <h1 class="text-3xl sm:text-4xl font-black tracking-tighter text-slate-900 dark:text-white">eddn.dev</h1>
-                    <p class="text-brand-500 font-mono text-sm font-bold uppercase tracking-widest mt-2">{t('bio.role')}</p>
+                    <h1 class="text-3xl sm:text-4xl font-normal tracking-tight text-ink">eddn.dev</h1>
+                    <p class="text-mute font-mono text-sm uppercase tracking-widest mt-2">{t('bio.role')}</p>
                 </div>
             </div>
 
@@ -45,24 +45,24 @@ const links = [
                 {links.map(link => (
                     <a
                         href={link.url}
-                        class="group relative w-full flex items-center justify-between p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-r-4 border-r-slate-200 dark:border-r-slate-700 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none text-slate-900 dark:text-slate-100 font-bold overflow-hidden"
+                        class="group relative w-full flex items-center justify-between p-6 bg-canvas border border-hairline hover:bg-ink transition-colors duration-300 rounded-[4px] text-ink hover:text-canvas font-medium overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
                         target={link.url.startsWith('http') ? '_blank' : '_self'}
                         rel={link.url.startsWith('http') ? 'noopener noreferrer' : ''}
                     >
                         <div
-                            class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-brand-500 opacity-[0.08] group-hover:opacity-[0.15] group-hover:scale-110 transition-all duration-500"
+                            class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-ink opacity-[0.05] group-hover:text-canvas group-hover:opacity-[0.12] group-hover:scale-110 transition-all duration-500"
                             style="height: 140%;"
                             set:html={`<svg viewBox="0 0 24 24" fill="currentColor" style="height:100%;width:auto">${link.icon}</svg>`}
                         />
                         <span class="relative z-10">{link.label}</span>
-                        <svg class="relative z-10 h-5 w-5 text-slate-400 group-hover:text-brand-500 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="relative z-10 h-5 w-5 text-mute group-hover:text-canvas group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                         </svg>
                     </a>
                 ))}
             </div>
         </div>
-	</main>
+	</div>
 
 	<script>
 		import { createRandomVisual, type VisualInstance } from "../../utils/visuals";
@@ -73,7 +73,7 @@ const links = [
 			const canvas = document.getElementById(
 				"bio-canvas",
 			) as HTMLCanvasElement;
-			
+
 			if (!canvas) return;
 
 			if (activeVisual) {
