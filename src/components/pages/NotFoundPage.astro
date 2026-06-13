@@ -13,9 +13,9 @@ const t = useTranslations(lang);
 
 <Layout title="404 - Not Found">
 	<div class="relative max-w-7xl mx-auto px-6 overflow-visible">
-		<div class="relative min-h-[100dvh] flex items-center py-24 sm:py-32 overflow-hidden">
-			<!-- Full-bleed dynamic field (transparent glyphs) behind the 404 -->
-			<div class="absolute inset-0 z-0">
+		<div class="relative min-h-[100dvh] flex items-center py-24 sm:py-32">
+			<!-- Full-viewport-width dynamic field (breaks out of the max-w-7xl column) -->
+			<div class="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 z-0 overflow-hidden">
 				<HeroCanvas />
 			</div>
 			<!-- Readability scrim: page color over the copy, clearing into the field -->

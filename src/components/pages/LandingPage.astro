@@ -66,9 +66,9 @@ const localUrl = (section: string, id: string) =>
 	<div
 		class="relative max-w-7xl mx-auto px-6 overflow-visible"
 	>
-		<div class="relative min-h-[100dvh] lg:min-h-0 lg:h-[calc(100dvh-4rem)] flex items-center py-16 sm:py-24 lg:py-0 overflow-hidden">
-			<!-- Full-bleed dynamic field (transparent glyphs) behind the hero -->
-			<div class="hero-seq [animation-delay:300ms] absolute inset-0 z-0">
+		<div class="relative min-h-[100dvh] lg:min-h-0 lg:h-[calc(100dvh-4rem)] flex items-center py-16 sm:py-24 lg:py-0">
+			<!-- Full-viewport-width dynamic field (breaks out of the max-w-7xl column) -->
+			<div class="hero-seq [animation-delay:300ms] absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 z-0 overflow-hidden">
 				<HeroCanvas />
 			</div>
 			<!-- Readability scrim: page color over the headline, clearing into the field -->
@@ -81,11 +81,11 @@ const localUrl = (section: string, id: string) =>
 							href="https://eddndev.com"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="hero-seq group inline-flex items-center gap-2 font-mono text-xs tracking-wider mb-2 text-mute hover:text-ink transition-colors"
+							class="hero-seq group block font-mono text-xs leading-relaxed tracking-wider mb-2 text-mute hover:text-ink transition-colors"
 						>
 							<span class="text-mute/70">eddn@dev:~$</span>
 							<span data-type-text class="text-body-strong">{t('home.availability')}</span>
-							<span class="inline-block w-[0.55em] h-[1.05em] bg-brand-500 cursor-blink align-middle" aria-hidden="true"></span>
+							<span class="ml-1 inline-block w-[0.5em] h-[0.95em] bg-brand-500 cursor-blink align-middle" aria-hidden="true"></span>
 						</a>
 
 						<span class="hero-seq [animation-delay:120ms] block font-mono text-xs tracking-[0.25em] uppercase text-mute mb-1">
