@@ -25,7 +25,7 @@ const lang = Astro.currentLocale || 'en';
 ---
 
 <!doctype html>
-<html lang="es" class="overflow-x-hidden">
+<html lang={lang} class="overflow-x-hidden">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -92,6 +92,7 @@ const lang = Astro.currentLocale || 'en';
 		<!-- Fonts (self-hosted, preloaded) -->
 		<link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/dm-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin />
 
 		<!-- KaTeX for math rendering -->
 		<link
@@ -102,7 +103,6 @@ const lang = Astro.currentLocale || 'en';
 		/>
 	</head>
 	<body class="selection:bg-brand-500/30 overflow-x-hidden relative">
-		<div id="ambient-blobs" class="pointer-events-none absolute left-0 top-0 w-full h-full z-[-1] overflow-hidden"></div>
 		<Header />
 		<Search />
 		<main class="pt-16" data-pagefind-filter={`lang:${lang}`}>
@@ -111,48 +111,6 @@ const lang = Astro.currentLocale || 'en';
 		<Footer />
 
 		<script>
-			function generateBlobs() {
-				const container = document.getElementById("ambient-blobs");
-				if (!container) return;
-
-				// Clear existing blobs (important for view transitions)
-				container.innerHTML = '';
-
-				const pageHeight = document.documentElement.scrollHeight;
-				const blobCount = Math.max(2, Math.floor(pageHeight / 1200));
-
-				const isDark = document.documentElement.classList.contains('dark');
-				const colors = isDark
-					? ['bg-brand-800', 'bg-brand-900', 'bg-slate-800']
-					: ['bg-brand-300', 'bg-brand-500', 'bg-slate-300'];
-
-				for (let i = 0; i < blobCount; i++) {
-					const blob = document.createElement("div");
-
-					const sizes = [450, 600, 500, 650, 550];
-					const size = sizes[i % sizes.length];
-					const color = colors[i % colors.length];
-
-					const jitters = [100, -150, 200, -100, 150];
-					const topPosition = (pageHeight / blobCount) * i + jitters[i % jitters.length];
-
-					const isLeft = i % 2 === 0;
-					const horizontalOffsets = [3, 2.5, 4, 3.5, 2.8];
-					const offsetDivisor = horizontalOffsets[i % horizontalOffsets.length];
-					const horizontalPosition = isLeft
-						? `left: -${size / offsetDivisor}px;`
-						: `right: -${size / offsetDivisor}px;`;
-
-					blob.className = `absolute rounded-full opacity-20 blur-[120px] ${color}`;
-					blob.style.width = `${size}px`;
-					blob.style.height = `${size}px`;
-					blob.style.top = `${Math.max(0, topPosition)}px`;
-					blob.style.cssText += horizontalPosition;
-
-					container.appendChild(blob);
-				}
-			}
-
 			function applyStagger(elements: NodeListOf<Element>, cls: string, staggerMs: number, baseMs = 0) {
 				elements.forEach((el, i) => {
 					(el as HTMLElement).style.setProperty('--delay', `${baseMs + i * staggerMs}ms`);
@@ -186,7 +144,6 @@ const lang = Astro.currentLocale || 'en';
 
 			function init() {
 				animateContent();
-				setTimeout(generateBlobs, 100);
 			}
 
 			// Restore dark class after Astro view-transition DOM swap
