@@ -42,10 +42,10 @@ const weeks: (ContributionDay | null)[][] = [];
 if (initialData && initialData.contributions && initialData.contributions.length > 0) {
   const firstDate = new Date(initialData.contributions[0].date);
   const dayOfWeek = firstDate.getDay(); // 0 = Sunday, 1 = Monday...
-  
+
   // Pad the beginning with nulls to align the first day
   let currentWeek: (ContributionDay | null)[] = Array(dayOfWeek).fill(null);
-  
+
   initialData.contributions.forEach((day) => {
     currentWeek.push(day);
     if (currentWeek.length === 7) {
@@ -56,40 +56,41 @@ if (initialData && initialData.contributions && initialData.contributions.length
   if (currentWeek.length > 0) weeks.push(currentWeek);
 }
 
-// Shared Color Logic (Server-side)
+// Heatmap is the sanctioned place for the violet "machine" scale (it is data).
+// Empty cells use the warm neutral surface.
 const getServerColor = (level: number) => {
   switch (level) {
     case 1: return 'bg-brand-300 dark:bg-brand-900';
     case 2: return 'bg-brand-500 dark:bg-brand-700';
     case 3: return 'bg-brand-700 dark:bg-brand-500';
     case 4: return 'bg-brand-900 dark:bg-brand-300';
-    default: return 'bg-slate-200/50 dark:bg-slate-800/50';
+    default: return 'bg-canvas-soft';
   }
 };
 ---
 
-<section class="w-full py-16 border-t border-slate-200 dark:border-slate-800">
+<section class="w-full py-16 border-t border-hairline">
   <div class="flex items-center justify-between mb-8">
     <div class="flex items-baseline gap-4">
-      <h3 class="text-2xl font-bold text-slate-900 dark:text-white">
+      <h3 class="text-2xl font-normal tracking-tight text-ink">
         {t('github.activity')}
       </h3>
-      <a href={`https://github.com/${USERNAME}`} target="_blank" rel="noopener noreferrer" class="text-sm font-mono text-slate-500 hover:text-brand-600 transition-colors">
+      <a href={`https://github.com/${USERNAME}`} target="_blank" rel="noopener noreferrer" class="text-sm font-mono text-mute hover:text-ink transition-colors rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
         @{USERNAME}
       </a>
     </div>
-    
-    <div id="contrib-total" class="hidden sm:block text-sm text-slate-500 font-medium transition-opacity duration-300">
-      {initialData 
+
+    <div id="contrib-total" class="hidden sm:block text-sm font-mono text-mute transition-opacity duration-300">
+      {initialData
         ? `${initialData.total[Object.keys(initialData.total)[0]]} ${t('github.submissions_last_year')}`
-        : 'Cargando datos...'}
+        : '...'}
     </div>
   </div>
 
   <div class="w-full overflow-x-auto pb-2 custom-scrollbar">
       <!-- justify-end on mobile to show recent, justify-start on desktop -->
-      <div 
-        id="contrib-grid" 
+      <div
+        id="contrib-grid"
         class="inline-flex gap-[3px] min-w-full justify-end sm:justify-start p-1"
         data-i18n-contributions={lang === 'es' ? 'contribuciones' : 'contributions'}
         data-i18n-on={lang === 'es' ? 'el' : 'on'}
@@ -100,7 +101,7 @@ const getServerColor = (level: number) => {
                 <div class="flex flex-col gap-[3px]">
                     {week.map((day) => (
                         day ? (
-                            <div 
+                            <div
                                 class={`gh-cell w-3 h-3 rounded-full ${getServerColor(day.level)} transition-colors duration-200 hover:ring-2 hover:ring-brand-500/50 hover:z-10`}
                                 data-count={day.count}
                                 data-date={new Date(day.date).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', { dateStyle: 'long' })}
@@ -116,7 +117,7 @@ const getServerColor = (level: number) => {
              Array.from({ length: 53 }).map(() => (
               <div class="flex flex-col gap-[3px]">
                   {Array.from({ length: 7 }).map(() => (
-                      <div class="w-3 h-3 rounded-full bg-slate-100 dark:bg-slate-800 animate-pulse"></div>
+                      <div class="w-3 h-3 rounded-full bg-canvas-soft animate-pulse"></div>
                   ))}
               </div>
             ))
@@ -124,9 +125,9 @@ const getServerColor = (level: number) => {
       </div>
   </div>
 
-  <div class="flex items-center gap-2 text-xs text-slate-400 mt-4 justify-start font-mono">
+  <div class="flex items-center gap-2 text-xs text-mute mt-4 justify-start font-mono">
       <span>{t('github.less')}</span>
-      <div class="w-3 h-3 rounded-full bg-slate-200/50 dark:bg-slate-800/50"></div>
+      <div class="w-3 h-3 rounded-full bg-canvas-soft"></div>
       <div class="w-3 h-3 rounded-full bg-brand-300 dark:bg-brand-900"></div>
       <div class="w-3 h-3 rounded-full bg-brand-500 dark:bg-brand-700"></div>
       <div class="w-3 h-3 rounded-full bg-brand-700 dark:bg-brand-500"></div>
@@ -136,31 +137,6 @@ const getServerColor = (level: number) => {
 
   {/* Custom Tooltip */}
 </section>
-
-<style>
-    /* Custom Scrollbar Styling */
-    .custom-scrollbar {
-        scrollbar-width: thin;
-        scrollbar-color: var(--color-brand-200) transparent;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar {
-        height: 6px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background-color: var(--color-brand-200);
-        border-radius: 20px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background-color: var(--color-brand-400);
-    }
-</style>
 
 <script>
     function initGitHubContributions() {
@@ -178,24 +154,24 @@ const getServerColor = (level: number) => {
                 });
             }
         }
-        
+
         // 1. Setup Tooltip (Singleton Pattern)
         let tooltip = document.getElementById('gh-tooltip');
         let tooltipContent: HTMLElement | null = null;
-        
+
         if (!tooltip) {
             tooltip = document.createElement('div');
             tooltip.id = 'gh-tooltip';
-            tooltip.className = 'fixed z-[99999] pointer-events-none opacity-0 invisible bg-slate-900 text-white px-3 py-1.5 rounded text-xs font-medium shadow-xl transition-all duration-200 ease-out transform translate-x-[-50%] translate-y-[-100%]';
-            
+            tooltip.className = 'fixed z-[99999] pointer-events-none opacity-0 invisible bg-[#1c1916] text-[#f7f5f0] px-3 py-1.5 rounded text-xs font-mono shadow-xl transition-all duration-200 ease-out transform translate-x-[-50%] translate-y-[-100%]';
+
             tooltipContent = document.createElement('div');
             tooltip.appendChild(tooltipContent);
-            
+
             // Arrow
             const arrow = document.createElement('div');
-            arrow.className = 'absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-slate-900';
+            arrow.className = 'absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-[#1c1916]';
             tooltip.appendChild(arrow);
-            
+
             document.body.appendChild(tooltip);
         } else {
             tooltipContent = tooltip.firstElementChild as HTMLElement;
@@ -211,15 +187,15 @@ const getServerColor = (level: number) => {
                 if (target.classList.contains('gh-cell')) {
                     const count = target.getAttribute('data-count');
                     const date = target.getAttribute('data-date');
-                    
+
                     if (count && date && tooltipContent) {
-                        tooltipContent.innerHTML = `<strong>${count}</strong> ${i18nContributions} <span class="text-slate-400">${i18nOn} ${date}</span>`;
-                        
+                        tooltipContent.innerHTML = `<strong>${count}</strong> ${i18nContributions} <span class="text-white/50">${i18nOn} ${date}</span>`;
+
                         tooltip.style.visibility = 'visible';
                         tooltip.style.opacity = '1';
                         tooltip.classList.add('translate-y-[-100%]');
                         tooltip.classList.remove('translate-y-[-90%]');
-                        
+
                         updatePosition(e);
                     }
                 }
@@ -227,7 +203,7 @@ const getServerColor = (level: number) => {
 
             const updatePosition = (e: MouseEvent) => {
                 const x = e.clientX;
-                const y = e.clientY - 12; 
+                const y = e.clientY - 12;
                 tooltip.style.left = `${x}px`;
                 tooltip.style.top = `${y}px`;
             };
