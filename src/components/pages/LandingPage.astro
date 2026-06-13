@@ -5,6 +5,7 @@ import GitHubContributions from "../../components/GitHubContributions.astro";
 import GitHubLanguages from "../../components/GitHubLanguages.astro";
 import LeetCodeContributions from "../../components/LeetCodeContributions.astro";
 import { useTranslations } from "../../i18n/ui";
+import { socials } from "../../data/socials";
 
 interface Props {
 	lang: 'en' | 'es';
@@ -51,6 +52,13 @@ const difficultyLabel = (difficulty: string) => {
 	// @ts-ignore
 	return t(key) || difficulty;
 };
+
+const fmtDate = (d: Date) =>
+	d.toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const blogIndexUrl = lang === 'es' ? '/es/blog/' : '/blog/';
+const localUrl = (section: string, id: string) =>
+	lang === 'es' ? `/es/${section}/${getSlug(id)}/` : `/${section}/${getSlug(id)}/`;
 ---
 
 <Layout title="eddn.dev — Eduardo Alonso">
@@ -73,30 +81,42 @@ const difficultyLabel = (difficulty: string) => {
 				<!-- Left Column: Content -->
 				<header class="space-y-8 relative z-10">
 					<div class="space-y-4">
-						<span class="inline-block font-mono text-xs font-bold tracking-widest uppercase text-brand-600 mb-2">
+						<a
+							href="https://eddndev.com"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hero-seq group inline-flex items-center gap-2 font-mono text-xs font-bold tracking-widest uppercase mb-4 text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+						>
+							<span class="text-brand-500">[</span>
+							<span data-type-text>{t('home.availability')}</span>
+							<span class="text-brand-500">]</span>
+							<span class="inline-block w-[0.6em] h-[1.1em] bg-brand-500 cursor-blink" aria-hidden="true"></span>
+						</a>
+
+						<span class="hero-seq [animation-delay:120ms] block font-mono text-xs font-bold tracking-widest uppercase text-brand-600 mb-2">
 							{t('home.greeting')}
 						</span>
 
 						<h1
-							class="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.9]"
+							class="hero-seq-clip [animation-delay:220ms] text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.9]"
                             set:html={t('home.title')}
 						>
 						</h1>
-						
-						<p class="text-xl sm:text-2xl font-medium text-slate-800 dark:text-slate-200 leading-tight">
+
+						<p class="hero-seq [animation-delay:420ms] text-xl sm:text-2xl font-medium text-slate-800 dark:text-slate-200 leading-tight">
 							{t('home.subtitle')}
 						</p>
 					</div>
 
 					<p
-						class="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-light leading-relaxed max-w-2xl border-l-4 border-brand-200 dark:border-brand-800 pl-4"
+						class="hero-seq [animation-delay:540ms] text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-light leading-relaxed max-w-2xl border-l-4 border-brand-200 dark:border-brand-800 pl-4"
 					>
                         {t('home.description')}
 					</p>
 
-					<div class="flex flex-wrap gap-4 pt-4">
+					<div class="hero-seq [animation-delay:660ms] flex flex-wrap gap-4 pt-4">
 						<a
-							href={latestBlog ? (lang === 'es' ? `/es/blog/${getSlug(latestBlog.id)}/` : `/blog/${getSlug(latestBlog.id)}/`) : (lang === 'es' ? "/es/blog/" : "/blog/")}
+							href={latestBlog ? localUrl('blog', latestBlog.id) : blogIndexUrl}
 							class="px-6 py-3 bg-brand-500 text-white font-bold rounded-full hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20"
 						>
 							{t('home.latest_blog_btn')}
@@ -108,6 +128,27 @@ const difficultyLabel = (difficulty: string) => {
 							{t('home.trajectory_btn')}
 						</a>
 					</div>
+
+					<div class="hero-seq [animation-delay:780ms] flex flex-wrap items-center gap-x-4 gap-y-3 pt-2">
+						<span class="font-mono text-xs text-slate-400 dark:text-slate-500 tracking-widest select-none">
+							{t('home.social_label')}
+						</span>
+						<ul class="flex items-center gap-1">
+							{socials.map((social) => (
+								<li>
+									<a
+										href={social.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label={social.label}
+										class="group flex p-2.5 text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-all duration-300 hover:-translate-y-1"
+									>
+										<svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5" aria-hidden="true" set:html={social.icon} />
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
 				</header>
 
 				<!-- Right Column Spacer (keeps text on left in grid layout) -->
@@ -115,142 +156,159 @@ const difficultyLabel = (difficulty: string) => {
 			</div>
 		</div>
 
-		<section class="pb-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-			{/* Latest Blog Post Card */}
-			{latestBlog && (
-				<article class="group relative flex flex-col justify-between p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-r-4 border-r-slate-200 dark:border-r-slate-700 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none h-full select-none">
-					<div>
-						<span class="block text-xs font-mono text-brand-500 font-bold uppercase tracking-widest mb-4 pointer-events-none">
-							{t('home.latest_post_label')}
-						</span>
-						<time 
-							transition:name={`date-${latestBlog.id}`}
-							class="relative z-10 mb-2 block text-xs font-mono text-slate-400 uppercase tracking-widest pointer-events-none"
-						>
-							{latestBlog.data.pubDate.toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', {
-								year: 'numeric',
-								month: 'long',
-								day: 'numeric',
-							})}
-						</time>
-						
-						<h3
-							transition:name={`title-${latestBlog.id}`}
-							class="text-2xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-brand-600 transition-colors leading-tight"
-						>
-							<a href={lang === 'es' ? `/es/blog/${getSlug(latestBlog.id)}/` : `/blog/${getSlug(latestBlog.id)}/`} class="focus:outline-none">
-								<span class="absolute inset-0 z-20"></span>
-								{latestBlog.data.title}
-							</a>
-						</h3>
-						
-						<p class="relative z-10 text-slate-600 dark:text-slate-400 leading-relaxed mb-6 line-clamp-3 pointer-events-none">
-							{latestBlog.data.description}
-						</p>
-					</div>
+		{/* ===== LEDGER — latest entries as an asymmetric editorial index ===== */}
+		<section class="pb-24">
+			<div class="io-reveal flex items-baseline justify-between mb-8">
+				<h2 class="font-mono text-xs font-bold tracking-widest uppercase text-brand-600">
+					{t('home.latest_label')}
+				</h2>
+				<a href={blogIndexUrl} class="group font-mono text-xs tracking-widest uppercase text-slate-400 hover:text-brand-600 transition-colors">
+					{t('home.view_all')} <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+				</a>
+			</div>
 
-					<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:translate-x-2 transition-transform duration-300 pointer-events-none">
-						{t('home.read_article')}
-						<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-						</svg>
-					</div>
-				</article>
-			)}
+			<div class="io-reveal grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-px bg-slate-200 dark:bg-slate-800 border-y-2 border-slate-900 dark:border-white">
 
-			{/* Latest Article Card */}
-			{latestArticle && (
-				<article class="group relative flex flex-col justify-between p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-r-4 border-r-slate-200 dark:border-r-slate-700 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none h-full select-none">
-					<div>
-						<div class="flex justify-between items-start mb-4 pointer-events-none">
-							<span class="text-xs font-mono text-brand-500 font-bold uppercase tracking-widest">
-								{t('home.latest_article_label')}
-							</span>
-							<span class="text-xs font-bold px-2 py-0.5 rounded-full text-violet-500 bg-violet-50 dark:bg-violet-950">
-								{latestArticle.data.technicalDepth}
-							</span>
-						</div>
-						<time
-							transition:name={`date-${latestArticle.id}`}
-							class="relative z-10 mb-2 block text-xs font-mono text-slate-400 uppercase tracking-widest pointer-events-none"
-						>
-							{latestArticle.data.pubDate.toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', {
-								year: 'numeric',
-								month: 'long',
-								day: 'numeric',
-							})}
-						</time>
+				{/* 01 — Featured: latest blog post (2x2 cell, full inversion on hover) */}
+				{latestBlog && (
+					<article class="group relative lg:col-span-2 lg:row-span-2 flex flex-col justify-between gap-10 p-8 sm:p-12 bg-white dark:bg-slate-950 hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors duration-300 overflow-hidden select-none">
+						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-8 -right-2 text-[8rem] sm:text-[13rem] font-black leading-none tracking-tighter text-brand-100/70 dark:text-slate-900 group-hover:text-brand-500 transition-colors duration-300">01</span>
+						<div class="relative z-10">
+							<div class="flex flex-wrap items-baseline justify-between gap-4 mb-6">
+								<span class="text-xs font-mono font-bold uppercase tracking-widest text-brand-500 group-hover:text-white transition-colors pointer-events-none">
+									{t('home.latest_post_label')}
+								</span>
+								<time
+									transition:name={`date-${latestBlog.id}`}
+									class="text-xs font-mono uppercase tracking-widest text-slate-400 group-hover:text-brand-100 transition-colors pointer-events-none"
+								>
+									{fmtDate(latestBlog.data.pubDate)}
+								</time>
+							</div>
 
-						<h3
-							transition:name={`title-${latestArticle.id}`}
-							class="text-2xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-brand-600 transition-colors leading-tight"
-						>
-							<a href={lang === 'es' ? `/es/articles/${getSlug(latestArticle.id)}/` : `/articles/${getSlug(latestArticle.id)}/`} class="focus:outline-none">
-								<span class="absolute inset-0 z-20"></span>
-								{latestArticle.data.title}
-							</a>
-						</h3>
-
-						<p class="relative z-10 text-slate-600 dark:text-slate-400 leading-relaxed mb-6 line-clamp-3 pointer-events-none">
-							{latestArticle.data.description}
-						</p>
-					</div>
-
-					<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:translate-x-2 transition-transform duration-300 pointer-events-none">
-						{t('home.read_paper')}
-						<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-						</svg>
-					</div>
-				</article>
-			)}
-
-			{/* Latest LeetCode Solution Card */}
-			{latestLeetCode && (
-				<article class="group relative flex flex-col justify-between p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-r-4 border-r-slate-200 dark:border-r-slate-700 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none h-full select-none">
-					<div>
-						<div class="flex justify-between items-start mb-4 pointer-events-none">
-							<span class="text-xs font-mono text-brand-500 font-bold uppercase tracking-widest">
-								{t('home.latest_solution_label')}
-							</span>
-							<span 
-								transition:name={`difficulty-${latestLeetCode.id}`}
-								class={`text-xs font-bold px-2 py-0.5 rounded-full ${difficultyColor[latestLeetCode.data.difficulty as keyof typeof difficultyColor]}`}
+							<h3
+								transition:name={`title-${latestBlog.id}`}
+								class="text-3xl sm:text-5xl font-black tracking-tighter leading-[0.95] text-slate-900 dark:text-white group-hover:text-white mb-6 max-w-2xl transition-colors"
 							>
-								{difficultyLabel(latestLeetCode.data.difficulty)}
-							</span>
-						</div>
-						
-						<h3
-							transition:name={`title-${latestLeetCode.id}`}
-							class="text-2xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-brand-600 transition-colors leading-tight"
-						>
-							<a href={lang === 'es' ? `/es/leetcode/${getSlug(latestLeetCode.id)}/` : `/leetcode/${getSlug(latestLeetCode.id)}/`} class="focus:outline-none">
-								<span class="absolute inset-0 z-20"></span>
-								{latestLeetCode.data.title}
-							</a>
-						</h3>
-						
-						<div class="relative z-10 text-slate-600 dark:text-slate-400 leading-relaxed mb-6 font-mono text-sm pointer-events-none">
-							{latestLeetCode.data.complexity ? (
-								<div class="flex flex-col gap-1">
-									<span>{t('home.time')}: {latestLeetCode.data.complexity.time}</span>
-									<span>{t('home.space')}: {latestLeetCode.data.complexity.space}</span>
-								</div>
-							) : (
-								<p>{t('home.complexity_analysis')}</p>
-							)}
-						</div>
-					</div>
+								<a href={localUrl('blog', latestBlog.id)} class="focus:outline-none">
+									<span class="absolute inset-0 z-20"></span>
+									{latestBlog.data.title}
+								</a>
+							</h3>
 
-					<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:translate-x-2 transition-transform duration-300 pointer-events-none">
-						{t('home.view_solution')}
-						<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-						</svg>
-					</div>
-				</article>
-			)}
+							<p class="text-slate-600 dark:text-slate-400 group-hover:text-brand-50 leading-relaxed line-clamp-3 max-w-xl transition-colors pointer-events-none">
+								{latestBlog.data.description}
+							</p>
+						</div>
+
+						<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:text-white group-hover:translate-x-2 transition-all duration-300 pointer-events-none">
+							{t('home.read_article')}
+							<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+							</svg>
+						</div>
+					</article>
+				)}
+
+				{/* 02 — Latest article / paper */}
+				{latestArticle && (
+					<article class="group relative flex flex-col justify-between gap-8 p-8 bg-white dark:bg-slate-950 hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors duration-300 overflow-hidden select-none">
+						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-6 -right-1 text-[6rem] font-black leading-none tracking-tighter text-brand-100/70 dark:text-slate-900 group-hover:text-brand-500 transition-colors duration-300">02</span>
+						<div class="relative z-10">
+							<div class="flex justify-between items-start gap-3 mb-4 pointer-events-none">
+								<span class="text-xs font-mono font-bold uppercase tracking-widest text-brand-500 group-hover:text-white transition-colors">
+									{t('home.latest_article_label')}
+								</span>
+								<span class="text-xs font-bold px-2 py-0.5 rounded-full text-violet-500 bg-violet-50 dark:bg-violet-950 shrink-0">
+									{latestArticle.data.technicalDepth}
+								</span>
+							</div>
+
+							<time
+								transition:name={`date-${latestArticle.id}`}
+								class="mb-2 block text-xs font-mono uppercase tracking-widest text-slate-400 group-hover:text-brand-100 transition-colors pointer-events-none"
+							>
+								{fmtDate(latestArticle.data.pubDate)}
+							</time>
+
+							<h3
+								transition:name={`title-${latestArticle.id}`}
+								class="text-xl sm:text-2xl font-bold tracking-tight leading-tight text-slate-900 dark:text-white group-hover:text-white transition-colors"
+							>
+								<a href={localUrl('articles', latestArticle.id)} class="focus:outline-none">
+									<span class="absolute inset-0 z-20"></span>
+									{latestArticle.data.title}
+								</a>
+							</h3>
+						</div>
+
+						<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:text-white group-hover:translate-x-2 transition-all duration-300 pointer-events-none">
+							{t('home.read_paper')}
+							<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+							</svg>
+						</div>
+					</article>
+				)}
+
+				{/* 03 — Latest LeetCode solution */}
+				{latestLeetCode && (
+					<article class="group relative flex flex-col justify-between gap-8 p-8 bg-white dark:bg-slate-950 hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors duration-300 overflow-hidden select-none">
+						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-6 -right-1 text-[6rem] font-black leading-none tracking-tighter text-brand-100/70 dark:text-slate-900 group-hover:text-brand-500 transition-colors duration-300">03</span>
+						<div class="relative z-10">
+							<div class="flex justify-between items-start gap-3 mb-4 pointer-events-none">
+								<span class="text-xs font-mono font-bold uppercase tracking-widest text-brand-500 group-hover:text-white transition-colors">
+									{t('home.latest_solution_label')}
+								</span>
+								<span
+									transition:name={`difficulty-${latestLeetCode.id}`}
+									class={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ${difficultyColor[latestLeetCode.data.difficulty as keyof typeof difficultyColor]}`}
+								>
+									{difficultyLabel(latestLeetCode.data.difficulty)}
+								</span>
+							</div>
+
+							<h3
+								transition:name={`title-${latestLeetCode.id}`}
+								class="text-xl sm:text-2xl font-bold tracking-tight leading-tight text-slate-900 dark:text-white group-hover:text-white mb-4 transition-colors"
+							>
+								<a href={localUrl('leetcode', latestLeetCode.id)} class="focus:outline-none">
+									<span class="absolute inset-0 z-20"></span>
+									{latestLeetCode.data.title}
+								</a>
+							</h3>
+
+							<div class="text-slate-600 dark:text-slate-400 group-hover:text-brand-50 leading-relaxed font-mono text-sm transition-colors pointer-events-none">
+								{latestLeetCode.data.complexity ? (
+									<div class="flex flex-col gap-1">
+										<span>{t('home.time')}: {latestLeetCode.data.complexity.time}</span>
+										<span>{t('home.space')}: {latestLeetCode.data.complexity.space}</span>
+									</div>
+								) : (
+									<p>{t('home.complexity_analysis')}</p>
+								)}
+							</div>
+						</div>
+
+						<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:text-white group-hover:translate-x-2 transition-all duration-300 pointer-events-none">
+							{t('home.view_solution')}
+							<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+							</svg>
+						</div>
+					</article>
+				)}
+			</div>
+		</section>
+
+		{/* ===== TELEMETRY — instrument panel ===== */}
+		<section class="pb-16">
+			<div class="io-reveal flex items-baseline justify-between border-t-2 border-slate-900 dark:border-white pt-4">
+				<h2 class="font-mono text-xs font-bold tracking-widest uppercase text-brand-600">
+					{t('home.telemetry_label')}
+				</h2>
+				<span class="font-mono text-xs text-slate-400 hidden sm:inline select-none">~/eddndev</span>
+			</div>
 		</section>
 
 		<GitHubContributions lang={lang} />
@@ -264,12 +322,14 @@ const difficultyLabel = (difficulty: string) => {
 		// Pattern for handling Astro View Transitions with interactive elements
 		// 1. Track the active instance in a module-scoped variable
 		let activeVisual: VisualInstance | null = null;
+		let revealObserver: IntersectionObserver | null = null;
+		let typeTimer: ReturnType<typeof setTimeout> | null = null;
 
 		function initHeroVisualization() {
 			const canvas = document.getElementById(
 				"hero-canvas",
 			) as HTMLCanvasElement;
-			
+
 			if (!canvas) return;
 
 			// Cleanup any existing instance just in case
@@ -282,16 +342,60 @@ const difficultyLabel = (difficulty: string) => {
 			activeVisual.init();
 		}
 
+		// Terminal typewriter for the status line (SSR text stays for SEO/no-JS)
+		function initTypewriter() {
+			const el = document.querySelector<HTMLElement>("[data-type-text]");
+			if (!el) return;
+			if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+			const full = el.dataset.fullText || el.textContent || "";
+			el.dataset.fullText = full;
+			el.textContent = "";
+
+			let i = 0;
+			const tick = () => {
+				el.textContent = full.slice(0, ++i);
+				if (i < full.length) typeTimer = setTimeout(tick, 26 + Math.random() * 38);
+			};
+			typeTimer = setTimeout(tick, 350);
+		}
+
+		// Scroll reveals for ledger / telemetry blocks
+		function initReveals() {
+			revealObserver?.disconnect();
+			revealObserver = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							entry.target.classList.add("is-visible");
+							revealObserver?.unobserve(entry.target);
+						}
+					});
+				},
+				{ threshold: 0.15 },
+			);
+			document.querySelectorAll(".io-reveal").forEach((el) => revealObserver?.observe(el));
+		}
+
+		function initAll() {
+			initHeroVisualization();
+			initTypewriter();
+			initReveals();
+		}
+
 		function cleanup() {
 			if (activeVisual) {
 				activeVisual.destroy();
 				activeVisual = null;
 			}
+			revealObserver?.disconnect();
+			revealObserver = null;
+			if (typeTimer) clearTimeout(typeTimer);
 		}
 
 		// 2. Initialize on every page load (initial + navigation)
-		document.addEventListener("astro:page-load", initHeroVisualization);
-		
+		document.addEventListener("astro:page-load", initAll);
+
 		// 3. Cleanup before swapping content
 		document.addEventListener("astro:before-swap", cleanup);
 	</script>

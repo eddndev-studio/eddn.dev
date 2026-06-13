@@ -1,5 +1,6 @@
 ---
 import { useTranslations } from '../i18n/ui';
+import { socials } from '../data/socials';
 
 const currentYear = new Date().getFullYear();
 const lang = (Astro.currentLocale as keyof typeof import('../i18n/ui').ui) || 'en';
@@ -67,10 +68,9 @@ const t = useTranslations(lang);
         <div class="mt-24 pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 font-mono">
             <span>&copy; {currentYear} EDDN.DEV. {t('footer.rights')}</span>
             <div class="flex flex-wrap gap-4 mt-4 sm:mt-0 justify-center">
-                <a href="https://github.com/eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">GITHUB</a>
-                <a href="https://www.linkedin.com/in/eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">LINKEDIN</a>
-                <a href="https://x.com/eddndev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">X</a>
-                <a href="https://instagram.com/eddn.dev" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">INSTAGRAM</a>
+                {socials.map((social) => (
+                    <a href={social.url} target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">{social.id.toUpperCase()}</a>
+                ))}
                 <a href="https://eddndev.com" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">EDDNDEV.COM</a>
                 <a href="https://achrony.me" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 transition-colors">ACHRONY.ME</a>
             </div>
