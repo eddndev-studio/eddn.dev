@@ -15,13 +15,19 @@ interface Props {
 
 const {
 	title = "eddn.dev — Personal Journal",
-	description = "Ingeniería de software, trayectoria y pensamientos personales de Eduardo Alonso.",
+	description,
 	hreflangs = [],
 	prevUrl,
 	nextUrl,
 } = Astro.props;
 
 const lang = Astro.currentLocale || 'en';
+
+// Locale-aware SEO defaults (else EN pages inherit a Spanish description).
+const metaDescription = description ?? (lang === 'es'
+	? "Ingeniería de software, trayectoria y pensamientos personales de Eduardo Alonso."
+	: "Software engineering, trajectory, and personal notes by Eduardo Alonso.");
+const imageAltPrefix = lang === 'es' ? 'Portada de:' : 'Cover of:';
 ---
 
 <!doctype html>
@@ -41,7 +47,7 @@ const lang = Astro.currentLocale || 'en';
 		<meta name="generator" content={Astro.generator} />
 
 		<title>{title}</title>
-		<meta name="description" content={description} />
+		<meta name="description" content={metaDescription} />
 
 		<!-- Canonical URL -->
 		<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
@@ -69,7 +75,7 @@ const lang = Astro.currentLocale || 'en';
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url} />
 		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
+		<meta property="og:description" content={metaDescription} />
 		<meta property="og:site_name" content="eddn.dev" />
 		
 		<!-- Open Graph Image Generation -->
@@ -77,15 +83,15 @@ const lang = Astro.currentLocale || 'en';
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
 		<meta property="og:image:type" content="image/png" />
-		<meta property="og:image:alt" content={`Portada de: ${title}`} />
+		<meta property="og:image:alt" content={`${imageAltPrefix} ${title}`} />
 
 		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:url" content={Astro.url} />
 		<meta property="twitter:title" content={title} />
-		<meta property="twitter:description" content={description} />
+		<meta property="twitter:description" content={metaDescription} />
 		<meta property="twitter:image" content={`https://og.eddn.dev/generate?title=${encodeURIComponent(title)}${Astro.url.pathname.includes('/blog/') ? '&og_type=Article' : Astro.url.pathname.includes('/leetcode/') ? '&og_type=Solution' : Astro.url.pathname.includes('/articles/') ? '&og_type=Paper' : '&og_type=Page'}`} />
-		<meta property="twitter:image:alt" content={`Portada de: ${title}`} />
+		<meta property="twitter:image:alt" content={`${imageAltPrefix} ${title}`} />
 
 		<ClientRouter />
 
@@ -123,8 +129,14 @@ const lang = Astro.currentLocale || 'en';
 			}
 
 			function animateContent() {
-				// 1. Hero / Header Reveal
-				const heroElements = document.querySelectorAll("main > header > *");
+				// Honor reduced-motion: skip the staggered entrance entirely
+				// (elements have no hidden base state, so they just appear).
+				if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+				// 1. Page header reveal (index/trajectory pages tag their
+				//    header with [data-page-header]; nesting-independent so
+				//    pages keep a single <main> landmark from Layout).
+				const heroElements = document.querySelectorAll("[data-page-header] > *");
 				if (heroElements.length) {
 					applyStagger(heroElements, 'anim-fade-up', 100);
 				}
