@@ -69,6 +69,10 @@ export class CellGrid {
   private cellH = BASE_CELL_H;
   private atlas: HTMLCanvasElement;
   private atlasCtx: CanvasRenderingContext2D;
+  // Glyph metrics the current atlas was built for; -1 forces the first build.
+  private atlasDpr = -1;
+  private atlasCellW = -1;
+  private atlasCellH = -1;
 
   // Pixel size of the backing store.
   private wDev = 0;
@@ -108,11 +112,27 @@ export class CellGrid {
     this.canvas.style.width = cols * BASE_CELL_W + "px";
     this.canvas.style.height = rows * BASE_CELL_H + "px";
 
-    this.buildAtlas();
+    // Glyph metrics only depend on dpr/cell size, never cols/rows, so skip the
+    // ~144 fillText atlas rebuild on resizes that don't change them.
+    if (
+      this.dpr !== this.atlasDpr ||
+      this.cellW !== this.atlasCellW ||
+      this.cellH !== this.atlasCellH
+    ) {
+      this.rebuildAtlas();
+    }
 
     const changed = cols !== this.field.cols || rows !== this.field.rows;
     if (changed) this.field = new FieldImpl(cols, rows);
     return changed;
+  }
+
+  // Force a glyph-atlas rebuild (e.g. after the web font finishes loading).
+  rebuildAtlas() {
+    this.buildAtlas();
+    this.atlasDpr = this.dpr;
+    this.atlasCellW = this.cellW;
+    this.atlasCellH = this.cellH;
   }
 
   private buildAtlas() {

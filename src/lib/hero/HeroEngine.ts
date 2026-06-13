@@ -50,6 +50,7 @@ export class HeroEngine {
   private fpsFrames = 0;
   private running = false;
   private reduced: boolean;
+  private disposed = false;
 
   private resizeTimer: ReturnType<typeof setTimeout> | null = null;
   private io: IntersectionObserver | null = null;
@@ -124,6 +125,17 @@ export class HeroEngine {
       this.resume();
     }
     this.emitState();
+
+    // The glyph atlas is rasterized at init; if DM Mono is still loading it
+    // would bake the fallback font. Rebuild once the real font is ready.
+    if (document.fonts && document.fonts.status !== "loaded") {
+      document.fonts.ready.then(() => {
+        if (this.disposed) return;
+        this.grid.rebuildAtlas();
+        if (this.reduced || !this.running) this.renderStill();
+        else this.grid.render();
+      });
+    }
   }
 
   private loadProgram(index: number) {
@@ -273,6 +285,7 @@ export class HeroEngine {
   }
 
   destroy() {
+    this.disposed = true;
     this.pause();
     const canvas = this.grid.canvas;
     canvas.removeEventListener("pointermove", this.bPointerMove);

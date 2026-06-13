@@ -10,7 +10,8 @@ import type { Field, Pointer, Program, RNG } from "../types";
 const NOISE_SCALE = 0.08; // spatial frequency
 const TIME_SCALE = 0.18; // base temporal drift
 const SPEED = 0.9; // cells per step at unit field strength
-const DECAY = 0.9; // density fade per frame
+const DECAY = 0.88; // density + heat fade per frame
+const DEPOSIT = 0.4; // density added per particle per cell
 const EPS = 0.6; // finite-difference step in noise space
 
 export class FlowProgram implements Program {
@@ -38,7 +39,7 @@ export class FlowProgram implements Program {
     this.t = rng.range(0, 1000);
     this.timeScale = 1;
 
-    this.count = Math.min(2200, Math.floor(this.size * 0.9));
+    this.count = Math.min(1400, Math.floor(this.size * 0.6));
     this.px = new Float32Array(this.count);
     this.py = new Float32Array(this.count);
     this.life = new Float32Array(this.count);
@@ -71,7 +72,12 @@ export class FlowProgram implements Program {
     this.timeScale += (1 - this.timeScale) * Math.min(dt * 2.5, 1);
 
     const { density, heat } = field;
-    for (let i = 0; i < this.size; i++) density[i] *= DECAY;
+    // Decay BOTH channels: heat must cool too, else every touched cell locks to
+    // its lifetime-max speed and the field homogenizes to hot over time.
+    for (let i = 0; i < this.size; i++) {
+      density[i] *= DECAY;
+      heat[i] *= DECAY;
+    }
 
     const n = this.noise;
     const cols = this.cols;
@@ -123,7 +129,7 @@ export class FlowProgram implements Program {
       const ix = x | 0;
       const iy = y | 0;
       const idx = iy * cols + ix;
-      let dv = density[idx] + 0.55;
+      let dv = density[idx] + DEPOSIT;
       if (dv > 1) dv = 1;
       density[idx] = dv;
       const sp = Math.hypot(vx, vy);
