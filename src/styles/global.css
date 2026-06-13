@@ -129,6 +129,7 @@
   --color-canvas-soft: var(--c-canvas-soft);
   --color-hairline: var(--c-hairline);
   --color-ink: var(--c-ink);
+  --color-body-strong: var(--c-body-strong);
   --color-body: var(--c-body);
   --color-mute: var(--c-mute);
   --color-machine: #8b5cf6;
@@ -140,8 +141,10 @@
   --c-canvas-soft: #efece4;
   --c-hairline: #e2dccd;
   --c-ink: #2b2622;
+  --c-body-strong: #3a342e;
   --c-body: #4f4a42;
-  --c-mute: #8a8276;
+  /* mute meets WCAG AA (4.5:1) on both canvas and canvas-soft */
+  --c-mute: #6b645a;
 }
 
 .dark {
@@ -150,6 +153,7 @@
   --c-canvas-soft: #383330;
   --c-hairline: #3f3a36;
   --c-ink: #f7f5f0;
+  --c-body-strong: #ddd4c4;
   --c-body: #c9c0ad;
   --c-mute: #aea69c;
 }
