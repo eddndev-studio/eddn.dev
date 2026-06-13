@@ -66,10 +66,16 @@ const localUrl = (section: string, id: string) =>
 	<div
 		class="relative max-w-7xl mx-auto px-6 overflow-visible"
 	>
-		<div class="relative min-h-[100dvh] lg:min-h-0 lg:h-[calc(100dvh-4rem)] flex items-center py-16 sm:py-24 lg:py-0">
-			<div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center w-full">
-				<!-- Left Column: Content -->
-				<header class="space-y-8 relative z-10">
+		<div class="relative min-h-[100dvh] lg:min-h-0 lg:h-[calc(100dvh-4rem)] flex items-center py-16 sm:py-24 lg:py-0 overflow-hidden">
+			<!-- Full-bleed dynamic field (transparent glyphs) behind the hero -->
+			<div class="hero-seq [animation-delay:300ms] absolute inset-0 z-0">
+				<HeroCanvas />
+			</div>
+			<!-- Readability scrim: page color over the headline, clearing into the field -->
+			<div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-canvas from-5% via-canvas/55 via-45% to-transparent"></div>
+
+			<!-- Content -->
+			<header class="relative z-10 max-w-2xl space-y-8">
 					<div class="space-y-5">
 						<a
 							href="https://eddndev.com"
@@ -142,12 +148,6 @@ const localUrl = (section: string, id: string) =>
 						</ul>
 					</div>
 				</header>
-
-				<!-- Right Column: live terminal -->
-				<div class="hero-seq [animation-delay:300ms] relative z-10">
-					<HeroCanvas />
-				</div>
-			</div>
 		</div>
 
 		{/* ===== LEDGER — latest entries as an asymmetric editorial index ===== */}

@@ -290,9 +290,9 @@ html.theme-transition::view-transition-old(root) { z-index: 1; }
     content: none;
   }
 
-  /* Code blocks live in the same warm "terminal" as the hero.   */
-  /* (#1c1916 == HeroCanvas TERMINAL_BG). Syntax color is the     */
-  /* one place chrome may carry hue.                              */
+  /* Code blocks live in the same warm "terminal" black as the    */
+  /* hero field (#1c1916). Syntax color is the one place chrome    */
+  /* may carry hue.                                                */
   .prose pre {
     @apply rounded-md border border-white/5 p-6;
     background-color: #1c1916 !important;
