@@ -63,7 +63,7 @@ const localUrl = (section: string, id: string) =>
 ---
 
 <Layout title="eddn.dev — Eduardo Alonso">
-	<main
+	<div
 		class="relative max-w-7xl mx-auto px-6 overflow-visible"
 	>
 		<div class="relative min-h-[100dvh] lg:min-h-0 lg:h-[calc(100dvh-4rem)] flex items-center py-16 sm:py-24 lg:py-0">
@@ -75,14 +75,14 @@ const localUrl = (section: string, id: string) =>
 							href="https://eddndev.com"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="hero-seq group inline-flex items-center gap-2 font-mono text-xs tracking-wider mb-2 text-mute hover:text-brand-400 transition-colors"
+							class="hero-seq group inline-flex items-center gap-2 font-mono text-xs tracking-wider mb-2 text-mute hover:text-ink transition-colors"
 						>
 							<span class="text-mute/70">eddn@dev:~$</span>
 							<span data-type-text class="text-body-strong">{t('home.availability')}</span>
 							<span class="inline-block w-[0.55em] h-[1.05em] bg-brand-500 cursor-blink align-middle" aria-hidden="true"></span>
 						</a>
 
-						<span class="hero-seq [animation-delay:120ms] block font-mono text-xs tracking-[0.25em] uppercase text-brand-500 mb-1">
+						<span class="hero-seq [animation-delay:120ms] block font-mono text-xs tracking-[0.25em] uppercase text-mute mb-1">
 							{t('home.greeting')}
 						</span>
 
@@ -133,7 +133,7 @@ const localUrl = (section: string, id: string) =>
 										target="_blank"
 										rel="noopener noreferrer"
 										aria-label={social.label}
-										class="group flex p-2 text-mute hover:text-brand-400 transition-all duration-300 hover:-translate-y-0.5"
+										class="group flex p-2 text-mute hover:text-ink transition-all duration-300 hover:-translate-y-0.5"
 									>
 										<svg viewBox="0 0 24 24" fill="currentColor" class="h-[18px] w-[18px]" aria-hidden="true" set:html={social.icon} />
 									</a>
@@ -184,7 +184,7 @@ const localUrl = (section: string, id: string) =>
 								transition:name={`title-${latestBlog.id}`}
 								class="text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[0.98] text-ink group-hover:text-canvas mb-6 max-w-2xl transition-colors"
 							>
-								<a href={localUrl('blog', latestBlog.id)} class="focus:outline-none">
+								<a href={localUrl('blog', latestBlog.id)} class="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
 									<span class="absolute inset-0 z-20"></span>
 									{latestBlog.data.title}
 								</a>
@@ -229,7 +229,7 @@ const localUrl = (section: string, id: string) =>
 								transition:name={`title-${latestArticle.id}`}
 								class="text-xl sm:text-2xl font-normal tracking-tight leading-snug text-ink group-hover:text-canvas transition-colors"
 							>
-								<a href={localUrl('articles', latestArticle.id)} class="focus:outline-none">
+								<a href={localUrl('articles', latestArticle.id)} class="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
 									<span class="absolute inset-0 z-20"></span>
 									{latestArticle.data.title}
 								</a>
@@ -266,7 +266,7 @@ const localUrl = (section: string, id: string) =>
 								transition:name={`title-${latestLeetCode.id}`}
 								class="text-xl sm:text-2xl font-normal tracking-tight leading-snug text-ink group-hover:text-canvas mb-4 transition-colors"
 							>
-								<a href={localUrl('leetcode', latestLeetCode.id)} class="focus:outline-none">
+								<a href={localUrl('leetcode', latestLeetCode.id)} class="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
 									<span class="absolute inset-0 z-20"></span>
 									{latestLeetCode.data.title}
 								</a>
@@ -308,7 +308,7 @@ const localUrl = (section: string, id: string) =>
 		<GitHubContributions lang={lang} />
 		<GitHubLanguages lang={lang} />
 		<LeetCodeContributions lang={lang} />
-	</main>
+	</div>
 
 	<script>
 		// The hero canvas + engine live in HeroCanvas.astro. This script only
