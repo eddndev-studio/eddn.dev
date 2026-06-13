@@ -41,9 +41,9 @@ const latestLeetCode = (await getCollection('leetcode'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
 
 const difficultyColor = {
-	Easy: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950',
-	Medium: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950',
-	Hard: 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950',
+	Easy: 'text-emerald-600 dark:text-emerald-400 border-emerald-500/40',
+	Medium: 'text-amber-600 dark:text-amber-400 border-amber-500/40',
+	Hard: 'text-rose-600 dark:text-rose-400 border-rose-500/40',
 };
 
 // Map difficulty from English data to current language label
@@ -152,29 +152,29 @@ const localUrl = (section: string, id: string) =>
 
 		{/* ===== LEDGER — latest entries as an asymmetric editorial index ===== */}
 		<section class="pb-24">
-			<div class="io-reveal flex items-baseline justify-between mb-8">
-				<h2 class="font-mono text-xs font-bold tracking-widest uppercase text-brand-600">
+			<div class="io-reveal flex items-baseline justify-between mb-6">
+				<h2 class="font-mono text-xs tracking-[0.2em] uppercase text-mute">
 					{t('home.latest_label')}
 				</h2>
-				<a href={blogIndexUrl} class="group font-mono text-xs tracking-widest uppercase text-slate-400 hover:text-brand-600 transition-colors">
-					{t('home.view_all')} <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+				<a href={blogIndexUrl} class="group font-mono text-xs tracking-[0.2em] uppercase text-mute hover:text-ink transition-colors">
+					{t('home.view_all')} <span class="inline-block transition-transform group-hover:translate-x-1">-&gt;</span>
 				</a>
 			</div>
 
-			<div class="io-reveal grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-px bg-slate-200 dark:bg-slate-800 border-y-2 border-slate-900 dark:border-white">
+			<div class="io-reveal grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-px bg-hairline border border-hairline rounded-md overflow-hidden">
 
-				{/* 01 — Featured: latest blog post (2x2 cell, full inversion on hover) */}
+				{/* 01 — Featured: latest blog post (2x2 cell, polarity-flip on hover) */}
 				{latestBlog && (
-					<article class="group relative lg:col-span-2 lg:row-span-2 flex flex-col justify-between gap-10 p-8 sm:p-12 bg-white dark:bg-slate-950 hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors duration-300 overflow-hidden select-none">
-						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-8 -right-2 text-[8rem] sm:text-[13rem] font-black leading-none tracking-tighter text-brand-100/70 dark:text-slate-900 group-hover:text-brand-500 transition-colors duration-300">01</span>
+					<article class="group relative lg:col-span-2 lg:row-span-2 flex flex-col justify-between gap-10 p-8 sm:p-12 bg-canvas hover:bg-ink transition-colors duration-300 overflow-hidden select-none">
+						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-10 -right-2 font-mono text-[8rem] sm:text-[12rem] font-medium leading-none tracking-tighter text-hairline group-hover:text-canvas/15 transition-colors duration-300">01</span>
 						<div class="relative z-10">
 							<div class="flex flex-wrap items-baseline justify-between gap-4 mb-6">
-								<span class="text-xs font-mono font-bold uppercase tracking-widest text-brand-500 group-hover:text-white transition-colors pointer-events-none">
+								<span class="text-xs font-mono uppercase tracking-[0.2em] text-mute group-hover:text-canvas/70 transition-colors pointer-events-none">
 									{t('home.latest_post_label')}
 								</span>
 								<time
 									transition:name={`date-${latestBlog.id}`}
-									class="text-xs font-mono uppercase tracking-widest text-slate-400 group-hover:text-brand-100 transition-colors pointer-events-none"
+									class="text-xs font-mono uppercase tracking-wider text-mute group-hover:text-canvas/60 transition-colors pointer-events-none"
 								>
 									{fmtDate(latestBlog.data.pubDate)}
 								</time>
@@ -182,7 +182,7 @@ const localUrl = (section: string, id: string) =>
 
 							<h3
 								transition:name={`title-${latestBlog.id}`}
-								class="text-3xl sm:text-5xl font-black tracking-tighter leading-[0.95] text-slate-900 dark:text-white group-hover:text-white mb-6 max-w-2xl transition-colors"
+								class="text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[0.98] text-ink group-hover:text-canvas mb-6 max-w-2xl transition-colors"
 							>
 								<a href={localUrl('blog', latestBlog.id)} class="focus:outline-none">
 									<span class="absolute inset-0 z-20"></span>
@@ -190,12 +190,12 @@ const localUrl = (section: string, id: string) =>
 								</a>
 							</h3>
 
-							<p class="text-slate-600 dark:text-slate-400 group-hover:text-brand-50 leading-relaxed line-clamp-3 max-w-xl transition-colors pointer-events-none">
+							<p class="text-body group-hover:text-canvas/80 leading-relaxed line-clamp-3 max-w-xl transition-colors pointer-events-none">
 								{latestBlog.data.description}
 							</p>
 						</div>
 
-						<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:text-white group-hover:translate-x-2 transition-all duration-300 pointer-events-none">
+						<div class="relative z-10 flex items-center text-sm font-medium text-ink group-hover:text-canvas group-hover:translate-x-1 transition-all duration-300 pointer-events-none">
 							{t('home.read_article')}
 							<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -206,28 +206,28 @@ const localUrl = (section: string, id: string) =>
 
 				{/* 02 — Latest article / paper */}
 				{latestArticle && (
-					<article class="group relative flex flex-col justify-between gap-8 p-8 bg-white dark:bg-slate-950 hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors duration-300 overflow-hidden select-none">
-						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-6 -right-1 text-[6rem] font-black leading-none tracking-tighter text-brand-100/70 dark:text-slate-900 group-hover:text-brand-500 transition-colors duration-300">02</span>
+					<article class="group relative flex flex-col justify-between gap-8 p-8 bg-canvas hover:bg-ink transition-colors duration-300 overflow-hidden select-none">
+						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-8 -right-1 font-mono text-[6rem] font-medium leading-none tracking-tighter text-hairline group-hover:text-canvas/15 transition-colors duration-300">02</span>
 						<div class="relative z-10">
 							<div class="flex justify-between items-start gap-3 mb-4 pointer-events-none">
-								<span class="text-xs font-mono font-bold uppercase tracking-widest text-brand-500 group-hover:text-white transition-colors">
+								<span class="text-xs font-mono uppercase tracking-[0.2em] text-mute group-hover:text-canvas/70 transition-colors">
 									{t('home.latest_article_label')}
 								</span>
-								<span class="text-xs font-bold px-2 py-0.5 rounded-full text-violet-500 bg-violet-50 dark:bg-violet-950 shrink-0">
+								<span class="text-[11px] font-mono px-2 py-0.5 rounded-[3px] border border-hairline text-mute group-hover:border-canvas/30 group-hover:text-canvas/80 shrink-0 transition-colors">
 									{latestArticle.data.technicalDepth}
 								</span>
 							</div>
 
 							<time
 								transition:name={`date-${latestArticle.id}`}
-								class="mb-2 block text-xs font-mono uppercase tracking-widest text-slate-400 group-hover:text-brand-100 transition-colors pointer-events-none"
+								class="mb-2 block text-xs font-mono uppercase tracking-wider text-mute group-hover:text-canvas/60 transition-colors pointer-events-none"
 							>
 								{fmtDate(latestArticle.data.pubDate)}
 							</time>
 
 							<h3
 								transition:name={`title-${latestArticle.id}`}
-								class="text-xl sm:text-2xl font-bold tracking-tight leading-tight text-slate-900 dark:text-white group-hover:text-white transition-colors"
+								class="text-xl sm:text-2xl font-normal tracking-tight leading-snug text-ink group-hover:text-canvas transition-colors"
 							>
 								<a href={localUrl('articles', latestArticle.id)} class="focus:outline-none">
 									<span class="absolute inset-0 z-20"></span>
@@ -236,7 +236,7 @@ const localUrl = (section: string, id: string) =>
 							</h3>
 						</div>
 
-						<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:text-white group-hover:translate-x-2 transition-all duration-300 pointer-events-none">
+						<div class="relative z-10 flex items-center text-sm font-medium text-ink group-hover:text-canvas group-hover:translate-x-1 transition-all duration-300 pointer-events-none">
 							{t('home.read_paper')}
 							<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -247,16 +247,16 @@ const localUrl = (section: string, id: string) =>
 
 				{/* 03 — Latest LeetCode solution */}
 				{latestLeetCode && (
-					<article class="group relative flex flex-col justify-between gap-8 p-8 bg-white dark:bg-slate-950 hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors duration-300 overflow-hidden select-none">
-						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-6 -right-1 text-[6rem] font-black leading-none tracking-tighter text-brand-100/70 dark:text-slate-900 group-hover:text-brand-500 transition-colors duration-300">03</span>
+					<article class="group relative flex flex-col justify-between gap-8 p-8 bg-canvas hover:bg-ink transition-colors duration-300 overflow-hidden select-none">
+						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-8 -right-1 font-mono text-[6rem] font-medium leading-none tracking-tighter text-hairline group-hover:text-canvas/15 transition-colors duration-300">03</span>
 						<div class="relative z-10">
 							<div class="flex justify-between items-start gap-3 mb-4 pointer-events-none">
-								<span class="text-xs font-mono font-bold uppercase tracking-widest text-brand-500 group-hover:text-white transition-colors">
+								<span class="text-xs font-mono uppercase tracking-[0.2em] text-mute group-hover:text-canvas/70 transition-colors">
 									{t('home.latest_solution_label')}
 								</span>
 								<span
 									transition:name={`difficulty-${latestLeetCode.id}`}
-									class={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ${difficultyColor[latestLeetCode.data.difficulty as keyof typeof difficultyColor]}`}
+									class={`text-[11px] font-mono px-2 py-0.5 rounded-[3px] border shrink-0 ${difficultyColor[latestLeetCode.data.difficulty as keyof typeof difficultyColor]}`}
 								>
 									{difficultyLabel(latestLeetCode.data.difficulty)}
 								</span>
@@ -264,7 +264,7 @@ const localUrl = (section: string, id: string) =>
 
 							<h3
 								transition:name={`title-${latestLeetCode.id}`}
-								class="text-xl sm:text-2xl font-bold tracking-tight leading-tight text-slate-900 dark:text-white group-hover:text-white mb-4 transition-colors"
+								class="text-xl sm:text-2xl font-normal tracking-tight leading-snug text-ink group-hover:text-canvas mb-4 transition-colors"
 							>
 								<a href={localUrl('leetcode', latestLeetCode.id)} class="focus:outline-none">
 									<span class="absolute inset-0 z-20"></span>
@@ -272,7 +272,7 @@ const localUrl = (section: string, id: string) =>
 								</a>
 							</h3>
 
-							<div class="text-slate-600 dark:text-slate-400 group-hover:text-brand-50 leading-relaxed font-mono text-sm transition-colors pointer-events-none">
+							<div class="text-body group-hover:text-canvas/80 leading-relaxed font-mono text-sm transition-colors pointer-events-none">
 								{latestLeetCode.data.complexity ? (
 									<div class="flex flex-col gap-1">
 										<span>{t('home.time')}: {latestLeetCode.data.complexity.time}</span>
@@ -284,7 +284,7 @@ const localUrl = (section: string, id: string) =>
 							</div>
 						</div>
 
-						<div class="relative z-10 flex items-center text-sm font-bold text-brand-500 group-hover:text-white group-hover:translate-x-2 transition-all duration-300 pointer-events-none">
+						<div class="relative z-10 flex items-center text-sm font-medium text-ink group-hover:text-canvas group-hover:translate-x-1 transition-all duration-300 pointer-events-none">
 							{t('home.view_solution')}
 							<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -297,11 +297,11 @@ const localUrl = (section: string, id: string) =>
 
 		{/* ===== TELEMETRY — instrument panel ===== */}
 		<section class="pb-16">
-			<div class="io-reveal flex items-baseline justify-between border-t-2 border-slate-900 dark:border-white pt-4">
-				<h2 class="font-mono text-xs font-bold tracking-widest uppercase text-brand-600">
+			<div class="io-reveal flex items-baseline justify-between border-t border-hairline pt-4">
+				<h2 class="font-mono text-xs tracking-[0.2em] uppercase text-mute">
 					{t('home.telemetry_label')}
 				</h2>
-				<span class="font-mono text-xs text-slate-400 hidden sm:inline select-none">~/eddndev</span>
+				<span class="font-mono text-xs text-mute hidden sm:inline select-none">~/eddndev</span>
 			</div>
 		</section>
 
