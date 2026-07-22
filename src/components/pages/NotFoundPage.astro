@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { useTranslations } from "../../i18n/ui";
-import HeroCanvas from "../HeroCanvas.astro";
 
 interface Props {
 	lang: 'en' | 'es';
@@ -12,58 +11,91 @@ const t = useTranslations(lang);
 ---
 
 <Layout title="404 - Not Found">
-	<div class="relative max-w-7xl mx-auto px-6 overflow-visible">
+	<div
+		class="relative max-w-7xl mx-auto px-6 overflow-visible"
+	>
 		<div class="relative min-h-[100dvh] flex items-center py-24 sm:py-32">
-			<!-- Full-viewport-width dynamic field (breaks out of the max-w-7xl column) -->
-			<div class="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 z-0 overflow-hidden">
-				<HeroCanvas />
+			<!-- Decorative Background/Blob -->
+			<div
+				class="absolute inset-0 lg:-top-20 lg:-right-20 lg:left-auto lg:bottom-auto lg:w-[1000px] lg:h-[1000px] -z-10 opacity-40 lg:opacity-80 pointer-events-none [mask-image:linear-gradient(to_top,white,transparent)] lg:[mask-image:radial-gradient(closest-side,white,transparent)]"
+			>
+				<div
+					class="w-full h-full lg:[border-radius:64%_36%_27%_73%_/_55%_58%_42%_45%]"
+				>
+					<canvas id="not-found-canvas" class="w-full h-full" aria-hidden="true"></canvas>
+				</div>
 			</div>
-			<!-- Readability scrim: page color over the copy, clearing into the field -->
-			<div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-canvas from-5% via-canvas/55 via-45% to-transparent"></div>
 
-			<!-- Content -->
-			<header class="relative z-10 max-w-2xl space-y-8">
-					<div class="space-y-5">
-						<span class="inline-flex items-center gap-2 font-mono text-xs tracking-wider text-mute mb-1">
-							<span class="text-mute/70">eddn@dev:~$</span>
-							<span class="text-body-strong">cat {lang === 'es' ? 'ruta' : 'route'}</span>
+			<div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center w-full">
+				<!-- Left Column: Content -->
+				<header class="space-y-8 relative z-10" data-animate-reveal>
+					<div class="space-y-4">
+						<span class="inline-block font-mono text-xs font-bold tracking-widest uppercase text-brand-600 mb-2">
+							{t('error.404.greeting')}
 						</span>
 
 						<h1
-							class="text-5xl sm:text-7xl font-normal tracking-[-0.04em] text-ink leading-[0.95]"
-							set:html={t('error.404.title')}
+							class="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.9]"
+                            set:html={t('error.404.title')}
 						>
 						</h1>
 
-						<p class="text-xl sm:text-2xl font-normal text-body-strong leading-snug max-w-xl">
+						<p class="text-xl sm:text-2xl font-medium text-slate-800 dark:text-slate-200 leading-tight">
 							{t('error.404.subtitle')}
 						</p>
 					</div>
 
 					<p
-						class="text-base sm:text-lg text-body font-normal leading-relaxed max-w-xl border-l border-hairline pl-4"
+						class="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-light leading-relaxed max-w-2xl border-l-4 border-brand-200 dark:border-brand-800 pl-4"
 					>
-						{t('error.404.description')}
+                        {t('error.404.description')}
 					</p>
 
-					<div class="flex flex-wrap gap-3 pt-2">
+					<div class="flex flex-wrap gap-4 pt-4">
 						<a
 							href={lang === 'es' ? "/es/" : "/"}
-							class="group inline-flex items-center gap-2.5 pl-5 pr-2 py-2 bg-ink text-canvas text-sm font-medium rounded-[4px] transition-transform active:scale-[0.98]"
+							class="px-6 py-3 bg-brand-500 text-white font-bold rounded-full hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20"
 						>
 							{t('error.404.home_btn')}
-							<span class="flex items-center justify-center w-6 h-6 rounded-[3px] bg-canvas/15 transition-transform group-hover:translate-x-0.5">
-								<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-							</span>
 						</a>
 						<a
 							href={lang === 'es' ? "/es/blog/" : "/blog/"}
-							class="inline-flex items-center px-5 py-2 text-ink text-sm font-medium rounded-[4px] border border-hairline hover:bg-canvas-soft transition-colors"
+							class="px-6 py-3 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-bold rounded-full border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
 						>
 							{t('error.404.blog_btn')}
 						</a>
 					</div>
 				</header>
+
+				<!-- Right Column Spacer (keeps text on left in grid layout) -->
+				<div class="hidden lg:block"></div>
+			</div>
 		</div>
 	</div>
+
+	<script>
+		import { createRandomVisual, manageVisualMotion } from "../../utils/visuals";
+
+		let cleanupVisual: (() => void) | null = null;
+
+		function initHeroVisualization() {
+			const canvas = document.getElementById(
+				"not-found-canvas",
+			) as HTMLCanvasElement;
+
+			if (!canvas) return;
+
+			cleanupVisual?.();
+			const visual = createRandomVisual(canvas, "#f43f5e");
+			cleanupVisual = manageVisualMotion(canvas, visual);
+		}
+
+		function cleanup() {
+			cleanupVisual?.();
+			cleanupVisual = null;
+		}
+
+		document.addEventListener("astro:page-load", initHeroVisualization);
+		document.addEventListener("astro:before-swap", cleanup);
+	</script>
 </Layout>

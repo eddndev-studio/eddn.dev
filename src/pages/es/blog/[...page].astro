@@ -29,30 +29,29 @@ function getSlug(id: string) {
 	hreflangs={[{ lang: "en", href: "/blog/" }]}
 >
 	<div class="max-w-7xl mx-auto px-6 py-24">
-		<header data-page-header class="mb-16">
+		<header class="mb-16">
 			<h1
-				class="text-6xl sm:text-8xl font-normal tracking-[-0.04em] text-ink leading-[0.9] mb-8"
+				class="text-6xl sm:text-8xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.85] mb-8"
 			>
 				BLOG <br />
-				<em class="font-serif italic font-normal lowercase tracking-normal"
-					>crónicas.</em
+				<span
+					class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8"
+					>CRÓNICAS.</span
 				>
 			</h1>
-			<p class="text-xl text-body font-normal max-w-2xl leading-snug">
+			<p class="text-xl text-slate-600 dark:text-slate-400 font-light max-w-2xl">
 				Pensamientos sobre software, diseño y aprendizaje continuo.
 			</p>
 		</header>
 
-		<div
-			class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-hairline border border-hairline rounded-md overflow-hidden"
-		>
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 			{
 				page.data.map((post) => (
-					<article class="group relative flex flex-col justify-between gap-8 p-8 bg-canvas hover:bg-ink transition-colors duration-300 overflow-hidden select-none">
+					<article class="group relative flex flex-col justify-between p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-r-4 border-r-slate-200 dark:border-r-slate-700 hover:border-r-brand-500 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-none h-full select-none">
 						<div>
 							<time
 								transition:name={`date-${post.id}`}
-								class="relative z-10 mb-4 block text-xs font-mono text-mute group-hover:text-canvas/60 uppercase tracking-widest transition-colors pointer-events-none"
+								class="relative z-10 mb-4 block text-xs font-mono text-slate-400 uppercase tracking-widest pointer-events-none"
 							>
 								{post.data.pubDate.toLocaleDateString("es-ES", {
 									year: "numeric",
@@ -63,23 +62,23 @@ function getSlug(id: string) {
 
 							<h2
 								transition:name={`title-${post.id}`}
-								class="text-2xl font-normal tracking-tight text-ink group-hover:text-canvas mb-4 transition-colors leading-tight"
+								class="text-2xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-brand-600 transition-colors leading-tight"
 							>
 								<a
 									href={`/es/blog/${getSlug(post.id)}`}
-									class="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+									class="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-600"
 								>
 									<span class="absolute inset-0 z-20" />
 									{post.data.title}
 								</a>
 							</h2>
 
-							<p class="relative z-10 text-body group-hover:text-canvas/80 leading-relaxed line-clamp-3 transition-colors pointer-events-none">
+							<p class="relative z-10 text-slate-600 dark:text-slate-400 leading-relaxed mb-6 line-clamp-3 pointer-events-none">
 								{post.data.description}
 							</p>
 						</div>
 
-						<div class="relative z-10 flex items-center text-sm font-medium text-ink group-hover:text-canvas group-hover:translate-x-1 transition-all duration-300 pointer-events-none">
+						<div class="relative z-10 flex items-center text-sm font-bold text-brand-600 dark:text-brand-400 group-hover:translate-x-2 transition-transform duration-300 pointer-events-none">
 							Leer artículo
 							<svg
 								class="ml-2 h-4 w-4"

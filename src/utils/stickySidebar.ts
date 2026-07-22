@@ -42,18 +42,6 @@ export function initStickySidebar(
         const containerRect = gridContainer.getBoundingClientRect();
         const sidebarHeight = sidebar.offsetHeight;
         
-        // Use parent column for top reference, not the inner element
-        // This ensures we know where the "start" line is even when the element is moved
-        const startPoint = parentColumn.getBoundingClientRect().top + window.scrollY; 
-        const currentScroll = window.scrollY;
-
-        // Calculate limits
-        // We want to start sticking when the scroll reaches (StartPoint - HeaderOffset)
-        // But simpler: just check container rect top relative to viewport
-        
-        // Correct Logic:
-        // 1. Sidebar Top should be at HeaderOffset.
-        // 2. This happens when ParentColumn Top is <= HeaderOffset.
         const parentTop = parentColumn.getBoundingClientRect().top;
 
         // Stop point: When bottom of sidebar hits bottom of container

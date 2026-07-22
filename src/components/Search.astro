@@ -15,11 +15,11 @@ const t = useTranslations(lang);
       class="fixed inset-0 bg-black/50 backdrop-blur-sm transition duration-200 data-closed:opacity-0"
     />
     <el-dialog-panel class="relative z-10 w-full max-w-2xl">
-      <div class="bg-canvas border border-hairline rounded-md shadow-2xl overflow-hidden">
+      <div class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
         <el-command-palette id="search-palette">
           <!-- Input -->
-          <div class="flex items-center gap-3 border-b border-hairline px-5 h-14">
-            <svg class="w-4 h-4 text-mute shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 px-5 h-14">
+            <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
@@ -27,9 +27,9 @@ const t = useTranslations(lang);
               type="text"
               placeholder={t('search.placeholder')}
               autocomplete="off"
-              class="flex-1 bg-transparent text-sm text-ink placeholder:text-mute outline-none font-mono"
+              class="flex-1 bg-transparent text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none font-mono"
             />
-            <kbd class="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold text-mute border border-hairline rounded-[3px]">
+            <kbd class="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold text-slate-400 border border-slate-200 dark:border-slate-700 rounded">
               ESC
             </kbd>
           </div>
@@ -38,7 +38,7 @@ const t = useTranslations(lang);
           <el-command-list class="block max-h-[60vh] overflow-y-auto" id="search-results">
           </el-command-list>
 
-          <el-no-results hidden class="px-5 py-12 text-center text-sm text-mute font-mono block">
+          <el-no-results hidden class="px-5 py-12 text-center text-sm text-slate-400 font-mono block">
             {t('search.no_results')}
           </el-no-results>
         </el-command-palette>
@@ -56,8 +56,6 @@ const t = useTranslations(lang);
   const groupOrder = ['Blog', 'Article', 'Solution'] as const;
 
   function initSearch() {
-    // Drop the previous run's document-level shortcut listener (it persists
-    // across view transitions otherwise, accumulating one per navigation).
     searchAbort?.abort();
     searchAbort = new AbortController();
     const dialog = document.querySelector('#search-dialog')?.closest('el-dialog') as any;
@@ -111,10 +109,10 @@ const t = useTranslations(lang);
     const createResultLink = (item: any, closeFn: () => void): HTMLAnchorElement => {
       const a = document.createElement('a');
       a.href = item.url;
-      a.className = 'search-result block px-5 py-4 border-b border-hairline last:border-0 hover:bg-canvas-soft focus:bg-canvas-soft transition-colors outline-none group';
+      a.className = 'search-result block px-5 py-4 border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-900 focus:bg-slate-50 dark:focus:bg-slate-900 transition-colors outline-none group';
       a.innerHTML = `
-        <div class="text-sm font-bold text-ink group-hover:text-brand-400 group-focus:text-brand-400 transition-colors">${item.meta?.title || item.url}</div>
-        <div class="text-xs text-body mt-1 line-clamp-2 leading-relaxed">${item.excerpt}</div>
+        <div class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-600 group-focus:text-brand-600 transition-colors">${item.meta?.title || item.url}</div>
+        <div class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">${item.excerpt}</div>
       `;
       a.addEventListener('click', closeFn);
       return a;
@@ -152,7 +150,7 @@ const t = useTranslations(lang);
         group.className = 'search-group block';
 
         const heading = document.createElement('div');
-        heading.className = 'px-5 py-2 text-[10px] font-mono font-bold uppercase tracking-widest text-mute bg-canvas-soft border-b border-hairline sticky top-0';
+        heading.className = 'px-5 py-2 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 sticky top-0';
         heading.textContent = labels[type] || type;
         group.appendChild(heading);
 

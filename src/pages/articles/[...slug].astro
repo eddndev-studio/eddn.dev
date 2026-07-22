@@ -52,7 +52,7 @@ if (translationKey) {
 			<div class="flex items-center gap-4 mb-6">
 				<time
 					transition:name={`date-${post.id}`}
-					class="text-sm font-mono text-mute uppercase tracking-widest"
+					class="text-sm font-mono font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest"
 				>
 					{
 						post.data.pubDate.toLocaleDateString("en-US", {
@@ -62,23 +62,23 @@ if (translationKey) {
 						})
 					}
 				</time>
-				<div class="h-1 w-1 rounded-full bg-hairline"></div>
+				<div class="h-1 w-1 rounded-full bg-slate-300"></div>
 				<ViewCounter slug={`articles-${post.id.replace('/', '-')}`} />
 				{
 					post.data.updatedDate && (
-						<span class="text-xs text-mute font-mono">
+						<span class="text-xs text-slate-400 font-mono">
 							(Updated)
 						</span>
 					)
 				}
-				<span class="text-[11px] font-mono px-2 py-0.5 rounded-[3px] border border-hairline text-mute ml-4">
-					{post.data.technicalDepth}
-				</span>
+                <span class="text-xs font-mono font-bold px-2 py-1 bg-brand-50 dark:bg-brand-950 text-brand-600 rounded ml-4">
+                    {post.data.technicalDepth}
+                </span>
 			</div>
 
 			<h1
 				transition:name={`title-${post.id}`}
-				class="text-5xl sm:text-7xl font-normal tracking-[-0.03em] text-ink leading-[0.95] mb-8"
+				class="text-5xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.9] mb-8"
 			>
 				{post.data.title}
 			</h1>
@@ -87,7 +87,7 @@ if (translationKey) {
 				post.data.tags && (
 					<div class="flex flex-wrap gap-x-4 gap-y-2 mb-8">
 						{post.data.tags.map((tag) => (
-							<span class="text-sm font-mono text-mute hover:text-ink transition-colors cursor-default">
+							<span class="text-sm font-mono font-bold text-brand-600 hover:text-brand-700 transition-colors cursor-default">
 								#{tag}
 							</span>
 						))}
@@ -95,14 +95,14 @@ if (translationKey) {
 				)
 			}
 
-			{
-				post.data.abstract && (
-					<div class="p-6 bg-canvas-soft border-l border-hairline rounded-r-md mb-8">
-						<h3 class="text-xs font-mono text-mute uppercase tracking-widest mb-2">Abstract</h3>
-						<p class="text-body leading-relaxed">{post.data.abstract}</p>
-					</div>
-				)
-			}
+            {
+                post.data.abstract && (
+                    <div class="p-6 bg-slate-50 dark:bg-slate-900 border-l-4 border-brand-500 mb-8">
+                        <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-2">Abstract</h3>
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed">{post.data.abstract}</p>
+                    </div>
+                )
+            }
 		</header>
 
 		<div
@@ -116,32 +116,32 @@ if (translationKey) {
 			>
 				<div id="sidebar-inner" class="space-y-8">
 					<div
-						class="text-sm text-body leading-relaxed border-l border-hairline pl-4"
+						class="text-sm text-slate-500 leading-relaxed border-l-2 border-brand-200 dark:border-brand-800 pl-4"
 					>
 						<p>{post.data.description}</p>
 					</div>
 
-					{
-						post.data.references && post.data.references.length > 0 && (
-							<div class="pt-6 border-t border-hairline">
-								<h4 class="text-xs font-mono text-mute uppercase tracking-widest mb-4">References</h4>
-								<ul class="space-y-3">
-									{post.data.references.map((ref) => (
-										<li>
-											<a href={ref} target="_blank" rel="noopener noreferrer" class="text-xs text-body hover:text-ink underline-offset-2 hover:underline break-all transition-colors">
-												{new URL(ref).hostname}
-											</a>
-										</li>
-									))}
-								</ul>
-							</div>
-						)
-					}
+                    {
+                        post.data.references && post.data.references.length > 0 && (
+                            <div class="pt-6 border-t border-slate-200 dark:border-slate-800">
+                                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-4">References</h4>
+                                <ul class="space-y-3">
+                                    {post.data.references.map((ref) => (
+                                        <li>
+                                            <a href={ref} target="_blank" rel="noopener noreferrer" class="text-xs text-brand-600 hover:underline break-all">
+                                                {new URL(ref).hostname}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )
+                    }
 
-					<div class="h-px bg-hairline w-12"></div>
+					<div class="h-px bg-slate-200 dark:bg-slate-700 w-12"></div>
 					<a
 						href="/articles/"
-						class="inline-flex items-center text-sm font-medium text-body hover:text-ink transition-colors group rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+						class="inline-flex items-center text-sm font-bold text-slate-900 dark:text-slate-100 hover:text-brand-600 transition-colors group"
 					>
 						<svg
 							class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform"
@@ -162,21 +162,28 @@ if (translationKey) {
 			<!-- Main Content -->
 			<article class="lg:col-span-8 lg:col-start-5">
 				<div
-					class="prose prose-lg max-w-none
-					prose-headings:font-medium prose-headings:tracking-tight
-					prose-a:font-medium prose-a:underline prose-a:underline-offset-2 prose-a:decoration-mute hover:prose-a:decoration-ink
-					prose-pre:rounded-md
-					prose-img:rounded-md"
+					class="prose prose-lg prose-slate max-w-none
+					prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-slate-900 dark:prose-headings:text-slate-100
+					prose-p:leading-relaxed prose-p:text-slate-700 dark:prose-p:text-slate-300
+					prose-a:text-brand-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline dark:prose-a:text-brand-400
+					prose-strong:font-bold prose-strong:text-slate-900 dark:prose-strong:text-slate-100
+					prose-code:text-brand-600 prose-code:bg-brand-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none dark:prose-code:text-brand-300 dark:prose-code:bg-brand-950
+					prose-pre:shadow-2xl prose-pre:rounded-xl
+					prose-li:text-slate-700 dark:prose-li:text-slate-300
+					prose-blockquote:text-slate-600 dark:prose-blockquote:text-slate-400 prose-blockquote:border-slate-300 dark:prose-blockquote:border-slate-600
+					prose-th:text-slate-900 dark:prose-th:text-slate-100 prose-td:text-slate-700 dark:prose-td:text-slate-300
+					prose-thead:border-slate-300 dark:prose-thead:border-slate-600 prose-tr:border-slate-200 dark:prose-tr:border-slate-700
+					prose-hr:border-slate-200 dark:prose-hr:border-slate-700"
 				>
 					<Content />
 				</div>
 
 				<div
-					class="mt-24 pt-12 border-t border-hairline flex justify-between items-center lg:hidden"
+					class="mt-24 pt-12 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center lg:hidden"
 				>
 					<a
 						href="/articles/"
-						class="inline-flex items-center text-sm font-medium text-body hover:text-ink transition-colors group rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+						class="inline-flex items-center text-sm font-bold text-slate-900 dark:text-slate-100 hover:text-brand-600 transition-colors group"
 					>
 						<svg
 							class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform"
@@ -218,3 +225,27 @@ if (translationKey) {
 	document.addEventListener("astro:page-load", setupSticky);
 	document.addEventListener("astro:before-swap", teardownSticky);
 </script>
+
+<style is:global>
+	@reference "tailwindcss";
+
+	/* Custom styles for the markdown content */
+	/* Fixing contrast: forcing Nord background color for code blocks */
+	.prose pre {
+		@apply rounded-xl border border-slate-700/50 bg-[#2e3440]! p-6 text-white;
+	}
+
+	/* Ensure code text inside has good contrast if not handled by shiki theme fully */
+	.prose pre code {
+		background-color: transparent !important;
+		color: inherit !important;
+		padding: 0 !important;
+		font-family:
+			var(--font-mono);
+		font-size: 0.875rem;
+	}
+
+	.prose code {
+		@apply font-mono text-sm;
+	}
+</style>

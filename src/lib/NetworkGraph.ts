@@ -1,3 +1,5 @@
+import { resizeCanvasToDisplaySize } from './canvas';
+
 export default class NetworkGraph {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
@@ -43,22 +45,22 @@ export default class NetworkGraph {
 
     private handleMouseMove(e: MouseEvent) {
         const rect = this.canvas.getBoundingClientRect();
-        this.mouse.x = e.clientX - rect.left;
-        this.mouse.y = e.clientY - rect.top;
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        if (x < 0 || y < 0 || x >= rect.width || y >= rect.height) {
+            this.mouse = { x: -1000, y: -1000 };
+            return;
+        }
+
+        this.mouse.x = x;
+        this.mouse.y = y;
     }
 
     private resize() {
-        const parent = this.canvas.parentElement;
-        if (parent) {
-            this.canvas.width = parent.clientWidth;
-            this.canvas.height = parent.clientHeight;
-        } else {
-            this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight;
-        }
-        
-        this.width = this.canvas.width;
-        this.height = this.canvas.height;
+        const size = resizeCanvasToDisplaySize(this.canvas, this.ctx);
+        this.width = size.width;
+        this.height = size.height;
         
         // Adjust particle count based on area and screen type
         const area = this.width * this.height;

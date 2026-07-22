@@ -26,11 +26,10 @@ interface Props {
 
 const { page } = Astro.props;
 
-// Border-based difficulty chips -- the semantic color is data, not chrome.
 const difficultyColor = {
-	Easy: "text-emerald-600 dark:text-emerald-400 border-emerald-500/40",
-	Medium: "text-amber-600 dark:text-amber-400 border-amber-500/40",
-	Hard: "text-rose-600 dark:text-rose-400 border-rose-500/40",
+	Easy: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950",
+	Medium: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950",
+	Hard: "text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950",
 };
 
 function getSlug(id: string) {
@@ -45,16 +44,17 @@ function getSlug(id: string) {
 	hreflangs={[{ lang: "en", href: "/leetcode/" }]}
 >
 	<div class="max-w-7xl mx-auto px-6 py-24">
-		<header data-page-header class="mb-16">
+		<header class="mb-16">
 			<h1
-				class="text-6xl sm:text-8xl font-normal tracking-[-0.04em] text-ink leading-[0.9] mb-8"
+				class="text-6xl sm:text-8xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.85] mb-8"
 			>
 				SOLUCIONES <br />
-				<em class="font-serif italic font-normal lowercase tracking-normal"
-					>leetcode.</em
+				<span
+					class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8"
+					>LEETCODE.</span
 				>
 			</h1>
-			<p class="text-xl text-body font-normal max-w-2xl leading-snug">
+			<p class="text-xl text-slate-600 dark:text-slate-400 font-light max-w-2xl">
 				Análisis y resoluciones de problemas algorítmicos.
 			</p>
 		</header>
@@ -64,21 +64,21 @@ function getSlug(id: string) {
 		<div class="overflow-x-auto">
 			<table class="w-full text-left border-collapse">
 				<thead>
-					<tr class="border-b border-hairline">
+					<tr class="border-b border-slate-200 dark:border-slate-800">
 						<th
-							class="py-4 font-mono text-xs uppercase tracking-widest text-mute"
+							class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400"
 							>Problema</th
 						>
 						<th
-							class="py-4 font-mono text-xs uppercase tracking-widest text-mute"
+							class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400"
 							>Dificultad</th
 						>
 						<th
-							class="py-4 font-mono text-xs uppercase tracking-widest text-mute"
+							class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400"
 							>Complejidad</th
 						>
 						<th
-							class="py-4 font-mono text-xs uppercase tracking-widest text-mute"
+							class="py-4 font-mono text-xs uppercase tracking-widest text-slate-400"
 							>Fecha</th
 						>
 					</tr>
@@ -86,11 +86,11 @@ function getSlug(id: string) {
 				<tbody>
 					{
 						page.data.map((solution) => (
-							<tr class="border-b border-hairline group hover:bg-canvas-soft transition-colors">
+							<tr class="border-b border-slate-100 dark:border-slate-800 group hover:bg-brand-50/30 dark:hover:bg-brand-950/30 transition-colors">
 								<td class="py-6">
 									<a
 										href={`/es/leetcode/${getSlug(solution.id)}`}
-										class="font-medium text-ink rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+										class="font-bold text-slate-900 dark:text-slate-100 group-hover:text-brand-500 transition-colors"
 									>
 										<span
 											transition:name={`title-${solution.id}`}
@@ -102,22 +102,22 @@ function getSlug(id: string) {
 								<td class="py-6">
 									<span
 										transition:name={`difficulty-${solution.id}`}
-										class={`text-[11px] font-mono px-2 py-0.5 rounded-[3px] border ${difficultyColor[solution.data.difficulty]}`}
+										class={`text-xs font-bold px-2.5 py-1 rounded-full ${difficultyColor[solution.data.difficulty]}`}
 									>
 										{solution.data.difficulty}
 									</span>
 								</td>
-								<td class="py-6 text-sm font-mono text-mute">
+								<td class="py-6 text-sm font-mono text-slate-500">
 									{solution.data.complexity ? (
 										<span>
 											T: {solution.data.complexity.time} /
 											S: {solution.data.complexity.space}
 										</span>
 									) : (
-										<span class="text-mute">N/A</span>
+										<span class="text-slate-300 dark:text-slate-600">N/A</span>
 									)}
 								</td>
-								<td class="py-6 text-sm font-mono text-mute">
+								<td class="py-6 text-sm font-mono text-slate-400">
 									{solution.data.pubDate.toLocaleDateString(
 										"es-ES",
 										{

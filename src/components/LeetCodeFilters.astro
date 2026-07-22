@@ -10,37 +10,46 @@ const { currentFilter = "All", baseUrl = "/leetcode" } = Astro.props;
 const lang = (Astro.currentLocale as keyof typeof import('../i18n/ui').ui) || 'en';
 const t = useTranslations(lang);
 
-// Neutral Warp chips. `key` is the stable English value (active comparison +
-// difficulty data); `label` is localized chrome. The leading dot is the only
-// color and it is semantic (the difficulty category itself) -- legend, not chrome.
 const filters = [
-    { key: "All", label: t('leetcode.filter_all'), href: `${baseUrl}`, dot: "" },
-    { key: "Easy", label: t('difficulty.easy'), href: `${baseUrl}/difficulty/easy`, dot: "bg-emerald-500" },
-    { key: "Medium", label: t('difficulty.medium'), href: `${baseUrl}/difficulty/medium`, dot: "bg-amber-500" },
-    { key: "Hard", label: t('difficulty.hard'), href: `${baseUrl}/difficulty/hard`, dot: "bg-rose-500" },
+    {
+        key: "All",
+        label: t('leetcode.filter_all'),
+        href: `${baseUrl}`,
+        color: "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700",
+    },
+    {
+        key: "Easy",
+        label: t('difficulty.easy'),
+        href: `${baseUrl}/difficulty/easy`,
+        color: "bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-400 dark:hover:bg-emerald-900",
+    },
+    {
+        key: "Medium",
+        label: t('difficulty.medium'),
+        href: `${baseUrl}/difficulty/medium`,
+        color: "bg-amber-50 text-amber-600 hover:bg-amber-100 dark:bg-amber-950 dark:text-amber-400 dark:hover:bg-amber-900",
+    },
+    {
+        key: "Hard",
+        label: t('difficulty.hard'),
+        href: `${baseUrl}/difficulty/hard`,
+        color: "bg-rose-50 text-rose-600 hover:bg-rose-100 dark:bg-rose-950 dark:text-rose-400 dark:hover:bg-rose-900",
+    },
 ];
+
+const activeClasses = "ring-2 ring-offset-2 ring-brand-500 font-bold dark:ring-offset-slate-950";
 ---
 
-<div class="flex flex-wrap gap-2 mb-8">
+<div class="flex flex-wrap gap-4 mb-8">
     {
-        filters.map((filter) => {
-            const active = currentFilter === filter.key;
-            return (
-                <a
-                    href={filter.href}
-                    aria-current={active ? "page" : undefined}
-                    class={`group inline-flex items-center gap-2 px-4 py-1.5 rounded-[4px] text-sm font-mono transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
-                        active
-                            ? "bg-ink text-canvas"
-                            : "border border-hairline text-mute hover:text-ink hover:bg-canvas-soft"
-                    }`}
-                >
-                    {filter.dot && (
-                        <span class={`h-1.5 w-1.5 rounded-full ${filter.dot}`} />
-                    )}
-                    {filter.label}
-                </a>
-            );
-        })
+        filters.map((filter) => (
+            <a
+                href={filter.href}
+                aria-current={currentFilter === filter.key ? "page" : undefined}
+                class={`px-4 py-2 rounded-full text-sm transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${filter.color} ${currentFilter === filter.key ? activeClasses : ""}`}
+            >
+                {filter.label}
+            </a>
+        ))
     }
 </div>

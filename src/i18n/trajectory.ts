@@ -1,6 +1,6 @@
 export const trajectoryData = {
   en: {
-    title: 'PROFESSIONAL <br /> <em class="font-serif italic font-normal lowercase tracking-normal">trajectory.</em>',
+    title: 'PROFESSIONAL <br /> <span class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8">TRAJECTORY.</span>',
     description: 'My professional path and technical evolution over the years.',
     milestones: [
       {
@@ -32,7 +32,7 @@ export const trajectoryData = {
     ]
   },
   es: {
-    title: 'TRAYECTORIA <br /> <em class="font-serif italic font-normal lowercase tracking-normal">profesional.</em>',
+    title: 'TRAYECTORIA <br /> <span class="text-brand-500 underline decoration-brand-100 decoration-8 underline-offset-8">PROFESIONAL.</span>',
     description: 'Mi camino profesional y evolución técnica a lo largo de los años.',
     milestones: [
       {

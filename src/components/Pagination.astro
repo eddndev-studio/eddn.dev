@@ -31,21 +31,21 @@ const progress = (page.currentPage / page.lastPage) * 100;
 
 {
     page.lastPage > 1 && (
-        <nav class="mt-20 space-y-6">
+        <nav class="mt-20 space-y-6" aria-label={t('pagination.label')}>
             {/* Label + counter */}
-            <div class="flex items-center justify-between border-b border-hairline pb-4">
-                <span class="font-mono text-xs uppercase tracking-widest text-mute">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+                <span class="font-mono text-xs uppercase tracking-widest text-slate-400">
                     {t('pagination.page')}
                 </span>
-                <span class="font-mono text-xs tracking-widest text-mute">
+                <span class="font-mono text-xs tracking-widest text-slate-400">
                     {pad(page.currentPage)} / {pad(page.lastPage)}
                 </span>
             </div>
 
-            {/* Progress bar (neutral -- structure, not signal) */}
-            <div class="h-0.5 bg-hairline overflow-hidden">
+            {/* Progress bar */}
+            <div class="h-0.5 bg-slate-200 dark:bg-slate-700 overflow-hidden">
                 <div
-                    class="h-full bg-ink transition-all duration-500 ease-out"
+                    class="h-full bg-brand-500 transition-all duration-500 ease-out"
                     style={`width: ${progress}%`}
                 />
             </div>
@@ -57,20 +57,20 @@ const progress = (page.currentPage / page.lastPage) * 100;
                     {page.url.prev ? (
                         <a
                             href={ensureSlash(page.url.prev)}
-                            class="group inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-ink hover:text-mute transition-colors rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+                            class="group inline-flex items-center gap-3 rounded-sm font-mono text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100 hover:text-brand-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
                         >
-                            <span class="inline-block w-6 h-px bg-mute group-hover:bg-ink group-hover:w-10 transition-all duration-300" />
+                            <span class="inline-block w-6 h-px bg-slate-400 dark:bg-slate-500 group-hover:bg-brand-500 group-hover:w-10 transition-all duration-300" />
                             {t('pagination.prev')}
                         </a>
                     ) : (
-                        <span class="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-mute cursor-default">
-                            <span class="inline-block w-6 h-px bg-hairline" />
+                        <span class="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-300 dark:text-slate-600 cursor-default">
+                            <span class="inline-block w-6 h-px bg-slate-200 dark:bg-slate-700" />
                             {t('pagination.prev')}
                         </span>
                     )}
                 </div>
 
-                {/* Page numbers — desktop */}
+                {/* Page numbers - desktop */}
                 <div class="hidden sm:flex items-center gap-1">
                     {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(
                         (pageNum) => {
@@ -79,14 +79,13 @@ const progress = (page.currentPage / page.lastPage) * 100;
                                 <a
                                     href={getPageUrl(pageNum)}
                                     aria-current={active ? "page" : undefined}
-                                    class={`group relative px-3 py-2 font-mono text-xs tracking-widest transition-colors rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
+                                    class={`group relative rounded-sm px-3 py-2 font-mono text-xs tracking-widest transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
                                         active
-                                            ? "text-brand-600 dark:text-brand-400"
-                                            : "text-mute hover:text-ink"
+                                            ? "text-brand-600 dark:text-brand-400 font-bold"
+                                            : "text-slate-400 hover:text-slate-900 dark:hover:text-white"
                                     }`}
                                 >
                                     {pad(pageNum)}
-                                    {/* Active marker == the page-location LED */}
                                     {active && (
                                         <span class="absolute bottom-0 left-3 right-3 h-0.5 bg-brand-500" />
                                     )}
@@ -101,15 +100,15 @@ const progress = (page.currentPage / page.lastPage) * 100;
                     {page.url.next ? (
                         <a
                             href={ensureSlash(page.url.next)}
-                            class="group inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-ink hover:text-mute transition-colors rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+                            class="group inline-flex items-center gap-3 rounded-sm font-mono text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100 hover:text-brand-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
                         >
                             {t('pagination.next')}
-                            <span class="inline-block w-6 h-px bg-mute group-hover:bg-ink group-hover:w-10 transition-all duration-300" />
+                            <span class="inline-block w-6 h-px bg-slate-400 dark:bg-slate-500 group-hover:bg-brand-500 group-hover:w-10 transition-all duration-300" />
                         </a>
                     ) : (
-                        <span class="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-mute cursor-default">
+                        <span class="inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-slate-300 dark:text-slate-600 cursor-default">
                             {t('pagination.next')}
-                            <span class="inline-block w-6 h-px bg-hairline" />
+                            <span class="inline-block w-6 h-px bg-slate-200 dark:bg-slate-700" />
                         </span>
                     )}
                 </div>

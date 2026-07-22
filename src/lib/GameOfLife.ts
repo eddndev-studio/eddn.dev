@@ -1,3 +1,5 @@
+import { resizeCanvasToDisplaySize } from './canvas';
+
 export default class GameOfLife {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
@@ -46,6 +48,8 @@ export default class GameOfLife {
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
+
+        if (x < 0 || y < 0 || x >= rect.width || y >= rect.height) return;
         
         const col = Math.floor(x / this.cellSize);
         const row = Math.floor(y / this.cellSize);
@@ -67,17 +71,9 @@ export default class GameOfLife {
     }
 
     private resize() {
-        const parent = this.canvas.parentElement;
-        if (parent) {
-            this.canvas.width = parent.clientWidth;
-            this.canvas.height = parent.clientHeight;
-        } else {
-            this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight;
-        }
-        
-        this.width = this.canvas.width;
-        this.height = this.canvas.height;
+        const size = resizeCanvasToDisplaySize(this.canvas, this.ctx);
+        this.width = size.width;
+        this.height = size.height;
         
         this.cols = Math.ceil(this.width / this.cellSize);
         this.rows = Math.ceil(this.height / this.cellSize);
@@ -91,63 +87,12 @@ export default class GameOfLife {
         this.grid = new Array(this.cols).fill(null)
             .map(() => new Array(this.rows).fill(0));
     }
-
-
-    // Patterns definition
-    private patterns = {
-        glider: [
-            [0, 1, 0],
-            [0, 0, 1],
-            [1, 1, 1]
-        ],
-        lwss: [
-            [0, 1, 1, 1, 1],
-            [1, 0, 0, 0, 1],
-            [0, 0, 0, 0, 1],
-            [1, 0, 0, 1, 0]
-        ],
-        pulsar: [
-            [0,0,1,1,1,0,0,0,1,1,1,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [1,0,0,0,0,1,0,1,0,0,0,0,1],
-            [1,0,0,0,0,1,0,1,0,0,0,0,1],
-            [1,0,0,0,0,1,0,1,0,0,0,0,1],
-            [0,0,1,1,1,0,0,0,1,1,1,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,1,1,1,0,0,0,1,1,1,0,0],
-            [1,0,0,0,0,1,0,1,0,0,0,0,1],
-            [1,0,0,0,0,1,0,1,0,0,0,0,1],
-            [1,0,0,0,0,1,0,1,0,0,0,0,1],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,1,1,1,0,0,0,1,1,1,0,0]
-        ],
-        block: [
-            [1, 1],
-            [1, 1]
-        ],
-        beehive: [
-            [0, 1, 1, 0],
-            [1, 0, 0, 1],
-            [0, 1, 1, 0]
-        ]
-    };
-
     private seed() {
         // Random seed
         for (let i = 0; i < this.cols; i++) {
             for (let j = 0; j < this.rows; j++) {
                 // 15% chance of being alive initially for a sparse, elegant look
                 this.grid[i][j] = Math.random() < 0.15 ? 1 : 0;
-            }
-        }
-    }
-
-    private placePattern(x: number, y: number, pattern: number[][]) {
-        for (let i = 0; i < pattern.length; i++) {
-            for (let j = 0; j < pattern[i].length; j++) {
-                if (x + i < this.cols && y + j < this.rows) {
-                    this.grid[x + i][y + j] = pattern[i][j];
-                }
             }
         }
     }
