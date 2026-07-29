@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { useTranslations } from "../../i18n/ui";
-import HeroCanvas from "../HeroCanvas.astro";
+import KineticField from "../KineticField.astro";
 
 interface Props {
 	lang: 'en' | 'es';
@@ -16,7 +16,7 @@ const t = useTranslations(lang);
 		<div class="relative min-h-[100dvh] flex items-center py-24 sm:py-32">
 			<!-- Full-viewport-width dynamic field (breaks out of the max-w-7xl column) -->
 			<div class="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 z-0 overflow-hidden">
-				<HeroCanvas />
+				<KineticField />
 			</div>
 			<!-- Readability scrim: page color over the copy, clearing into the field -->
 			<div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-canvas from-5% via-canvas/55 via-45% to-transparent"></div>

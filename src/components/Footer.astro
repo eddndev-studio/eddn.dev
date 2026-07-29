@@ -1,132 +1,102 @@
 ---
-import { useTranslations } from '../i18n/ui';
-import { socials } from '../data/socials';
+import { socials } from "../data/socials";
+import { useTranslations } from "../i18n/ui";
 
 const currentYear = new Date().getFullYear();
-const lang = (Astro.currentLocale as keyof typeof import('../i18n/ui').ui) || 'en';
+const lang = (Astro.currentLocale as keyof typeof import("../i18n/ui").ui) || "en";
 const t = useTranslations(lang);
+
+const links = [
+	{ name: t("nav.blog"), description: t("footer.blog_desc"), href: lang === "es" ? "/es/blog/" : "/blog/" },
+	{ name: t("nav.articles"), description: t("footer.articles_desc"), href: lang === "es" ? "/es/articles/" : "/articles/" },
+	{ name: t("nav.leetcode"), description: t("footer.leetcode_desc"), href: lang === "es" ? "/es/leetcode/" : "/leetcode/" },
+	{ name: t("nav.trajectory"), description: t("footer.trajectory_desc"), href: lang === "es" ? "/es/trajectory/" : "/trajectory/" },
+];
 ---
 
-<footer class="bg-canvas text-ink min-h-[100dvh] flex flex-col justify-center py-24 lg:py-32 border-t border-hairline overflow-hidden relative z-20">
-    <canvas id="footer-gol" class="absolute inset-0 w-full h-full opacity-[0.13] dark:opacity-[0.10] pointer-events-none" aria-hidden="true"></canvas>
-    <div class="mx-auto max-w-7xl px-6 relative z-10 w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+<footer class="relative z-20 min-h-[90dvh] overflow-hidden bg-[#17131d] text-[#f3f0ea]">
+	<canvas id="footer-gol" class="pointer-events-none absolute inset-0 size-full opacity-[0.07]" aria-hidden="true"></canvas>
 
-            <!-- Site Map -->
-            <div class="space-y-12 hidden lg:block">
-                <h2 class="text-xs font-mono text-mute tracking-[0.2em] uppercase mb-8">{t('footer.explore')}</h2>
+	<div class="relative mx-auto flex min-h-[90dvh] max-w-[1400px] flex-col px-4 pb-6 pt-12 sm:px-6 sm:pb-8 sm:pt-16 lg:px-8 lg:pt-20">
+		<div class="mb-16 flex items-center justify-between border-b border-white/20 pb-5 font-mono text-[11px] uppercase tracking-[0.2em] text-white/55 sm:mb-24">
+			<span>04 / Contact</span>
+			<span>Mexico City / {currentYear}</span>
+		</div>
 
-                <ul class="space-y-8">
-                    <li class="group border-b border-hairline pb-4 hover:border-ink transition-colors">
-                        <a href={lang === 'es' ? "/es/blog/" : "/blog/"} class="flex items-baseline justify-between w-full">
-                            <span class="text-2xl lg:text-3xl font-normal tracking-tight text-body group-hover:text-ink transition-colors">{t('nav.blog')}</span>
-                            <span class="text-sm font-mono text-mute group-hover:text-ink transition-colors">{t('footer.blog_desc')}</span>
-                        </a>
-                    </li>
-                    <li class="group border-b border-hairline pb-4 hover:border-ink transition-colors">
-                        <a href={lang === 'es' ? "/es/articles/" : "/articles/"} class="flex items-baseline justify-between w-full">
-                            <span class="text-2xl lg:text-3xl font-normal tracking-tight text-body group-hover:text-ink transition-colors">{t('nav.articles')}</span>
-                            <span class="text-sm font-mono text-mute group-hover:text-ink transition-colors">{t('footer.articles_desc')}</span>
-                        </a>
-                    </li>
-                    <li class="group border-b border-hairline pb-4 hover:border-ink transition-colors">
-                        <a href={lang === 'es' ? "/es/leetcode/" : "/leetcode/"} class="flex items-baseline justify-between w-full">
-                            <span class="text-2xl lg:text-3xl font-normal tracking-tight text-body group-hover:text-ink transition-colors">{t('nav.leetcode')}</span>
-                            <span class="text-sm font-mono text-mute group-hover:text-ink transition-colors">{t('footer.leetcode_desc')}</span>
-                        </a>
-                    </li>
-                    <li class="group border-b border-hairline pb-4 hover:border-ink transition-colors">
-                        <a href={lang === 'es' ? "/es/trajectory/" : "/trajectory/"} class="flex items-baseline justify-between w-full">
-                            <span class="text-2xl lg:text-3xl font-normal tracking-tight text-body group-hover:text-ink transition-colors">{t('nav.trajectory')}</span>
-                            <span class="text-sm font-mono text-mute group-hover:text-ink transition-colors">{t('footer.trajectory_desc')}</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+		<div class="grid flex-1 gap-12 lg:grid-cols-12 lg:items-end">
+			<div class="lg:col-span-8">
+				<h2 class="max-w-[11ch] text-[clamp(3.4rem,8vw,8.5rem)] font-semibold leading-[0.8] tracking-[-0.075em] [&_span]:text-brand-300" set:html={t("footer.talk_title")}></h2>
+			</div>
 
-            <!-- CTA / Contact -->
-            <div class="flex flex-col justify-between h-full">
-                 <div>
-                    <h3 class="text-5xl lg:text-7xl font-normal tracking-[-0.03em] leading-[0.95] mb-8 text-ink" set:html={t('footer.talk_title')}>
-                    </h3>
-                    <p class="text-body text-lg mb-12 max-w-md leading-relaxed">
-                        {t('footer.talk_desc')}
-                    </p>
-                 </div>
+			<div class="flex flex-col items-start gap-8 lg:col-span-4 lg:pb-2">
+				<p class="max-w-[36ch] text-sm leading-relaxed text-white/65 sm:text-base">{t("footer.talk_desc")}</p>
+				<a href="#" data-email-cta class="group inline-flex items-center gap-5 border-b border-white/60 pb-2 text-sm font-medium transition-colors duration-300 hover:border-brand-300 hover:text-brand-300">
+					<span>{t("footer.start_conversation")}</span>
+					<span class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">-&gt;</span>
+				</a>
+			</div>
+		</div>
 
-                 <div class="flex flex-col sm:flex-row gap-6">
-                    <!-- Primary CTA (button-in-button) -->
-                    <a href="#" id="email-cta" class="group inline-flex items-center gap-3 pl-6 pr-2.5 py-2.5 bg-ink text-canvas text-sm font-medium rounded-[4px] transition-transform active:scale-[0.98] w-max">
-                        <span>{t('footer.start_conversation')}</span>
-                        <span class="flex items-center justify-center w-7 h-7 rounded-[3px] bg-canvas/15 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16"></path></svg>
-                        </span>
-                    </a>
-                 </div>
-            </div>
+		<div class="mt-20 grid gap-10 border-t border-white/20 pt-6 lg:grid-cols-12">
+			<nav class="lg:col-span-8" aria-label="Footer navigation">
+				<ul class="grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-4">
+					{links.map((link, index) => (
+						<li>
+							<a href={link.href} class="group block">
+								<span class="mb-2 block font-mono text-[11px] text-brand-300">0{index + 1}</span>
+								<span class="block text-sm font-medium transition-colors duration-300 group-hover:text-brand-300">{link.name}</span>
+								<span class="mt-1 hidden text-[10px] text-white/45 sm:block">{link.description}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</nav>
 
-        </div>
-
-        <!-- Minimal Footer Info -->
-        <div class="mt-24 pt-8 border-t border-hairline flex flex-col sm:flex-row justify-between items-center text-xs text-mute font-mono">
-            <span>(c) {currentYear} EDDN.DEV. {t('footer.rights')}</span>
-            <div class="flex flex-wrap gap-4 mt-4 sm:mt-0 justify-center">
-                {socials.map((social) => (
-                    <a href={social.url} target="_blank" rel="noopener noreferrer" class="hover:text-ink transition-colors">{social.id.toUpperCase()}</a>
-                ))}
-                <a href="https://eddndev.com" target="_blank" rel="noopener noreferrer" class="hover:text-ink transition-colors">EDDNDEV.COM</a>
-                <a href="https://achrony.me" target="_blank" rel="noopener noreferrer" class="hover:text-ink transition-colors">ACHRONY.ME</a>
-            </div>
-        </div>
-    </div>
+			<div class="flex flex-wrap items-end justify-between gap-6 lg:col-span-4 lg:justify-end">
+				<div class="flex flex-wrap gap-x-4 gap-y-2 font-mono text-[11px] uppercase tracking-[0.12em] text-white/60">
+					{socials.map((social) => (
+						<a href={social.url} target="_blank" rel="noopener noreferrer" class="transition-colors duration-300 hover:text-brand-300">{social.id}</a>
+					))}
+				</div>
+				<span class="font-mono text-[11px] uppercase tracking-[0.12em] text-white/40">(c) {currentYear} EDDN.DEV</span>
+			</div>
+		</div>
+	</div>
 </footer>
 
 <script>
-    import GameOfLife from "../lib/GameOfLife";
+	import GameOfLife from "../lib/GameOfLife";
 
-    let gol: GameOfLife | null = null;
+	let gol: GameOfLife | null = null;
+	let footerAbort: AbortController | null = null;
 
-    function initFooterVisual() {
-        const canvas = document.getElementById('footer-gol') as HTMLCanvasElement;
-        if (!canvas) return;
+	function initFooterVisual() {
+		gol?.destroy();
+		footerAbort?.abort();
+		footerAbort = new AbortController();
+		const { signal } = footerAbort;
 
-        // Cleanup existing instance if any
-        if (gol) {
-            gol.destroy();
-        }
+		const canvas = document.getElementById("footer-gol") as HTMLCanvasElement | null;
+		if (canvas) {
+			gol = new GameOfLife(canvas, "#b7a3fb");
+			gol.init();
+		}
 
-        // Initialize
-        gol = new GameOfLife(canvas, '#8b5cf6');
-        gol.init();
-        
-        // Email Obfuscation Logic (Bypasses Cloudflare Email Protection)
-        const emailCta = document.getElementById('email-cta');
-        if (emailCta) {
-            emailCta.addEventListener('click', (e) => {
-                e.preventDefault();
-                const user = 'contacto';
-                const domain = 'eddndev.com';
-                window.location.href = `mailto:${user}@${domain}`;
-            });
-            // Optional: Set href on hover so status bar looks legit (but might trigger CF if it scans DOM aggressively, though usually it scans static HTML)
-            emailCta.addEventListener('mouseover', () => {
-                 const user = 'contacto';
-                 const domain = 'eddndev.com';
-                 emailCta.setAttribute('href', `mailto:${user}@${domain}`);
-            });
-        }
-    }
+		document.querySelectorAll<HTMLElement>("[data-email-cta]").forEach((emailCta) => {
+			emailCta.addEventListener("click", (event) => {
+				event.preventDefault();
+				window.location.href = "mailto:" + "contacto" + "@" + "eddndev.com";
+			}, { signal });
+		});
+	}
 
-    function cleanupFooterVisual() {
-        if (gol) {
-            gol.destroy();
-            gol = null;
-        }
-    }
+	function cleanupFooterVisual() {
+		footerAbort?.abort();
+		footerAbort = null;
+		gol?.destroy();
+		gol = null;
+	}
 
-    // Initialize on every page load (initial + navigation)
-    document.addEventListener('astro:page-load', initFooterVisual);
-    
-    // Cleanup before swapping content
-    document.addEventListener('astro:before-swap', cleanupFooterVisual);
+	document.addEventListener("astro:page-load", initFooterVisual);
+	document.addEventListener("astro:before-swap", cleanupFooterVisual);
 </script>

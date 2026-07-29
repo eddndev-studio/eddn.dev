@@ -1,0 +1,162 @@
+---
+interface Props {
+  decorative?: boolean;
+}
+
+const { decorative = false } = Astro.props;
+const rows = Array.from({ length: 11 });
+const columns = Array.from({ length: 17 });
+const slices = Array.from({ length: 3 });
+---
+
+<div
+	data-kinetic-field
+	class:list={[
+		"kinetic-field relative h-full overflow-hidden",
+		{ "is-decorative": decorative, "bg-[#15111e]": !decorative },
+	]}
+>
+	<div class="kinetic-stage absolute inset-0 bg-[#15111e]">
+		<svg
+			data-kinetic-svg
+			viewBox="0 0 1200 360"
+			preserveAspectRatio="none"
+			aria-hidden="true"
+			class="absolute inset-0 size-full touch-none"
+		>
+			<defs>
+				<linearGradient id="kinetic-row-gradient" x1="0" x2="1">
+					<stop offset="0" stop-color="#7458d8" stop-opacity="0"></stop>
+					<stop offset="0.22" stop-color="#7458d8" stop-opacity="0.72"></stop>
+					<stop offset="0.54" stop-color="#f8f5ff" stop-opacity="0.46"></stop>
+					<stop offset="0.82" stop-color="#9479ee" stop-opacity="0.76"></stop>
+					<stop offset="1" stop-color="#7458d8" stop-opacity="0"></stop>
+				</linearGradient>
+				<linearGradient id="kinetic-column-gradient" y1="0" y2="1">
+					<stop offset="0" stop-color="#b7a3fb" stop-opacity="0"></stop>
+					<stop offset="0.5" stop-color="#b7a3fb" stop-opacity="0.38"></stop>
+					<stop offset="1" stop-color="#b7a3fb" stop-opacity="0"></stop>
+				</linearGradient>
+			</defs>
+
+			<g class="kinetic-columns">
+				{columns.map((_, index) => (
+					<path
+						data-kinetic-column
+						data-index={index}
+						d={`M${((index + 1) / (columns.length + 1)) * 1200},0 V360`}
+						vector-effect="non-scaling-stroke"
+					></path>
+				))}
+			</g>
+
+			<g class="kinetic-rows">
+				{rows.map((_, index) => (
+					<path
+						data-kinetic-row
+						data-index={index}
+						d={`M0,${((index + 1) / (rows.length + 1)) * 360} H1200`}
+						vector-effect="non-scaling-stroke"
+					></path>
+				))}
+			</g>
+
+			<g class="kinetic-slices">
+				{slices.map((_, index) => (
+					<polygon data-kinetic-slice data-index={index} points="0,0 0,0 0,360 0,360"></polygon>
+				))}
+			</g>
+		</svg>
+	</div>
+</div>
+
+<style>
+  .is-decorative .kinetic-stage {
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, #000 7%, #000 93%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to right, transparent 0%, #000 7%, #000 93%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    mask-composite: intersect;
+  }
+
+  .kinetic-stage::after {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    background:
+      linear-gradient(180deg, rgba(21, 17, 30, 0.84), transparent 30%, transparent 70%, rgba(21, 17, 30, 0.86)),
+      linear-gradient(90deg, rgba(21, 17, 30, 0.42), transparent 26%, transparent 74%, rgba(21, 17, 30, 0.42));
+  }
+
+  [data-kinetic-row] {
+    fill: none;
+    stroke: url(#kinetic-row-gradient);
+    stroke-width: 1.15;
+    stroke-dasharray: 2 8 34 10;
+    opacity: 0.84;
+  }
+
+  [data-kinetic-row]:nth-child(3n) {
+    stroke-width: 2;
+    stroke-dasharray: 54 12 5 9;
+  }
+
+  [data-kinetic-column] {
+    fill: none;
+    stroke: url(#kinetic-column-gradient);
+    stroke-width: 0.8;
+    stroke-dasharray: 1 13;
+    opacity: 0.72;
+  }
+
+  [data-kinetic-column]:nth-child(4n) {
+    stroke-width: 1.45;
+    stroke-dasharray: 26 14;
+  }
+
+  [data-kinetic-slice] {
+    fill: #9479ee;
+    mix-blend-mode: screen;
+    opacity: 0.1;
+  }
+
+  [data-kinetic-slice]:nth-child(2) {
+    fill: #f8f5ff;
+    opacity: 0.06;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-kinetic-row],
+    [data-kinetic-column] {
+      stroke-dashoffset: 0 !important;
+    }
+  }
+</style>
+
+<script>
+  import { KineticFieldController } from "../lib/kinetic/KineticField";
+
+  let fields: KineticFieldController[] = [];
+
+  function initKineticFields() {
+    cleanupKineticFields();
+    fields = Array.from(document.querySelectorAll<HTMLElement>("[data-kinetic-field]"))
+      .map((root) => {
+        const field = new KineticFieldController(root);
+        field.init();
+        return field;
+      });
+  }
+
+  function cleanupKineticFields() {
+    fields.forEach((field) => field.destroy());
+    fields = [];
+  }
+
+  document.addEventListener("astro:page-load", initKineticFields);
+  document.addEventListener("astro:before-swap", cleanupKineticFields);
+</script>
