@@ -1,371 +1,270 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import { getCollection } from 'astro:content';
-import GitHubContributions from "../../components/GitHubContributions.astro";
-import GitHubLanguages from "../../components/GitHubLanguages.astro";
-import LeetCodeContributions from "../../components/LeetCodeContributions.astro";
-import { useTranslations } from "../../i18n/ui";
+import { getCollection } from "astro:content";
+import GitHubContributions from "../GitHubContributions.astro";
+import GitHubLanguages from "../GitHubLanguages.astro";
+import KineticField from "../KineticField.astro";
+import LeetCodeContributions from "../LeetCodeContributions.astro";
 import { socials } from "../../data/socials";
-import HeroCanvas from "../HeroCanvas.astro";
+import { useTranslations } from "../../i18n/ui";
+import Layout from "../../layouts/Layout.astro";
 
 interface Props {
-	lang: 'en' | 'es';
+	lang: "en" | "es";
+}
+
+interface IndexEntry {
+	id: string;
+	index: string;
+	label: string;
+	title: string;
+	description: string;
+	href: string;
+	date?: Date;
+	detail?: string;
+	detailClass?: string;
 }
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-// Helper to filter content by language (folder structure)
 function filterByLang(entry: { id: string }) {
-  const [entryLang] = entry.id.split('/');
-  return entryLang === lang;
+	return entry.id.split("/")[0] === lang;
 }
 
-// Helper to clean slug (remove lang prefix and extension)
 function getSlug(id: string) {
-  const parts = id.split('/');
-  return parts.slice(1).join('/').replace(/\.(md|mdx)$/, '');
+	return id.split("/").slice(1).join("/").replace(/\.(md|mdx)$/, "");
 }
 
-const latestBlog = (await getCollection('blog'))
-  .filter(filterByLang)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
+const latestBlog = (await getCollection("blog"))
+	.filter(filterByLang)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
 
-const latestArticle = (await getCollection('articles'))
-  .filter(filterByLang)
-  .filter((a: { data: { draft?: boolean } }) => !a.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
+const latestArticle = (await getCollection("articles"))
+	.filter(filterByLang)
+	.filter((entry: { data: { draft?: boolean } }) => !entry.data.draft)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
 
-const latestLeetCode = (await getCollection('leetcode'))
-  .filter(filterByLang)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
+const latestLeetCode = (await getCollection("leetcode"))
+	.filter(filterByLang)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
 
 const difficultyColor = {
-	Easy: 'text-emerald-600 dark:text-emerald-400 border-emerald-500/40',
-	Medium: 'text-amber-600 dark:text-amber-400 border-amber-500/40',
-	Hard: 'text-rose-600 dark:text-rose-400 border-rose-500/40',
+	Easy: "text-emerald-700 dark:text-emerald-300",
+	Medium: "text-amber-700 dark:text-amber-300",
+	Hard: "text-rose-700 dark:text-rose-300",
 };
 
-// Map difficulty from English data to current language label
-// Assuming data.difficulty is 'Easy' | 'Medium' | 'Hard'
 const difficultyLabel = (difficulty: string) => {
 	const key = `difficulty.${difficulty.toLowerCase()}`;
-	// @ts-ignore
+	// @ts-ignore - difficulty is validated by the content collection.
 	return t(key) || difficulty;
 };
 
-const fmtDate = (d: Date) =>
-	d.toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const formatDate = (date: Date) =>
+	date.toLocaleDateString(lang === "es" ? "es-ES" : "en-US", {
+		month: "short",
+		day: "2-digit",
+		year: "numeric",
+	});
 
-const blogIndexUrl = lang === 'es' ? '/es/blog/' : '/blog/';
+const blogIndexUrl = lang === "es" ? "/es/blog/" : "/blog/";
 const localUrl = (section: string, id: string) =>
-	lang === 'es' ? `/es/${section}/${getSlug(id)}/` : `/${section}/${getSlug(id)}/`;
+	lang === "es" ? `/es/${section}/${getSlug(id)}/` : `/${section}/${getSlug(id)}/`;
+
+const entries: IndexEntry[] = [];
+
+if (latestBlog) {
+	entries.push({
+		id: latestBlog.id,
+		index: "01",
+		label: t("home.latest_post_label"),
+		title: latestBlog.data.title,
+		description: latestBlog.data.description,
+		href: localUrl("blog", latestBlog.id),
+		date: latestBlog.data.pubDate,
+	});
+}
+
+if (latestArticle) {
+	entries.push({
+		id: latestArticle.id,
+		index: "02",
+		label: t("home.latest_article_label"),
+		title: latestArticle.data.title,
+		description: latestArticle.data.description,
+		href: localUrl("articles", latestArticle.id),
+		date: latestArticle.data.pubDate,
+		detail: latestArticle.data.technicalDepth,
+	});
+}
+
+if (latestLeetCode) {
+	const complexity = latestLeetCode.data.complexity;
+	entries.push({
+		id: latestLeetCode.id,
+		index: "03",
+		label: t("home.latest_solution_label"),
+		title: latestLeetCode.data.title,
+		description: t("home.complexity_analysis"),
+		href: localUrl("leetcode", latestLeetCode.id),
+		detail: [
+			difficultyLabel(latestLeetCode.data.difficulty),
+			complexity ? `${t("home.time")} ${complexity.time}` : undefined,
+			complexity ? `${t("home.space")} ${complexity.space}` : undefined,
+		].filter(Boolean).join(" / "),
+		detailClass: difficultyColor[latestLeetCode.data.difficulty as keyof typeof difficultyColor],
+	});
+}
 ---
 
-<Layout title="eddn.dev — Eduardo Alonso">
-	<div
-		class="relative max-w-7xl mx-auto px-6 overflow-visible"
-	>
-		<div class="relative min-h-[100dvh] lg:min-h-0 lg:h-[calc(100dvh-4rem)] flex items-center py-16 sm:py-24 lg:py-0">
-			<!-- Full-viewport-width dynamic field (breaks out of the max-w-7xl column) -->
-			<div class="hero-seq [animation-delay:300ms] absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 z-0 overflow-hidden">
-				<HeroCanvas />
+<Layout title="eddn.dev - Eduardo Alonso">
+	<section data-hero-section class="flex flex-col">
+		<div data-hero-content class="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 content-center gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-12 lg:gap-6 lg:px-8 lg:py-24">
+			<div class="hero-seq lg:col-span-8">
+				<div class="mb-8 flex items-center gap-4 sm:mb-10">
+					<span class="font-mono text-[11px] uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">01 / Index</span>
+					<span class="h-px w-10 bg-hairline" aria-hidden="true"></span>
+					<span class="font-mono text-[11px] uppercase tracking-[0.18em] text-mute">{t("home.greeting")}</span>
+				</div>
+
+				<h1
+					class="hero-seq-clip [animation-delay:100ms] max-w-[10ch] text-[clamp(3.8rem,8.8vw,8.75rem)] font-semibold leading-[0.8] tracking-[-0.078em] text-ink [&_span]:text-brand-600 dark:[&_span]:text-brand-300"
+					set:html={t("home.title")}
+				></h1>
 			</div>
-			<!-- Readability scrim: page color over the headline, clearing into the field -->
-			<div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-canvas from-5% via-canvas/55 via-45% to-transparent"></div>
 
-			<!-- Content -->
-			<header class="relative z-10 max-w-2xl space-y-8">
-					<div class="space-y-5">
-						<a
-							href="https://eddndev.com"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hero-seq group block font-mono text-xs leading-relaxed tracking-wider mb-2 text-mute hover:text-ink transition-colors"
-						>
-							<span class="text-mute/70">eddn@dev:~$</span>
-							<span data-type-text class="text-body-strong">{t('home.availability')}</span>
-							<span class="ml-1 inline-block w-[0.5em] h-[0.95em] bg-brand-500 cursor-blink align-middle" aria-hidden="true"></span>
-						</a>
-
-						<span class="hero-seq [animation-delay:120ms] block font-mono text-xs tracking-[0.25em] uppercase text-mute mb-1">
-							{t('home.greeting')}
-						</span>
-
-						<h1
-							class="hero-seq-clip [animation-delay:220ms] text-5xl sm:text-7xl font-normal tracking-[-0.04em] text-ink leading-[0.95]"
-                            set:html={t('home.title')}
-						>
-						</h1>
-
-						<p class="hero-seq [animation-delay:420ms] text-xl sm:text-2xl font-normal text-body-strong leading-snug max-w-xl">
-							{t('home.subtitle')}
-						</p>
-					</div>
-
-					<p
-						class="hero-seq [animation-delay:540ms] text-base sm:text-lg text-body font-normal leading-relaxed max-w-xl border-l border-hairline pl-4"
+			<div class="hero-seq [animation-delay:260ms] flex flex-col justify-end gap-8 lg:col-span-4 lg:pb-2">
+				<p class="max-w-[26ch] text-[clamp(1.35rem,2.2vw,2rem)] font-medium leading-[1.05] tracking-[-0.045em] text-body-strong">
+					{t("home.subtitle")}
+				</p>
+				<p class="max-w-[39ch] text-sm leading-relaxed text-body sm:text-base">{t("home.description")}</p>
+				<div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+					<a
+						href={latestBlog ? localUrl("blog", latestBlog.id) : blogIndexUrl}
+						class="group inline-flex items-center gap-3 border-b border-ink pb-1 text-sm font-medium text-ink transition-colors duration-300 hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-300"
 					>
-                        {t('home.description')}
-					</p>
+						{t("home.latest_blog_btn")}
+						<span class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">-&gt;</span>
+					</a>
+					<a
+						href={lang === "es" ? "/es/trajectory/" : "/trajectory/"}
+						class="text-sm font-medium text-mute transition-colors duration-300 hover:text-ink"
+					>
+						{t("home.trajectory_btn")}
+					</a>
+				</div>
+				<span class="inline-flex items-center font-mono text-[11px] uppercase tracking-[0.15em] text-mute">
+					{t("home.availability")}
+				</span>
 
-					<div class="hero-seq [animation-delay:660ms] flex flex-wrap gap-3 pt-2">
-						<a
-							href={latestBlog ? localUrl('blog', latestBlog.id) : blogIndexUrl}
-							class="group inline-flex items-center gap-2.5 pl-5 pr-2 py-2 bg-ink text-canvas text-sm font-medium rounded-[4px] transition-transform active:scale-[0.98]"
-						>
-							{t('home.latest_blog_btn')}
-							<span class="flex items-center justify-center w-6 h-6 rounded-[3px] bg-canvas/15 transition-transform group-hover:translate-x-0.5">
-								<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-							</span>
-						</a>
-						<a
-							href={lang === 'es' ? "/es/trajectory/" : "/trajectory/"}
-							class="inline-flex items-center px-5 py-2 text-ink text-sm font-medium rounded-[4px] border border-hairline hover:bg-canvas-soft transition-colors"
-						>
-							{t('home.trajectory_btn')}
-						</a>
-					</div>
-
-					<div class="hero-seq [animation-delay:780ms] flex flex-wrap items-center gap-x-3 gap-y-2 pt-1">
-						<span class="font-mono text-[11px] text-mute tracking-wider select-none">
-							{t('home.social_label')}
-						</span>
-						<ul class="flex items-center gap-0.5">
-							{socials.map((social) => (
-								<li>
-									<a
-										href={social.url}
-										target="_blank"
-										rel="noopener noreferrer"
-										aria-label={social.label}
-										class="group flex p-2 text-mute hover:text-ink transition-all duration-300 hover:-translate-y-0.5"
-									>
-										<svg viewBox="0 0 24 24" fill="currentColor" class="h-[18px] w-[18px]" aria-hidden="true" set:html={social.icon} />
-									</a>
-								</li>
-							))}
-						</ul>
-					</div>
-				</header>
+				<div data-hero-links class="flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-hairline pt-5">
+					<a
+						href="#"
+						data-email-cta
+						class="group inline-flex items-center gap-3 text-sm font-medium text-ink transition-colors duration-300 hover:text-brand-600 dark:hover:text-brand-300"
+					>
+						{t("home.contact_link")}
+						<span class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">-&gt;</span>
+					</a>
+					<ul data-hero-socials class="flex items-center gap-4" aria-label={t("home.social_label")}>
+						{socials.map((social) => (
+							<li>
+								<a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.label} class="block text-mute transition-[color,transform] duration-300 hover:-translate-y-0.5 hover:text-ink">
+									<svg viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true" set:html={social.icon}></svg>
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			</div>
 		</div>
 
-		{/* ===== LEDGER — latest entries as an asymmetric editorial index ===== */}
-		<section class="pb-24">
-			<div class="io-reveal flex items-baseline justify-between mb-6">
-				<h2 class="font-mono text-xs tracking-[0.2em] uppercase text-mute">
-					{t('home.latest_label')}
-				</h2>
-				<a href={blogIndexUrl} class="group font-mono text-xs tracking-[0.2em] uppercase text-mute hover:text-ink transition-colors">
-					{t('home.view_all')} <span class="inline-block transition-transform group-hover:translate-x-1">-&gt;</span>
+		<div data-hero-slot class="hero-seq relative z-0 -mt-24 h-[34dvh] min-h-[18rem] max-h-[24rem] [animation-delay:360ms] sm:-mt-32 lg:-mt-40">
+			<KineticField decorative />
+		</div>
+
+	</section>
+
+	<div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+		<section id="latest" class="scroll-mt-24 py-28 sm:py-36 lg:py-44">
+			<div class="io-reveal mb-12 grid gap-6 lg:mb-16 lg:grid-cols-12 lg:items-end">
+				<div class="lg:col-span-8">
+					<span class="mb-4 block font-mono text-[11px] uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">02 / Editorial index</span>
+					<h2 class="text-[clamp(2.8rem,6vw,6.5rem)] font-semibold leading-[0.86] tracking-[-0.07em] text-ink">{t("home.latest_label")}</h2>
+				</div>
+				<a href={blogIndexUrl} class="group inline-flex items-center gap-3 justify-self-start border-b border-hairline pb-1 text-sm text-body transition-colors duration-300 hover:border-ink hover:text-ink lg:col-span-4 lg:justify-self-end">
+					{t("home.view_all")}
+					<span class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">-&gt;</span>
 				</a>
 			</div>
 
-			<div class="io-reveal grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-px bg-hairline border border-hairline rounded-md overflow-hidden">
-
-				{/* 01 — Featured: latest blog post (2x2 cell, polarity-flip on hover) */}
-				{latestBlog && (
-					<article class="group relative lg:col-span-2 lg:row-span-2 flex flex-col justify-between gap-10 p-8 sm:p-12 bg-canvas hover:bg-ink transition-colors duration-300 overflow-hidden select-none">
-						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-10 -right-2 font-mono text-[8rem] sm:text-[12rem] font-medium leading-none tracking-tighter text-hairline group-hover:text-canvas/15 transition-colors duration-300">01</span>
-						<div class="relative z-10">
-							<div class="flex flex-wrap items-baseline justify-between gap-4 mb-6">
-								<span class="text-xs font-mono uppercase tracking-[0.2em] text-mute group-hover:text-canvas/70 transition-colors pointer-events-none">
-									{t('home.latest_post_label')}
-								</span>
-								<time
-									transition:name={`date-${latestBlog.id}`}
-									class="text-xs font-mono uppercase tracking-wider text-mute group-hover:text-canvas/60 transition-colors pointer-events-none"
-								>
-									{fmtDate(latestBlog.data.pubDate)}
-								</time>
-							</div>
-
-							<h3
-								transition:name={`title-${latestBlog.id}`}
-								class="text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[0.98] text-ink group-hover:text-canvas mb-6 max-w-2xl transition-colors"
-							>
-								<a href={localUrl('blog', latestBlog.id)} class="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
-									<span class="absolute inset-0 z-20"></span>
-									{latestBlog.data.title}
+			<div class="io-reveal border-b border-hairline">
+				{entries.map((entry) => (
+					<article data-entry-row class="group relative grid gap-5 border-t border-hairline py-7 sm:py-9 lg:grid-cols-12 lg:gap-6 lg:py-11">
+						<div class="flex items-baseline gap-4 lg:col-span-3">
+							<span class="font-mono text-[11px] tracking-[0.12em] text-brand-600 dark:text-brand-300">{entry.index}</span>
+							<span class="font-mono text-[11px] uppercase tracking-[0.14em] text-mute">{entry.label}</span>
+						</div>
+						<div class="lg:col-span-6">
+							<h3 transition:name={`title-${entry.id}`} class="text-[clamp(1.8rem,3.4vw,3.75rem)] font-semibold leading-[0.96] tracking-[-0.055em] text-ink transition-colors duration-300 group-hover:text-brand-600 dark:group-hover:text-brand-300">
+								<a href={entry.href} class="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500">
+									<span class="absolute inset-0"></span>
+									{entry.title}
 								</a>
 							</h3>
-
-							<p class="text-body group-hover:text-canvas/80 leading-relaxed line-clamp-3 max-w-xl transition-colors pointer-events-none">
-								{latestBlog.data.description}
-							</p>
+							<p class="mt-4 max-w-[52ch] text-sm leading-relaxed text-body sm:text-base">{entry.description}</p>
 						</div>
-
-						<div class="relative z-10 flex items-center text-sm font-medium text-ink group-hover:text-canvas group-hover:translate-x-1 transition-all duration-300 pointer-events-none">
-							{t('home.read_article')}
-							<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-							</svg>
+						<div class="flex items-end justify-between gap-5 lg:col-span-3 lg:flex-col lg:items-end">
+							<div class="font-mono text-[11px] uppercase tracking-[0.12em] text-mute lg:text-right">
+								{entry.date && <time transition:name={`date-${entry.id}`}>{formatDate(entry.date)}</time>}
+								{entry.detail && <span class={`block ${entry.detailClass ?? ""}`}>{entry.detail}</span>}
+							</div>
+							<span class="text-xl text-mute transition-[color,transform] duration-300 group-hover:translate-x-1 group-hover:text-ink" aria-hidden="true">-&gt;</span>
 						</div>
 					</article>
-				)}
-
-				{/* 02 — Latest article / paper */}
-				{latestArticle && (
-					<article class="group relative flex flex-col justify-between gap-8 p-8 bg-canvas hover:bg-ink transition-colors duration-300 overflow-hidden select-none">
-						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-8 -right-1 font-mono text-[6rem] font-medium leading-none tracking-tighter text-hairline group-hover:text-canvas/15 transition-colors duration-300">02</span>
-						<div class="relative z-10">
-							<div class="flex justify-between items-start gap-3 mb-4 pointer-events-none">
-								<span class="text-xs font-mono uppercase tracking-[0.2em] text-mute group-hover:text-canvas/70 transition-colors">
-									{t('home.latest_article_label')}
-								</span>
-								<span class="text-[11px] font-mono px-2 py-0.5 rounded-[3px] border border-hairline text-mute group-hover:border-canvas/30 group-hover:text-canvas/80 shrink-0 transition-colors">
-									{latestArticle.data.technicalDepth}
-								</span>
-							</div>
-
-							<time
-								transition:name={`date-${latestArticle.id}`}
-								class="mb-2 block text-xs font-mono uppercase tracking-wider text-mute group-hover:text-canvas/60 transition-colors pointer-events-none"
-							>
-								{fmtDate(latestArticle.data.pubDate)}
-							</time>
-
-							<h3
-								transition:name={`title-${latestArticle.id}`}
-								class="text-xl sm:text-2xl font-normal tracking-tight leading-snug text-ink group-hover:text-canvas transition-colors"
-							>
-								<a href={localUrl('articles', latestArticle.id)} class="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
-									<span class="absolute inset-0 z-20"></span>
-									{latestArticle.data.title}
-								</a>
-							</h3>
-						</div>
-
-						<div class="relative z-10 flex items-center text-sm font-medium text-ink group-hover:text-canvas group-hover:translate-x-1 transition-all duration-300 pointer-events-none">
-							{t('home.read_paper')}
-							<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-							</svg>
-						</div>
-					</article>
-				)}
-
-				{/* 03 — Latest LeetCode solution */}
-				{latestLeetCode && (
-					<article class="group relative flex flex-col justify-between gap-8 p-8 bg-canvas hover:bg-ink transition-colors duration-300 overflow-hidden select-none">
-						<span aria-hidden="true" class="pointer-events-none select-none absolute -bottom-8 -right-1 font-mono text-[6rem] font-medium leading-none tracking-tighter text-hairline group-hover:text-canvas/15 transition-colors duration-300">03</span>
-						<div class="relative z-10">
-							<div class="flex justify-between items-start gap-3 mb-4 pointer-events-none">
-								<span class="text-xs font-mono uppercase tracking-[0.2em] text-mute group-hover:text-canvas/70 transition-colors">
-									{t('home.latest_solution_label')}
-								</span>
-								<span
-									transition:name={`difficulty-${latestLeetCode.id}`}
-									class={`text-[11px] font-mono px-2 py-0.5 rounded-[3px] border shrink-0 ${difficultyColor[latestLeetCode.data.difficulty as keyof typeof difficultyColor]}`}
-								>
-									{difficultyLabel(latestLeetCode.data.difficulty)}
-								</span>
-							</div>
-
-							<h3
-								transition:name={`title-${latestLeetCode.id}`}
-								class="text-xl sm:text-2xl font-normal tracking-tight leading-snug text-ink group-hover:text-canvas mb-4 transition-colors"
-							>
-								<a href={localUrl('leetcode', latestLeetCode.id)} class="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
-									<span class="absolute inset-0 z-20"></span>
-									{latestLeetCode.data.title}
-								</a>
-							</h3>
-
-							<div class="text-body group-hover:text-canvas/80 leading-relaxed font-mono text-sm transition-colors pointer-events-none">
-								{latestLeetCode.data.complexity ? (
-									<div class="flex flex-col gap-1">
-										<span>{t('home.time')}: {latestLeetCode.data.complexity.time}</span>
-										<span>{t('home.space')}: {latestLeetCode.data.complexity.space}</span>
-									</div>
-								) : (
-									<p>{t('home.complexity_analysis')}</p>
-								)}
-							</div>
-						</div>
-
-						<div class="relative z-10 flex items-center text-sm font-medium text-ink group-hover:text-canvas group-hover:translate-x-1 transition-all duration-300 pointer-events-none">
-							{t('home.view_solution')}
-							<svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-							</svg>
-						</div>
-					</article>
-				)}
+				))}
 			</div>
 		</section>
 
-		{/* ===== TELEMETRY — instrument panel ===== */}
-		<section class="pb-16">
-			<div class="io-reveal flex items-baseline justify-between border-t border-hairline pt-4">
-				<h2 class="font-mono text-xs tracking-[0.2em] uppercase text-mute">
-					{t('home.telemetry_label')}
-				</h2>
-				<span class="font-mono text-xs text-mute hidden sm:inline select-none">~/eddndev</span>
+		<section id="proof" class="scroll-mt-24 pb-20 pt-12 sm:pb-28 sm:pt-20">
+			<div class="io-reveal mb-14 grid gap-8 border-t border-hairline pt-5 lg:mb-20 lg:grid-cols-12 lg:items-end">
+				<div class="lg:col-span-8">
+					<span class="mb-5 block font-mono text-[11px] uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">03 / {t("home.telemetry_label")}</span>
+					<h2 class="text-[clamp(3rem,7vw,7.5rem)] font-semibold leading-[0.82] tracking-[-0.075em] text-ink [&_span]:text-brand-600 dark:[&_span]:text-brand-300" set:html={t("home.telemetry_title")}></h2>
+				</div>
+				<p class="max-w-[38ch] text-base leading-relaxed text-body lg:col-span-4">{t("home.telemetry_intro")}</p>
+			</div>
+
+			<div>
+				<GitHubContributions lang={lang} />
+				<GitHubLanguages lang={lang} />
+				<LeetCodeContributions lang={lang} />
 			</div>
 		</section>
-
-		<GitHubContributions lang={lang} />
-		<GitHubLanguages lang={lang} />
-		<LeetCodeContributions lang={lang} />
 	</div>
 
 	<script>
-		// The hero canvas + engine live in HeroCanvas.astro. This script only
-		// owns the status-line typewriter and the ledger/telemetry reveals.
 		let revealObserver: IntersectionObserver | null = null;
-		let typeTimer: ReturnType<typeof setTimeout> | null = null;
 
-		// Terminal typewriter for the status line (SSR text stays for SEO/no-JS)
-		function initTypewriter() {
-			const el = document.querySelector<HTMLElement>("[data-type-text]");
-			if (!el) return;
-			if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-			const full = el.dataset.fullText || el.textContent || "";
-			el.dataset.fullText = full;
-			el.textContent = "";
-
-			let i = 0;
-			const tick = () => {
-				el.textContent = full.slice(0, ++i);
-				if (i < full.length) typeTimer = setTimeout(tick, 26 + Math.random() * 38);
-			};
-			typeTimer = setTimeout(tick, 350);
-		}
-
-		// Scroll reveals for ledger / telemetry blocks
 		function initReveals() {
 			revealObserver?.disconnect();
-			revealObserver = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((entry) => {
-						if (entry.isIntersecting) {
-							entry.target.classList.add("is-visible");
-							revealObserver?.unobserve(entry.target);
-						}
-					});
-				},
-				{ threshold: 0.15 },
-			);
-			document.querySelectorAll(".io-reveal").forEach((el) => revealObserver?.observe(el));
+			revealObserver = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add("is-visible");
+						revealObserver?.unobserve(entry.target);
+					}
+				});
+			}, { threshold: 0.12 });
+			document.querySelectorAll(".io-reveal").forEach((element) => revealObserver?.observe(element));
 		}
 
-		function initAll() {
-			initTypewriter();
-			initReveals();
-		}
-
-		function cleanup() {
+		function cleanupReveals() {
 			revealObserver?.disconnect();
 			revealObserver = null;
-			if (typeTimer) clearTimeout(typeTimer);
 		}
 
-		// 2. Initialize on every page load (initial + navigation)
-		document.addEventListener("astro:page-load", initAll);
-
-		// 3. Cleanup before swapping content
-		document.addEventListener("astro:before-swap", cleanup);
+		document.addEventListener("astro:page-load", initReveals);
+		document.addEventListener("astro:before-swap", cleanupReveals);
 	</script>
 </Layout>

@@ -1,6 +1,4 @@
 ---
-import { languages } from '../i18n/ui';
-
 const currentLang = Astro.currentLocale || 'en';
 
 // Helper to get the path for the other language
@@ -23,6 +21,6 @@ const targetLang = currentLang === 'en' ? 'es' : 'en';
 const label = targetLang.toUpperCase();
 ---
 
-<a href={translatedPath} class="text-xs font-mono font-bold text-slate-400 hover:text-brand-600 transition-colors uppercase">
+<a href={translatedPath} class="font-mono text-[10px] font-medium uppercase tracking-[0.1em] text-mute transition-colors hover:text-ink">
   {label}
 </a>

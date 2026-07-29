@@ -69,18 +69,18 @@ const getServerColor = (level: number) => {
 };
 ---
 
-<section class="w-full py-16 border-t border-hairline">
-  <div class="flex items-center justify-between mb-8">
+<section class="w-full border-t border-hairline py-14 sm:py-16">
+  <div class="mb-10 flex items-center justify-between">
     <div class="flex items-baseline gap-4">
-      <h3 class="text-2xl font-normal tracking-tight text-ink">
+      <h3 class="text-2xl font-semibold tracking-[-0.04em] text-ink sm:text-3xl">
         {t('github.activity')}
       </h3>
-      <a href={`https://github.com/${USERNAME}`} target="_blank" rel="noopener noreferrer" class="text-sm font-mono text-mute hover:text-ink transition-colors rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
+      <a href={`https://github.com/${USERNAME}`} target="_blank" rel="noopener noreferrer" class="rounded-sm font-mono text-[10px] uppercase tracking-[0.14em] text-mute transition-colors duration-500 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
         @{USERNAME}
       </a>
     </div>
 
-    <div id="contrib-total" class="hidden sm:block text-sm font-mono text-mute transition-opacity duration-300">
+    <div id="contrib-total" class="hidden font-mono text-[10px] uppercase tracking-[0.12em] text-mute transition-opacity duration-500 sm:block">
       {initialData
         ? `${initialData.total[Object.keys(initialData.total)[0]]} ${t('github.submissions_last_year')}`
         : '...'}
@@ -102,12 +102,12 @@ const getServerColor = (level: number) => {
                     {week.map((day) => (
                         day ? (
                             <div
-                                class={`gh-cell w-3 h-3 rounded-full ${getServerColor(day.level)} transition-colors duration-200 hover:ring-2 hover:ring-brand-500/50 hover:z-10`}
+                                class={`gh-cell h-3 w-3 rounded-[1px] ${getServerColor(day.level)} transition-colors duration-200 hover:ring-2 hover:ring-brand-500/50 hover:z-10`}
                                 data-count={day.count}
                                 data-date={new Date(day.date).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', { dateStyle: 'long' })}
                             ></div>
                         ) : (
-                            <div class="w-3 h-3 rounded-full opacity-0"></div>
+                            <div class="h-3 w-3 rounded-[1px] opacity-0"></div>
                         )
                     ))}
                 </div>
@@ -117,7 +117,7 @@ const getServerColor = (level: number) => {
              Array.from({ length: 53 }).map(() => (
               <div class="flex flex-col gap-[3px]">
                   {Array.from({ length: 7 }).map(() => (
-                      <div class="w-3 h-3 rounded-full bg-canvas-soft animate-pulse"></div>
+                      <div class="h-3 w-3 animate-pulse rounded-[1px] bg-canvas-soft"></div>
                   ))}
               </div>
             ))
@@ -127,11 +127,11 @@ const getServerColor = (level: number) => {
 
   <div class="flex items-center gap-2 text-xs text-mute mt-4 justify-start font-mono">
       <span>{t('github.less')}</span>
-      <div class="w-3 h-3 rounded-full bg-canvas-soft"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-300 dark:bg-brand-900"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-500 dark:bg-brand-700"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-700 dark:bg-brand-500"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-900 dark:bg-brand-300"></div>
+      <div class="h-3 w-3 rounded-[1px] bg-canvas-soft"></div>
+      <div class="h-3 w-3 rounded-[1px] bg-brand-300 dark:bg-brand-900"></div>
+      <div class="h-3 w-3 rounded-[1px] bg-brand-500 dark:bg-brand-700"></div>
+      <div class="h-3 w-3 rounded-[1px] bg-brand-700 dark:bg-brand-500"></div>
+      <div class="h-3 w-3 rounded-[1px] bg-brand-900 dark:bg-brand-300"></div>
       <span>{t('github.more')}</span>
   </div>
 
@@ -141,7 +141,6 @@ const getServerColor = (level: number) => {
 <script>
     function initGitHubContributions() {
         const grid = document.getElementById('contrib-grid');
-        const totalContainer = document.getElementById('contrib-total');
         const scrollContainer = grid?.parentElement;
 
         function scrollToEnd() {
@@ -162,7 +161,7 @@ const getServerColor = (level: number) => {
         if (!tooltip) {
             tooltip = document.createElement('div');
             tooltip.id = 'gh-tooltip';
-            tooltip.className = 'fixed z-[99999] pointer-events-none opacity-0 invisible bg-[#1c1916] text-[#f7f5f0] px-3 py-1.5 rounded text-xs font-mono shadow-xl transition-all duration-200 ease-out transform translate-x-[-50%] translate-y-[-100%]';
+            tooltip.className = 'fixed z-[70] pointer-events-none opacity-0 invisible bg-[#15111e] text-[#f8f5ff] px-3 py-1.5 rounded-full text-xs font-mono shadow-xl transition-[opacity,transform] duration-200 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] transform translate-x-[-50%] translate-y-[-100%]';
 
             tooltipContent = document.createElement('div');
             tooltip.appendChild(tooltipContent);

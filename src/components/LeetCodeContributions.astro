@@ -19,12 +19,10 @@ let totalSubmissions = 0;
 let weeks: ContributionDay[][] = [];
 
 // New stats
-let ranking = 0;
 let hardSolved = 0;
 let mediumSolved = 0;
 let easySolved = 0;
 let acceptanceRate = 0;
-let totalSolved = 0;
 
 const getLevel = (count: number): 0 | 1 | 2 | 3 | 4 => {
   if (count === 0) return 0;
@@ -34,7 +32,7 @@ const getLevel = (count: number): 0 | 1 | 2 | 3 | 4 => {
   return 4;
 };
 
-// 1. FETCH DATA (Server Side) — Direct LeetCode GraphQL API
+// 1. FETCH DATA (Server Side) - Direct LeetCode GraphQL API
 try {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
@@ -68,7 +66,6 @@ try {
     const user = json.data?.matchedUser;
     if (user) {
        // Extract stats from GraphQL response
-       ranking = user.profile?.ranking ?? 0;
        const stats = user.submitStatsGlobal?.acSubmissionNum ?? [];
        let totalAccepted = 0;
        let totalAttempts = 0;
@@ -81,7 +78,6 @@ try {
            totalAttempts = s.submissions;
          }
        }
-       totalSolved = totalAccepted;
        acceptanceRate = totalAttempts > 0
          ? Math.round((totalAccepted / totalAttempts) * 10000) / 100
          : 0;
@@ -175,92 +171,51 @@ const getServerColor = (level: number) => {
 };
 ---
 
-<section class="w-full py-16 border-t border-hairline">
-  <div class="flex items-center justify-between mb-8">
+<section class="w-full border-t border-hairline py-14 sm:py-16">
+  <div class="mb-10 flex items-center justify-between">
     <div class="flex items-baseline gap-4">
-      <h3 class="text-2xl font-normal tracking-tight text-ink">
+      <h3 class="text-2xl font-semibold tracking-[-0.04em] text-ink sm:text-3xl">
         {t('leetcode.activity')}
       </h3>
-      <a href={`https://leetcode.com/u/${USERNAME}`} target="_blank" rel="noopener noreferrer" class="text-sm font-mono text-mute hover:text-ink transition-colors rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
+      <a href={`https://leetcode.com/u/${USERNAME}`} target="_blank" rel="noopener noreferrer" class="rounded-sm font-mono text-[10px] uppercase tracking-[0.14em] text-mute transition-colors duration-500 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
         @{USERNAME}
       </a>
     </div>
 
-    <div id="lc-total" class="hidden sm:block text-sm font-mono text-mute transition-opacity duration-300">
+    <div id="lc-total" class="hidden font-mono text-[10px] uppercase tracking-[0.12em] text-mute transition-opacity duration-500 sm:block">
       {weeks.length > 0
         ? `${totalSubmissions} ${t('github.submissions_last_year')}`
         : '...'}
     </div>
   </div>
 
-  <!-- Dashboard -->
+  <!-- Compact metrics row -->
   {weeks.length > 0 ? (
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
-        <div class="md:col-span-4 bg-canvas-soft p-6 rounded-md border border-hairline flex flex-col justify-between relative overflow-hidden group">
-            <div class="absolute top-0 right-0 p-4 opacity-[0.06] group-hover:opacity-[0.1] transition-opacity pointer-events-none text-ink">
-                <svg class="w-24 h-24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-                </svg>
-            </div>
-            <div>
-                <span class="text-xs font-mono text-mute uppercase tracking-wider">{t('leetcode.contest_rating')}</span>
-                <div class="mt-2 text-4xl font-normal text-ink font-mono tracking-tight">
-                    2,887
-                </div>
-            </div>
-             <div class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-body-strong">
-                <span class="inline-block w-2 h-2 rounded-full bg-mute"></span>
-                Guardian: Top 0.02%
-            </div>
-        </div>
-
-        <!-- Stats & Quality Card -->
-        <div class="md:col-span-8 bg-canvas-soft p-6 rounded-md border border-hairline flex flex-col justify-center">
-            <div class="flex items-end justify-between mb-2">
-                <div>
-                     <span class="text-xs font-mono text-mute uppercase tracking-wider">{t('leetcode.solution_quality')}</span>
-                     <div class="mt-1 text-xl font-medium text-ink">
-                        {hardSolved} <span class="text-mute text-sm font-normal">{t('leetcode.hard_problems')}</span>
-                     </div>
-                </div>
-                 <div class="text-right">
-                    <div class="text-xs font-mono text-mute">{t('leetcode.acceptance_rate')}</div>
-                    <div class="font-medium text-ink">{acceptanceRate}%</div>
-                </div>
-            </div>
-
-            <!-- Progress Bar for Hard Problems (neutral -- structure, not signal) -->
-             <div class="relative w-full h-3 bg-hairline rounded-[3px] overflow-hidden mb-4">
-                 <div class="absolute top-0 left-0 h-full bg-ink transition-all duration-1000" style={`width: ${Math.min((hardSolved / 50) * 100, 100)}%`}></div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-4 mt-2">
-                <div class="bg-canvas p-3 rounded-md border border-hairline">
-                    <div class="flex items-center gap-1.5 mb-1">
-                        <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                        <span class="text-xs text-mute">{t('difficulty.easy')}</span>
-                    </div>
-                    <div class="font-medium text-ink">{easySolved}</div>
-                </div>
-                <div class="bg-canvas p-3 rounded-md border border-hairline">
-                    <div class="flex items-center gap-1.5 mb-1">
-                        <span class="inline-block h-1.5 w-1.5 rounded-full bg-amber-500"></span>
-                        <span class="text-xs text-mute">{t('difficulty.medium')}</span>
-                    </div>
-                    <div class="font-medium text-ink">{mediumSolved}</div>
-                </div>
-                 <div class="bg-canvas p-3 rounded-md border border-hairline">
-                    <div class="flex items-center gap-1.5 mb-1">
-                        <span class="inline-block h-1.5 w-1.5 rounded-full bg-rose-500"></span>
-                        <span class="text-xs text-mute">{t('difficulty.hard')}</span>
-                    </div>
-                    <div class="font-medium text-ink">{hardSolved}</div>
-                </div>
-            </div>
-        </div>
+    <div data-proof-row class="mb-12 grid grid-cols-2 border-b border-t border-hairline sm:grid-cols-5">
+      <div class="col-span-2 py-5 sm:col-span-1 sm:pr-5">
+        <span class="block font-mono text-[11px] uppercase tracking-[0.16em] text-mute">{t('leetcode.contest_rating')}</span>
+        <strong class="mt-2 block font-mono text-3xl font-normal tracking-[-0.05em] text-ink">2,887</strong>
+        <span class="mt-1 block text-xs text-body">Guardian / top 0.02%</span>
+      </div>
+      <div class="border-l border-hairline px-4 py-5 sm:px-5">
+        <span class="block font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">{t('difficulty.easy')}</span>
+        <strong class="mt-2 block font-mono text-2xl font-normal text-ink">{easySolved}</strong>
+      </div>
+      <div class="border-l border-hairline px-4 py-5 sm:px-5">
+        <span class="block font-mono text-[11px] uppercase tracking-[0.16em] text-amber-700 dark:text-amber-300">{t('difficulty.medium')}</span>
+        <strong class="mt-2 block font-mono text-2xl font-normal text-ink">{mediumSolved}</strong>
+      </div>
+      <div class="border-l border-t border-hairline px-4 py-5 sm:border-t-0 sm:px-5">
+        <span class="block font-mono text-[11px] uppercase tracking-[0.16em] text-rose-700 dark:text-rose-300">{t('difficulty.hard')}</span>
+        <strong class="mt-2 block font-mono text-2xl font-normal text-ink">{hardSolved}</strong>
+      </div>
+      <div class="border-l border-t border-hairline px-4 py-5 sm:border-t-0 sm:px-5">
+        <span class="block font-mono text-[11px] uppercase tracking-[0.16em] text-mute">{t('leetcode.acceptance_rate')}</span>
+        <strong class="mt-2 block font-mono text-2xl font-normal text-ink">{acceptanceRate}%</strong>
+      </div>
     </div>
   ) : (
-      <div class="h-32 w-full bg-canvas-soft rounded-md animate-pulse mb-8 border border-hairline"></div>
+      <div class="mb-8 h-32 w-full animate-pulse border-y border-hairline bg-canvas-soft"></div>
   )}
 
   <div class="w-full overflow-x-auto pb-2 custom-scrollbar">
@@ -275,10 +230,10 @@ const getServerColor = (level: number) => {
                 <div class="flex flex-col gap-[3px]">
                     {week.map((day) => (
                         day.isFuture ? (
-                           <div class="w-3 h-3 rounded-full opacity-0"></div>
+                           <div class="h-3 w-3 rounded-[1px] opacity-0"></div>
                         ) : (
                           <div
-                              class={`lc-cell w-3 h-3 rounded-full ${getServerColor(day.level)} transition-colors duration-200 hover:ring-2 hover:ring-brand-500/50 hover:z-10`}
+                              class={`lc-cell h-3 w-3 rounded-[1px] ${getServerColor(day.level)} transition-colors duration-200 hover:ring-2 hover:ring-brand-500/50 hover:z-10`}
                               data-count={day.count}
                               data-date={new Date(day.date).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', { dateStyle: 'long' })}
                           ></div>
@@ -290,7 +245,7 @@ const getServerColor = (level: number) => {
              Array.from({ length: 53 }).map(() => (
               <div class="flex flex-col gap-[3px]">
                   {Array.from({ length: 7 }).map(() => (
-                      <div class="w-3 h-3 rounded-full bg-canvas-soft animate-pulse"></div>
+                      <div class="h-3 w-3 animate-pulse rounded-[1px] bg-canvas-soft"></div>
                   ))}
               </div>
             ))
@@ -300,11 +255,11 @@ const getServerColor = (level: number) => {
 
   <div class="flex items-center gap-2 text-xs text-mute mt-4 justify-start font-mono">
       <span>{t('github.less')}</span>
-      <div class="w-3 h-3 rounded-full bg-canvas-soft"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-300 dark:bg-brand-900"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-500 dark:bg-brand-700"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-700 dark:bg-brand-500"></div>
-      <div class="w-3 h-3 rounded-full bg-brand-900 dark:bg-brand-300"></div>
+      <div class="h-3 w-3 rounded-[1px] bg-canvas-soft"></div>
+      <div class="h-3 w-3 rounded-[1px] bg-brand-300 dark:bg-brand-900"></div>
+      <div class="h-3 w-3 rounded-[1px] bg-brand-500 dark:bg-brand-700"></div>
+      <div class="h-3 w-3 rounded-[1px] bg-brand-700 dark:bg-brand-500"></div>
+      <div class="h-3 w-3 rounded-[1px] bg-brand-900 dark:bg-brand-300"></div>
       <span>{t('github.more')}</span>
   </div>
 </section>
@@ -312,7 +267,6 @@ const getServerColor = (level: number) => {
 <script>
     function initLeetCodeContributions() {
         const grid = document.getElementById('lc-grid');
-        const totalContainer = document.getElementById('lc-total');
         const scrollContainer = grid?.parentElement;
 
         function scrollToEnd() {
@@ -331,7 +285,7 @@ const getServerColor = (level: number) => {
         if (!tooltip) {
             tooltip = document.createElement('div');
             tooltip.id = 'gh-tooltip';
-            tooltip.className = 'fixed z-[99999] pointer-events-none opacity-0 invisible bg-[#1c1916] text-[#f7f5f0] px-3 py-1.5 rounded text-xs font-mono shadow-xl transition-all duration-200 ease-out transform translate-x-[-50%] translate-y-[-100%]';
+            tooltip.className = 'fixed z-[70] pointer-events-none opacity-0 invisible bg-[#15111e] text-[#f8f5ff] px-3 py-1.5 rounded-full text-xs font-mono shadow-xl transition-[opacity,transform] duration-200 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] transform translate-x-[-50%] translate-y-[-100%]';
             tooltipContent = document.createElement('div');
             tooltip.appendChild(tooltipContent);
             const arrow = document.createElement('div');

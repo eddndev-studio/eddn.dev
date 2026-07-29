@@ -1,357 +1,259 @@
 ---
-import { useTranslations } from '../i18n/ui';
-import LanguagePicker from './LanguagePicker.astro';
+import { useTranslations } from "../i18n/ui";
+import LanguagePicker from "./LanguagePicker.astro";
 
-const lang = (Astro.currentLocale as keyof typeof import('../i18n/ui').ui) || 'en';
+const lang = (Astro.currentLocale as keyof typeof import("../i18n/ui").ui) || "en";
 const t = useTranslations(lang);
 
 const navItems = [
-  { name: t('nav.blog'), href: lang === 'es' ? "/es/blog/" : "/blog/" },
-  { name: t('nav.articles'), href: lang === 'es' ? "/es/articles/" : "/articles/" },
-  { name: t('nav.trajectory'), href: lang === 'es' ? "/es/trajectory/" : "/trajectory/" },
-  { name: t('nav.leetcode'), href: lang === 'es' ? "/es/leetcode/" : "/leetcode/" },
+	{ name: t("nav.blog"), href: lang === "es" ? "/es/blog/" : "/blog/" },
+	{ name: t("nav.articles"), href: lang === "es" ? "/es/articles/" : "/articles/" },
+	{ name: t("nav.trajectory"), href: lang === "es" ? "/es/trajectory/" : "/trajectory/" },
+	{ name: t("nav.leetcode"), href: lang === "es" ? "/es/leetcode/" : "/leetcode/" },
 ];
 
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(href);
+const currentYear = new Date().getFullYear();
 ---
 
 <header
-  id="main-header"
-  class="fixed top-0 left-0 right-0 z-50 bg-transparent border-b border-transparent transition-all duration-300"
+	id="main-header"
+	class="fixed inset-x-0 top-0 z-50 border-b border-transparent transition-[background-color,border-color] duration-500 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)]"
 >
-  <nav
-    class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative z-50"
-  >
-    <!-- Logo -->
-    <a href={lang === 'es' ? "/es/" : "/"} class="group flex items-center gap-1">
-      <span
-        class="font-semibold tracking-tight text-xl text-ink transition-colors duration-300"
-      >
-        eddn.dev
-      </span>
-      <span
-        class="w-1.5 h-1.5 rounded-full bg-mute opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100"
-      ></span>
-    </a>
+	<nav
+		class="mx-auto grid h-20 max-w-[1400px] grid-cols-12 items-center px-4 sm:px-6 lg:px-8"
+		aria-label="Primary navigation"
+	>
+		<a
+			href={lang === "es" ? "/es/" : "/"}
+			class="header-logo group col-span-7 flex h-11 items-center gap-3 text-ink sm:col-span-8 lg:col-span-3"
+		>
+			<span class="text-[15px] font-semibold tracking-[-0.04em]">eddn.dev</span>
+			<span class="font-mono text-[11px] uppercase tracking-[0.18em] text-brand-600 transition-colors duration-300 group-hover:text-ink dark:text-brand-300">/ EA</span>
+		</a>
 
-    <!-- Desktop Menu -->
-    <div class="hidden md:flex items-center gap-8">
-      <ul class="flex gap-10">
-        {
-          navItems.map((item, index) => (
-            <li>
-              <a
-                href={item.href}
-                aria-current={isActive(item.href) ? "page" : undefined}
-                class="group flex items-center gap-2 text-xs font-mono tracking-wider uppercase text-body-strong hover:text-ink aria-[current=page]:text-ink transition-colors duration-300"
-              >
-                <span class="inline-flex items-center gap-1 text-mute group-hover:text-ink group-aria-[current=page]:text-ink transition-colors duration-300">
-                  <span class="h-1 w-1 rounded-full bg-brand-500 opacity-0 group-aria-[current=page]:opacity-100 transition-opacity" aria-hidden="true"></span>
-                  0{index + 1}
-                </span>
-                {item.name}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-      <div class="h-4 w-px bg-hairline"></div>
-      <LanguagePicker />
-      <div class="h-4 w-px bg-hairline"></div>
-      <button
-        aria-label="Search"
-        class="search-trigger group flex items-center gap-2 text-mute hover:text-ink transition-colors"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <kbd class="hidden lg:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono text-mute border border-hairline rounded-[3px]">/</kbd>
-      </button>
-      <div class="h-4 w-px bg-hairline"></div>
-      <button
-        aria-label="Toggle theme"
-        class="theme-toggle group flex items-center justify-center w-8 h-8 text-mute hover:text-ink transition-colors"
-      >
-        <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      </button>
-    </div>
+		<div data-nav-desktop class="hidden lg:flex lg:col-span-9 lg:items-center lg:justify-end lg:gap-7 xl:gap-9">
+			<ul class="flex items-center gap-5 xl:gap-7">
+				{navItems.map((item, index) => (
+					<li>
+						<a
+							href={item.href}
+							aria-current={isActive(item.href) ? "page" : undefined}
+							class="group flex h-11 items-center gap-1.5 text-[12px] font-medium text-mute transition-colors duration-300 hover:text-ink aria-[current=page]:text-ink"
+						>
+							<span class="font-mono text-[11px] text-mute/75">0{index + 1}</span>
+							<span class="relative after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-brand-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100 group-aria-[current=page]:after:scale-x-100">
+								{item.name}
+							</span>
+						</a>
+					</li>
+				))}
+			</ul>
 
-    <!-- Mobile Toggle -->
-    <div class="md:hidden flex items-center gap-2 z-50">
-      <button
-        aria-label="Search"
-        class="search-trigger flex items-center justify-center w-10 h-10 text-mute hover:text-ink transition-colors"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </button>
-      <button
-        aria-label="Toggle theme"
-        class="theme-toggle flex items-center justify-center w-10 h-10 text-mute hover:text-ink transition-colors"
-      >
-        <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      </button>
-      <button
-        id="menu-toggle"
-        aria-label="Toggle Menu"
-        aria-expanded="false"
-        class="flex flex-col justify-center items-center w-12 h-12 gap-1.5 p-2 group border border-transparent transition-colors rounded-none"
-      >
-        <span
-          class="w-8 h-0.5 bg-ink transition-all duration-300 ease-out origin-center group-[.is-open]:rotate-45 group-[.is-open]:translate-y-2"
-        ></span>
-        <span
-          class="w-8 h-0.5 bg-ink transition-all duration-300 ease-out group-[.is-open]:opacity-0"
-        ></span>
-        <span
-          class="w-8 h-0.5 bg-ink transition-all duration-300 ease-out origin-center group-[.is-open]:-rotate-45 group-[.is-open]:-translate-y-2"
-        ></span>
-      </button>
-    </div>
-  </nav>
+			<span class="h-5 w-px bg-hairline" aria-hidden="true"></span>
+			<LanguagePicker />
+			<button
+				type="button"
+				aria-label="Search"
+				class="search-trigger group flex h-11 items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:text-ink"
+			>
+				<svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+				</svg>
+				<span class="hidden xl:inline">Search</span>
+			</button>
+			<button
+				type="button"
+				aria-label="Toggle theme"
+				class="theme-toggle grid size-11 place-items-center text-mute transition-colors duration-300 hover:text-ink"
+			>
+				<svg class="size-4 block dark:hidden" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+				</svg>
+				<svg class="size-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+				</svg>
+			</button>
+		</div>
+
+		<div data-nav-compact class="col-span-5 flex justify-end sm:col-span-4 lg:hidden">
+			<button
+				id="menu-toggle"
+				type="button"
+				aria-label="Toggle menu"
+				aria-controls="mobile-menu"
+				aria-expanded="false"
+				class="header-action group flex h-11 items-center gap-3 text-[11px] font-medium uppercase tracking-[0.12em] text-ink focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
+			>
+				<span data-menu-label>Menu</span>
+				<span class="relative block h-3 w-5" aria-hidden="true">
+					<span class="menu-line absolute left-0 top-[3px] h-px w-5 bg-ink transition-transform duration-500 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] group-[.is-open]:translate-y-[3px] group-[.is-open]:rotate-45"></span>
+					<span class="menu-line absolute bottom-[3px] left-0 h-px w-5 bg-ink transition-transform duration-500 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] group-[.is-open]:-translate-y-[3px] group-[.is-open]:-rotate-45"></span>
+				</span>
+			</button>
+		</div>
+	</nav>
 </header>
 
-<!-- Mobile Menu Overlay -->
 <div
-  id="mobile-menu"
-  class="fixed inset-0 bg-canvas z-40 flex flex-col justify-center px-8 opacity-0 invisible transition-all duration-300 md:hidden overflow-hidden"
+	id="mobile-menu"
+	aria-hidden="true"
+	class="fixed inset-0 z-40 flex min-h-[100dvh] flex-col bg-canvas px-4 pb-6 pt-24 text-ink opacity-0 invisible transition-[opacity,visibility] duration-500 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] sm:px-6 lg:hidden"
 >
-  <!-- Background Decoration -->
-  <div class="absolute inset-0 z-0 opacity-30 pointer-events-none [mask-image:linear-gradient(to_top,white,transparent)]">
-    <canvas id="menu-canvas" class="w-full h-full" aria-hidden="true"></canvas>
-  </div>
+	<div class="mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-between">
+		<nav class="border-b border-hairline" aria-label="Compact navigation">
+			{navItems.map((item, index) => (
+				<a
+					href={item.href}
+					aria-current={isActive(item.href) ? "page" : undefined}
+					style={`--menu-delay:${index * 55}ms`}
+					class="mobile-link group grid grid-cols-[2.25rem_1fr_auto] items-baseline border-t border-hairline py-4 text-[clamp(2.4rem,10vw,5rem)] font-semibold leading-[0.9] tracking-[-0.065em] transition-colors duration-300 hover:text-brand-600 aria-[current=page]:text-brand-600 dark:hover:text-brand-300 dark:aria-[current=page]:text-brand-300 sm:py-5"
+				>
+					<span class="font-mono text-[11px] font-normal tracking-[0.1em] text-mute">0{index + 1}</span>
+					<span>{item.name}</span>
+					<span class="text-xl font-normal opacity-0 transition-[opacity,transform] duration-300 group-hover:translate-x-1 group-hover:opacity-100" aria-hidden="true">-&gt;</span>
+				</a>
+			))}
+		</nav>
 
-  <div class="relative z-10 flex flex-col gap-6 max-w-lg">
-    {
-      navItems.map((item, index) => (
-        <a
-          href={item.href}
-          aria-current={isActive(item.href) ? "page" : undefined}
-          class="flex items-baseline gap-4 text-4xl font-normal tracking-tight text-ink hover:text-mute aria-[current=page]:text-mute transition-colors mobile-link group"
-        >
-          <span class="text-sm font-mono text-mute font-normal group-hover:text-ink transition-colors">
-            0{index + 1}
-          </span>
-          {item.name.toUpperCase()}
-        </a>
-      ))
-    }
-  </div>
-
-  <div
-    class="absolute bottom-12 left-8 right-8 pt-8 border-t border-hairline flex justify-between items-center font-mono text-xs text-mute uppercase tracking-widest z-10"
-  >
-    <span>(c) 2026</span>
-    <div class="px-4 py-2 -my-2">
-      <LanguagePicker />
-    </div>
-    <span>Mexico City</span>
-  </div>
+		<div class="grid grid-cols-2 border-t border-hairline font-mono text-[11px] uppercase tracking-[0.14em] text-mute sm:grid-cols-4">
+			<button type="button" class="search-trigger mobile-search-trigger h-12 text-left transition-colors hover:text-ink sm:h-14">Search</button>
+			<div class="flex h-12 items-center sm:h-14"><LanguagePicker /></div>
+			<button type="button" aria-label="Toggle theme" class="theme-toggle h-12 text-left transition-colors hover:text-ink sm:h-14">Light / Dark</button>
+			<span class="flex h-12 items-center justify-end sm:h-14">(c) {currentYear}</span>
+		</div>
+	</div>
 </div>
 
+<style>
+	.mobile-link {
+		opacity: 0;
+		transform: translateY(1rem);
+	}
+	#mobile-menu.visible .mobile-link {
+		animation: mobile-link-in 0.65s cubic-bezier(0.32, 0.72, 0, 1) var(--menu-delay) both;
+	}
+	@keyframes mobile-link-in {
+		to { opacity: 1; transform: none; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.mobile-link { opacity: 1; transform: none; }
+		#mobile-menu.visible .mobile-link { animation: none; }
+	}
+</style>
+
 <script>
-  import { createRandomVisual, type VisualInstance } from "../utils/visuals";
+	let headerAbort: AbortController | null = null;
 
-  let menuVisual: VisualInstance | null = null;
-  let scrollHandler: (() => void) | null = null;
-  let observer: IntersectionObserver | null = null;
+	function prefersReducedMotion() {
+		return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	}
 
-  function setupHeaderTransparency() {
-    const header = document.getElementById('main-header');
-    const footer = document.querySelector('footer');
-    if (!header) return;
+	function setupHeader() {
+		headerAbort?.abort();
+		headerAbort = new AbortController();
+		const { signal } = headerAbort;
+		const header = document.getElementById("main-header");
+		const toggle = document.getElementById("menu-toggle");
+		const menu = document.getElementById("mobile-menu");
+		const label = toggle?.querySelector<HTMLElement>("[data-menu-label]");
 
-    let isAtTop = window.scrollY <= 20;
-    let isFooterIntersecting = false;
+		if (!header || !toggle || !menu) return;
 
-    const updateHeaderState = () => {
-      header.classList.toggle('header-scrolled', !(isAtTop || isFooterIntersecting));
-    };
+		const updateHeader = () => {
+			header.classList.toggle("header-scrolled", window.scrollY > 16);
+		};
 
-    // 1. Scroll Handler (Top Logic)
-    scrollHandler = () => {
-      const currentTop = window.scrollY <= 20;
-      if (currentTop !== isAtTop) {
-        isAtTop = currentTop;
-        updateHeaderState();
-      }
-    };
-    window.addEventListener('scroll', scrollHandler);
+		const closeMenu = (restoreFocus = false) => {
+			toggle.classList.remove("is-open");
+			toggle.setAttribute("aria-expanded", "false");
+			menu.setAttribute("aria-hidden", "true");
+			menu.classList.remove("visible", "opacity-100");
+			menu.classList.add("invisible", "opacity-0");
+			header.classList.remove("menu-open");
+			document.body.style.overflow = "";
+			if (label) label.textContent = "Menu";
+			if (restoreFocus) toggle.focus();
+		};
 
-    // 2. Footer Observer (Restored Logic)
-    if (footer) {
-        const options = {
-            root: null,
-            // Detect when footer reaches the top part of viewport
-            rootMargin: '0px 0px -100% 0px', 
-            threshold: 0,
-        };
+		const openMenu = () => {
+			toggle.classList.add("is-open");
+			toggle.setAttribute("aria-expanded", "true");
+			menu.setAttribute("aria-hidden", "false");
+			menu.classList.remove("invisible", "opacity-0");
+			menu.classList.add("visible", "opacity-100");
+			header.classList.add("menu-open");
+			document.body.style.overflow = "hidden";
+			if (label) label.textContent = "Close";
+			requestAnimationFrame(() => menu.querySelector<HTMLAnchorElement>("a")?.focus({ preventScroll: true }));
+		};
 
-        observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                isFooterIntersecting = entry.isIntersecting;
-                updateHeaderState();
-            });
-        }, options);
+		closeMenu();
+		updateHeader();
+		window.addEventListener("scroll", updateHeader, { passive: true, signal });
+		toggle.addEventListener("click", () => {
+			if (toggle.classList.contains("is-open")) closeMenu();
+			else openMenu();
+		}, { signal });
+		menu.querySelectorAll("a").forEach((link) => {
+			link.addEventListener("click", () => closeMenu(), { signal });
+		});
+		menu.querySelector(".mobile-search-trigger")?.addEventListener("click", () => closeMenu(), { signal });
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "Escape" && toggle.classList.contains("is-open")) closeMenu(true);
+		}, { signal });
+		window.matchMedia("(min-width: 1024px)").addEventListener("change", () => closeMenu(), { signal });
 
-        observer.observe(footer);
-    }
-    
-    // Initial check
-    updateHeaderState();
-  }
+		document.querySelectorAll(".theme-toggle").forEach((button) => {
+			button.addEventListener("click", handleThemeToggle, { signal });
+		});
+	}
 
-  function setupMenu() {
-    const toggle = document.querySelector("#menu-toggle") as HTMLElement;
-    const menu = document.querySelector("#mobile-menu");
-    const links = document.querySelectorAll(".mobile-link");
-    const body = document.body;
-    const canvas = document.getElementById("menu-canvas") as HTMLCanvasElement;
+	function handleThemeToggle(event: Event) {
+		const toggle = event.currentTarget as HTMLElement;
+		const isDark = document.documentElement.classList.contains("dark");
+		const newTheme = isDark ? "light" : "dark";
 
-    if (!toggle || !menu) return;
+		if (!document.startViewTransition || prefersReducedMotion()) {
+			document.documentElement.classList.toggle("dark");
+			localStorage.setItem("theme", newTheme);
+			return;
+		}
 
-    // Initialize visual if canvas exists and not already initialized
-    if (canvas && !menuVisual) {
-      menuVisual = createRandomVisual(canvas, "#8b5cf6");
-      menuVisual.init();
-      menuVisual.stop(); // Start paused
-    }
+		const rect = toggle.getBoundingClientRect();
+		const x = rect.left + rect.width / 2;
+		const y = rect.top + rect.height / 2;
+		document.documentElement.classList.add("theme-transition");
 
-    const closeMenu = () => {
-      toggle.classList.remove("is-open");
-      toggle.setAttribute("aria-expanded", "false");
-      menu.classList.remove("opacity-100", "visible");
-      menu.classList.add("opacity-0", "invisible");
-      body.style.overflow = "";
+		const transition = document.startViewTransition(() => {
+			document.documentElement.classList.toggle("dark");
+			localStorage.setItem("theme", newTheme);
+		});
 
-      // Pause animation
-      menuVisual?.stop();
-    };
+		transition.ready.then(() => {
+			const radius = Math.hypot(
+				Math.max(x, window.innerWidth - x),
+				Math.max(y, window.innerHeight - y),
+			);
+			document.documentElement.animate(
+				{ clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+				{
+					duration: 600,
+					easing: "cubic-bezier(0.32, 0.72, 0, 1)",
+					pseudoElement: "::view-transition-new(root)",
+				},
+			);
+		});
+		transition.finished.then(() => document.documentElement.classList.remove("theme-transition"));
+	}
 
-    const openMenu = () => {
-      toggle.classList.add("is-open");
-      toggle.setAttribute("aria-expanded", "true");
-      menu.classList.remove("opacity-0", "invisible");
-      menu.classList.add("opacity-100", "visible");
-      body.style.overflow = "hidden";
+	function cleanupHeader() {
+		headerAbort?.abort();
+		headerAbort = null;
+		document.body.style.overflow = "";
+	}
 
-      // Resume animation
-      menuVisual?.start();
-    };
-
-    // Initialize state (Force closed)
-    closeMenu();
-
-    toggle.onclick = (e) => {
-      e.stopPropagation();
-      const isOpen = toggle.classList.contains("is-open");
-      if (isOpen) {
-        closeMenu();
-      } else {
-        openMenu();
-      }
-    };
-
-    // Close on link click
-    links.forEach((link) => {
-      link.addEventListener("click", closeMenu);
-    });
-    
-    // Setup footer observer
-    setupHeaderTransparency();
-  }
-
-  function cleanupMenu() {
-    if (menuVisual) {
-      menuVisual.destroy();
-      menuVisual = null;
-    }
-    if (scrollHandler) {
-        window.removeEventListener('scroll', scrollHandler);
-        scrollHandler = null;
-    }
-    if (observer) {
-        observer.disconnect();
-        observer = null;
-    }
-  }
-
-  // Theme toggle with circular mask view transition
-  function setupThemeToggle() {
-    document.querySelectorAll('.theme-toggle').forEach(btn => {
-      btn.addEventListener('click', handleThemeToggle);
-    });
-  }
-
-  function handleThemeToggle(e: Event) {
-    const toggle = e.currentTarget as HTMLElement;
-    const isDark = document.documentElement.classList.contains('dark');
-    const newTheme = isDark ? 'light' : 'dark';
-
-    // Instant (no animation) when View Transitions are unsupported OR the user
-    // prefers reduced motion -- a WAAPI .animate() is not covered by the CSS guard.
-    if (
-      !document.startViewTransition ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    ) {
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', newTheme);
-      return;
-    }
-
-    const rect = toggle.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-
-    document.documentElement.classList.add('theme-transition');
-
-    const transition = document.startViewTransition(() => {
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', newTheme);
-    });
-
-    transition.ready.then(() => {
-      const maxRadius = Math.hypot(
-        Math.max(x, window.innerWidth - x),
-        Math.max(y, window.innerHeight - y)
-      );
-
-      document.documentElement.animate(
-        {
-          clipPath: [
-            `circle(0px at ${x}px ${y}px)`,
-            `circle(${maxRadius}px at ${x}px ${y}px)`,
-          ],
-        },
-        {
-          duration: 600,
-          easing: 'ease-out',
-          pseudoElement: '::view-transition-new(root)',
-        }
-      );
-    });
-
-    transition.finished.then(() => {
-      document.documentElement.classList.remove('theme-transition');
-    });
-  }
-
-  // Bind on every navigation
-  document.addEventListener("astro:page-load", () => {
-    setupMenu();
-    setupThemeToggle();
-  });
-  document.addEventListener("astro:before-swap", cleanupMenu);
+	document.addEventListener("astro:page-load", setupHeader);
+	document.addEventListener("astro:before-swap", cleanupHeader);
 </script>

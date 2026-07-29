@@ -1,31 +1,13 @@
+@import "@fontsource-variable/geist";
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ============================================================ */
 /*  Fonts                                                       */
-/*  Inter  -> narrative (display + body)                        */
-/*  DM Mono -> machine (readouts, code, numerals, labels)       */
-/*  Instrument Serif -> editorial (one italic moment per page)  */
+/*  Geist -> display, navigation, and body                      */
+/*  DM Mono -> readouts, code, numerals, and labels             */
 /* ============================================================ */
-
-/* Self-hosted Inter Variable */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('/fonts/inter-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('/fonts/inter-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
 
 /* DM Mono 400 */
 @font-face {
@@ -62,66 +44,34 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-/* Instrument Serif 400 (roman + italic) */
-@font-face {
-  font-family: 'Instrument Serif';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/instrument-serif-400-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Instrument Serif';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/instrument-serif-400-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Instrument Serif';
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/instrument-serif-400-italic-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Instrument Serif';
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/instrument-serif-400-italic-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
 /* ============================================================ */
 /*  Design tokens                                              */
 /* ============================================================ */
 
 @theme {
-  /* Brand violet scale -- the "machine" accent.                */
-  /* RULE: color is emitted only by computation (hero, heatmap, */
-  /* cursor, active-page LED, syntax). Not used as page chrome.  */
-  --color-brand-50: #f5f3ff;
-  --color-brand-100: #ede9fe;
-  --color-brand-200: #ddd6fe;
-  --color-brand-300: #c4b5fd;
-  --color-brand-400: #a78bfa;
-  --color-brand-500: #8b5cf6;
-  --color-brand-600: #7c3aed;
-  --color-brand-700: #6d28d9;
-  --color-brand-800: #5b21b6;
-  --color-brand-900: #4c1d95;
-  --color-brand-950: #2e1065;
+  /* Violet is a signal accent, not a decorative surface. */
+  --color-brand-50: #f3f0ff;
+  --color-brand-100: #e8e1ff;
+  --color-brand-200: #d3c6ff;
+  --color-brand-300: #b7a3fb;
+  --color-brand-400: #9479ee;
+  --color-brand-500: #7458d8;
+  --color-brand-600: #6548c8;
+  --color-brand-700: #5137a6;
+  --color-brand-800: #402d7d;
+  --color-brand-900: #32265d;
+  --color-brand-950: #1d1539;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+
+  /* Editorial copy favors reading comfort over compact UI density. */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
 }
 
-/* Warp neutrals -- theme-aware. Resolved from runtime vars so */
+/* Theme-aware neutrals resolve from runtime variables so      */
 /* a single token (bg-canvas, text-ink, border-hairline...)    */
 /* flips between warm-paper (light) and warm-charcoal (dark).   */
 @theme inline {
@@ -132,30 +82,31 @@
   --color-body-strong: var(--c-body-strong);
   --color-body: var(--c-body);
   --color-mute: var(--c-mute);
-  --color-machine: #8b5cf6;
+  --color-machine: #7458d8;
 }
 
 :root {
-  /* Light = warm paper */
-  --c-canvas: #f7f5f0;
-  --c-canvas-soft: #efece4;
-  --c-hairline: #e2dccd;
-  --c-ink: #2b2622;
-  --c-body-strong: #3a342e;
-  --c-body: #4f4a42;
-  /* mute meets WCAG AA (4.5:1) on both canvas and canvas-soft */
-  --c-mute: #6b645a;
+  --c-canvas: #f3f0ea;
+  --c-canvas-soft: #e8e3dc;
+  --c-hairline: #cbc4ba;
+  --c-ink: #17131d;
+  --c-body-strong: #302b37;
+  --c-body: #4f4958;
+  --c-mute: #655e6e;
+  --c-violet-ink: #7458d8;
+  --c-violet-contrast: #f8f5ff;
 }
 
 .dark {
-  /* Dark = warm charcoal (NOT pure black -- the warmth is the brand) */
-  --c-canvas: #2b2622;
-  --c-canvas-soft: #383330;
-  --c-hairline: #3f3a36;
-  --c-ink: #f7f5f0;
-  --c-body-strong: #ddd4c4;
-  --c-body: #c9c0ad;
-  --c-mute: #aea69c;
+  --c-canvas: #111015;
+  --c-canvas-soft: #1c1a21;
+  --c-hairline: #35313c;
+  --c-ink: #f5f1fa;
+  --c-body-strong: #ded7e6;
+  --c-body: #c4bccd;
+  --c-mute: #9b92a5;
+  --c-violet-ink: #8c72e6;
+  --c-violet-contrast: #110e17;
 }
 
 @layer base {
@@ -164,7 +115,18 @@
     color: var(--c-ink);
     -webkit-font-smoothing: antialiased;
     font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
   }
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  content: "";
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
 }
 
 /* Keep scrollbar gutter to avoid layout shift on route change */
@@ -177,10 +139,15 @@ html {
 /* ============================================================ */
 
 #main-header.header-scrolled {
-  background-color: color-mix(in srgb, var(--c-canvas) 82%, transparent);
-  border-bottom-color: var(--c-hairline);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: color-mix(in srgb, var(--c-canvas) 92%, transparent);
+  border-color: var(--c-hairline);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+#main-header.menu-open {
+  background-color: var(--c-canvas);
+  border-color: var(--c-hairline);
 }
 
 /* ============================================================ */
@@ -217,21 +184,29 @@ html.theme-transition::view-transition-old(root) { z-index: 1; }
 
 /* Scroll reveals (IntersectionObserver toggles .is-visible) */
 .io-reveal {
+  opacity: 1;
+  transform: none;
+}
+.js .io-reveal {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: opacity 0.6s cubic-bezier(0.32, 0.72, 0, 1), transform 0.7s cubic-bezier(0.32, 0.72, 0, 1);
 }
-.io-reveal.is-visible { opacity: 1; transform: none; }
+.js .io-reveal.is-visible { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-seq, .hero-seq-clip { animation: none; }
-  .io-reveal { opacity: 1; transform: none; transition: none; }
+  .js .io-reveal { opacity: 1; transform: none; transition: none; }
   .cursor-blink { animation: none; }
+}
+
+@media print {
+  .js .io-reveal { opacity: 1; transform: none; }
 }
 
 /* ============================================================ */
 /*  Prose (article / blog / solution body)                     */
-/*  Theme-aware via Warp tokens -- one place so every long-form */
+/*  Theme-aware tokens keep every long-form page consistent.   */
 /*  page reads warm in both modes. Color rule: body links are   */
 /*  ink (not violet); only fenced code carries syntax color.    */
 /* ============================================================ */

@@ -16,16 +16,16 @@ The primary objective of this project is to maintain a high-performance, low-lat
 *   **Static Site Excellence:** Utilizing Astro v5 to achieve near-zero client-side JavaScript for content delivery, leveraging SSG (Static Site Generation) for optimal edge distribution.
 *   **Custom Simulation Engines:** Implementation of raw HTML5 Canvas simulations (`src/lib/`) for visual components, avoiding heavy abstraction layers to maintain direct control over memory and the render loop.
 *   **Structured Content Engineering:** Using strict TypeScript schemas via Astro Content Collections to manage algorithmic documentation (LeetCode) and technical articles, ensuring metadata integrity and type safety across the entire build.
-*   **Seamless Interactivity:** Integration of GSAP for orchestrating complex entrance sequences and Lenis for unified scroll behavior, balanced against the performance requirements of a static site.
+*   **Purposeful Interactivity:** Raw canvas simulations, IntersectionObserver-driven reveals, and native View Transitions keep motion expressive without taking over scrolling or content delivery.
 *   **Internationalization Logic:** A robust i18n implementation that handles localized content discovery and SEO-compliant cross-linking via structured sitemaps and hreflang orchestration.
+*   **Signal Index Design System:** An open 12-column system with one Geist display voice, DM Mono readouts, full-width interactive fields, and a compact navigation mode through tablet widths. See [`DESIGN.md`](./DESIGN.md).
 
 ## Tech Stack
 
 *   **Framework:** Astro v5 (SSG)
 *   **Language:** TypeScript
 *   **Styling:** Tailwind CSS v4 (Vite-integrated)
-*   **Animations:** GSAP + ScrollTrigger
-*   **Smooth Scrolling:** Lenis
+*   **Motion:** CSS, IntersectionObserver, View Transitions, and custom Canvas engines
 *   **Content:** Markdown/MDX with Shiki-based syntax highlighting
 
 ## License
