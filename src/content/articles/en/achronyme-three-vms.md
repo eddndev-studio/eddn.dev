@@ -1,11 +1,12 @@
 ---
-title: "Akron, Artik, Lysis: Why Achronyme Composes Three Virtual Machines Instead of One"
-description: "When a single general-purpose VM isn't enough: how Achronyme ended up with three specialized virtual machines (one for scripting, one for witness generation, one for constraint emission), each with its own memory discipline."
+title: "Akron, Artik, Lysis: Why Achronyme Uses Three Virtual Machines"
+description: "How scripting, witness generation, and constraint emission led Achronyme to three different memory models."
 pubDate: "2026-05-03"
+updatedDate: "2026-08-08"
 tags: ["architecture", "compilers", "vm", "achronyme", "memory"]
 draft: false
 translationKey: "achronyme-three-vms"
-abstract: "This article continues the architectural analysis of Achronyme's VM published in March, this time explaining how and why the project evolved from a single register-based virtual machine to a composition of three specialized VMs: Akron (scripting + prove blocks with heap and tri-color GC), Artik (deterministic witness generation with no heap and no GC), and Lysis (an SSA bytecode walked by the constraint frontend, with a single-static-store discipline). Each was born from an invariant the previous one couldn't sustain, and each one's memory discipline is exactly aligned with the question that VM exists to answer. The article argues that composing small machines with precise invariants yields less code and more guarantees than a unified VM that tries to absorb every case."
+abstract: "Achronyme separates dynamic scripting, witness generation, and constraint emission into Akron, Artik, and Lysis. Each VM uses the memory model required by its job instead of sharing one general-purpose runtime."
 technicalDepth: "Advanced"
 references:
   - "https://github.com/achronyme/achronyme"
@@ -14,110 +15,86 @@ references:
   - "https://en.wikipedia.org/wiki/Tracing_garbage_collection"
 ---
 
-Two months ago I published an article on the architecture of Achronyme's virtual machine: the stack-to-register transition, the lessons from Lua 5.0 and Dalvik, cache locality. That article is still correct, but it's incomplete: somewhere between March and May, Achronyme stopped having *one* virtual machine and ended up with three.
+My first article about Achronyme's VM covered the move from stack bytecode to registers. By May 2026, calling it "the VM" was already inaccurate. The project had three execution engines: **Akron**, **Artik**, and **Lysis**.
 
-It wasn't a decision I made in front of a whiteboard. It was the cumulative consequence of running into two walls the original VM couldn't cross (first with witness generation, then with SHA-256), and realizing the right answer wasn't to make a bigger VM, but to compose several small VMs, each with its own memory discipline.
+They were not created from a plan to maximize the number of VMs. Witness generation and large constraint programs imposed memory rules that conflicted with the dynamic language runtime. Splitting the machines made those rules explicit.
 
-This article is the story of **Akron**, **Artik**, and **Lysis**: why each one exists, what problem it solves, and why together they are less than the sum of their parts in lines of code but more than the sum of their parts in structural guarantees.
+## Three jobs, three memory models
 
-## The trap of the general-purpose VM
+Achronyme needed to execute three kinds of work:
 
-The natural way to extend a VM when a new use case shows up is to add opcodes, add types, add paths in the dispatch loop. The consequence isn't just more code; it's more invariants the same machine has to sustain at the same time. A VM that has a heap with GC and at the same time has to be deterministic in latency for witness generation is a VM that breaks one of those two invariants on every design decision.
+1. **User programs and `prove {}` blocks.** Closures, strings, maps, and values with dynamic lifetimes require managed heap allocation.
+2. **Witness functions.** This code runs in the proving path. Its allocation should be bounded and predictable from the compiled program.
+3. **Constraint emission.** Large, unrolled SSA programs need somewhere to spill intermediate values, but the emitter should not need general alias analysis or garbage collection.
 
-At some point along the way I realized that the three core responsibilities Achronyme was asking of its single VM were fundamentally incompatible:
+Adding every requirement to one dispatch loop would couple unrelated invariants. A heap feature for scripting could affect witness execution; a restriction added for witness predictability could make ordinary language code awkward.
 
-1. **Scripting and `prove {}` blocks**: needs full dynamic semantics: closures, arbitrary allocation, values with unpredictable lifetimes. That asks for a *heap* with *garbage collection*.
-2. **Witness generation**: runs inside the proof's hot path; it has to be deterministic in time and free of pauses. That asks for *no heap*, *no GC*.
-3. **Constraint emission**: the circom frontend produces SSA so large that a single iter body of SHA-256 no longer fits in a register frame. That asks for *a heap with explicit spill discipline*, no GC but persistent slots.
+## Akron: the language runtime
 
-Any single VM trying to sustain those three invariants at once solves all three poorly. The way out was to separate them.
-
-## Akron: the scripting VM
-
-Akron is the original VM, the one I described in the March article, now with a proper name. It's register-based, has forty-something opcodes, 64-bit values with a 4-bit tag in the top bits, and a tri-color mark-sweep garbage collector over its heap. It runs `.achb` (compiled bytecode of the full language), including the `prove { ... }` blocks a user writes in their code.
+Akron is the register VM used for compiled `.achb` programs. It supports the dynamic parts of the language and executes the host side of `prove {}` blocks. Its values can outlive a single expression, so it has a heap and a tracing garbage collector.
 
 ```text
-// a = b + c in Akron bytecode (register-based)
+// a = b + c in Akron bytecode
 ADD R0, R1, R2
 ```
 
-Why can Akron afford a GC? Because its work is *human-perceptible*: scripting proofs, transforming data, configuration. A GC pause of a few milliseconds every so often breaks nothing. The user doesn't perceive that latency, and the values living in its heap can have arbitrary lifetimes (closures capturing variables, maps growing at runtime, concatenated strings).
+Garbage collection is appropriate here because closures, maps, arrays, and strings do not have lifetimes that the bytecode compiler can always determine statically. A pause is a runtime tradeoff Akron accepts in exchange for that flexibility.
 
-Akron sustains the mental model of "a normal programming language with dynamic types". Heap + GC is the right answer to that question.
+## Artik: bounded witness execution
 
-## Artik: the deterministic witness VM
+The Circom frontend needs to evaluate imperative helper functions while building a witness. I first tried to execute them through Akron. That reused more code, but it also allowed heap allocation and collection inside the proving path.
 
-The first limit appeared with witness generation. When a ZK proof is built, the circom frontend describes *which* signals exist and *which* constraints relate them, but it doesn't compute their values directly. That's the job of the *witness generator*, which runs the user's imperative functions (circom `function` declarations: `nbits`, `log2`, etc.) to produce the concrete numbers the cryptographic proof later signs over.
-
-This code runs inside the proof's hot path: every time someone generates a proof, the witness gets recomputed. It has to be fast and, more importantly, **deterministic**. A GC pause in the middle of a witness computation may not break correctness (the final result is the same), but it breaks observational properties of the system (timing channels, predictable throughput under load, ability to run witness generation in memory-strict environments).
-
-I tried first to lift witness generation onto Akron. It worked, but I couldn't guarantee the properties I needed. Any call that allocated a string or closed over a `Vec` could trigger a collection. The fix was to build a separate VM whose memory discipline was structurally incompatible with the problem:
-
-**Artik** has roughly twenty-five opcodes, runs `.artik` bytecode lifted from the bodies of circom functions, uses SSA-style registers, and, critically, **has no heap and no GC**. Each value lives in a register with a statically computable lifetime; the dispatch loop is a switch over opcodes that only manipulate finite-field values and small integers. The R1CS backend dispatches it via a dedicated opcode (`WitnessOp::ArtikCall`).
+Artik is a smaller register machine for those helper functions. It operates on finite-field values and small integers, and it has no general heap or garbage collector:
 
 ```text
-// Pseudocode for a circom function body lifted to Artik
-LOAD_PARAM    R0, 0       // first parameter
+LOAD_PARAM    R0, 0
 CONST_FIELD   R1, 1
 ADD_FIELD     R2, R0, R1
 RET           R2
 ```
 
-The invariant Artik holds is simple and verifiable: the memory used by an Artik call is exactly the sum of the registers declared in its bytecode, no more. That makes Artik trivially compatible with witness generation, precisely because it gave up the flexibility Akron needs.
+The register count in the bytecode bounds the storage required by an Artik call. That removes allocator and collector behavior from this part of witness generation. It does not make the entire prover constant-time, and it should not be presented as a complete timing-channel defense. It gives the runtime a narrower property that can be checked from the program.
 
-## Lysis: the SSA VM the constraint frontend walks
+## Lysis: spill storage with one write per slot
 
-The second limit appeared with SHA-256.
+The next limit appeared while lowering large Circom templates such as SHA-256. An unrolled round could create more SSA intermediates than the original register frame could hold. Simply increasing the frame postponed the overflow without expressing how long spilled values remained valid.
 
-Achronyme's circom frontend lowers circom `template`s into its own SSA IR. For small circuits (Num2Bits, IsZero, EdDSA, MiMCSponge) that IR fits cleanly into a "register frame + a constraint emitter that walks the IR linearly" scheme. For SHA-256 with 64 bytes of input, that scheme breaks: a single iteration body of the main round generates so many SSA operations that the planned register frame doesn't contain them, and the constraint emitter (which I'd called the *Walker*) starts failing with frame overflow.
-
-The obvious fix was to make the frame bigger. But the problem wasn't size; it was structural. What the Walker actually needed was an explicit *spill* mechanism: a heap where it could stash intermediate values when an iter body exceeded the frame, and strict rules about how that heap is used so the emitter could walk the bytecode without doing aliasing analysis.
-
-**Lysis** is that VM. It has thirty-something opcodes, a header with a `heap_size_hint`, explicit `StoreHeap` and `LoadHeap` opcodes for controlled spill, and an `EmitWitnessCallHeap` opcode for invoking Artik with arguments resolved from the heap. But the key architectural decision isn't the presence of the heap; it's the invariant that governs its use:
-
-> **Each heap slot is written exactly once.**
-
-That rule (*single-static-store*) is what makes Lysis walkable by the constraint emitter without aliasing analysis. If every slot is written once, the bytecode's dependency graph is static and constructible in a single pass. There's no GC because there's no dynamic liveness to track; slots live until the frame ends, and since each one was written once, the reader can always recover the value without worrying about race conditions or overwrites.
+Lysis provides explicit spill instructions:
 
 ```text
-// Lysis pseudocode: spilling an SSA value to the heap
-COMPUTE       %v3, %v1, %v2     // internal operation
-STORE_HEAP    slot_42, %v3      // spill to heap (single-static-store)
+COMPUTE       %v3, %v1, %v2
+STORE_HEAP    slot_42, %v3
 ...
-LOAD_HEAP     %v77, slot_42     // recover later
-EMIT_R1CS     %v77, ...         // the emitter reads from here
+LOAD_HEAP     %v77, slot_42
+EMIT_R1CS     %v77, ...
 ```
 
-Lysis isn't a VM that's "more general" than Artik; it's a VM whose discipline (heap with single writes) is exactly aligned with the question the constraint emitter needs to answer: *"how do I connect constraints across the unrolled iterations of a large loop?"*.
+Its heap follows one central rule:
 
-## The invariant that ties the three together
+> Each heap slot is written exactly once.
 
-Each VM's choice of memory model isn't a decision separate from its purpose; it's a *consequence* of the purpose.
+With single-static-store, the constraint emitter can build dependencies in one pass. A later read cannot observe an overwritten value, and slots remain valid until the frame ends. Lysis therefore gets spill storage without adopting Akron's object model or garbage collector.
 
-| VM     | Question it answers                              | Memory          | GC  |
-|--------|--------------------------------------------------|-----------------|-----|
-| Akron  | "What does the user want to compute?"            | Heap            | Yes |
-| Artik  | "What's the witness for this proof?"             | Registers only  | No  |
-| Lysis  | "How do I connect constraints across iters?"     | Heap (1-store)  | No  |
+Lysis can also resolve arguments from its heap when it invokes Artik witness code. The two machines cooperate, but they retain different memory rules.
 
-Akron asks for flexibility and answers with a free heap and tri-color GC. Artik asks for determinism and answers by giving up the heap entirely. Lysis asks for spillability without aliasing and answers with a heap constrained by construction.
+## The boundary between them
 
-What three VMs gave me, and one didn't, is the ability to reason locally. When I'm writing code in Akron, I don't have to worry about whether an allocation breaks a witness invariant: Artik doesn't touch Akron's heap. When I'm debugging a constraint emitter on Lysis, I don't have to consider whether a slot might have been overwritten: the single-static-store invariant structurally forbids it.
+| VM | Responsibility | Storage | GC |
+|---|---|---|---|
+| Akron | Dynamic Achronyme programs | Registers and managed heap | Yes |
+| Artik | Witness helper functions | Registers | No |
+| Lysis | Constraint-program traversal | Registers and single-write spill slots | No |
 
-## Why three, not two or four
+The separation reduces the number of cases each engine must handle. An Akron allocation cannot trigger collection inside Artik. A Lysis slot cannot be overwritten because the bytecode validator rejects a second store. Problems can be investigated within the machine that owns the relevant invariant.
 
-The natural question is whether this separation is optimal or merely reflects historical accidents. My honest answer is: three is what the problem asked for, and any merger breaks an invariant.
+## Why I did not merge them
 
-- **Akron + Artik**: would force witness generation to coexist with GC. Unworkable for the reasons in the Artik section.
-- **Akron + Lysis**: would force the scripting language to operate under single-static-store. Impossible for closures and ordinary mutation.
-- **Artik + Lysis**: both share "no GC", but Artik is heap-less and Lysis is heap-with-discipline. Merging them would mean either giving Artik a heap it doesn't need, or stripping Lysis of a heap it does need. Either direction makes one of the two worse.
+The possible pairs share implementation details but not the same contract:
 
-A hypothetical fourth VM would be one for *optimization passes* over the IR; perhaps it'll exist eventually if those passes accumulate enough complexity to justify their own bytecode. But today the optimization passes run as native Rust code over the SSA graph, and there's no clear invariant calling for a new VM. Three is right for today's problem; four would be complexity without justification.
+- Merging Akron and Artik would reintroduce managed allocation into witness helper execution or remove features required by the language runtime.
+- Merging Akron and Lysis would force dynamic language values into a single-write storage model.
+- Merging Artik and Lysis would either give Artik spill storage it does not need or remove the storage that lets Lysis handle large unrolled programs.
 
-## Conclusion
+Three is not a permanent law. If the compiler changes, these boundaries can change too. It is simply the smallest split I found that let each execution path state its memory rules without exceptions from the other two.
 
-The temptation when a system starts breaking under load is to add features: a new flag, a new opcode, a special case. Sometimes that's the right call. But sometimes, what you're seeing isn't a bug in an abstraction; it's the abstraction trying to sustain two incompatible invariants at the same time. The way out isn't a patch; it's recognizing there are two problems pretending to be one, and splitting them.
-
-In Achronyme that split produced three small virtual machines (each of which could be deleted and rebuilt in a couple of weeks if the problem changed) instead of one large machine no one could touch without breaking something distant. Each VM's memory discipline is strict because the question each one answers is strict. The aggregate complexity of the whole system didn't go up by composing three VMs; it went *down*, because each VM can be analyzed in isolation from the others.
-
-If you take one thing from this article, let it be this: when an invariant breaks, before adding another special case, ask yourself whether what you have in front of you is really one system, or two systems that have been pretending to be one for months.
+The source lives in the [Achronyme repository](https://github.com/achronyme/achronyme). The useful design test is whether each VM's invariant remains enforceable at its bytecode boundary. If that stops being true, the split should be reconsidered rather than defended for historical reasons.

@@ -1,26 +1,24 @@
 ---
-title: "ProveIR: Compila Una Vez, Prueba Muchas. Dentro del Sistema de Templates de Circuitos de Achronyme"
-description: "Cómo Achronyme pre-compila bloques prove en templates de circuitos paramétricos que se serializan en bytecode y se instancian en runtime con valores capturados."
+title: "ProveIR: Compila Una Vez, Instancia Cada Prueba"
+description: "Cómo Achronyme guarda templates de circuito en el bytecode y resuelve valores capturados antes del proving."
 pubDate: "2026-04-06"
+updatedDate: "2026-08-08"
 tags: ["architecture", "compilers", "zero-knowledge", "achronyme", "cryptography"]
 draft: false
 translationKey: "achronyme-prove-ir"
-abstract: "Este artículo explora ProveIR, la representación intermedia que impulsa los bloques prove de Achronyme. ProveIR es un sistema de templates de circuitos paramétricos: los bloques prove se compilan una vez en tiempo de compilación, se serializan en el constant pool del bytecode, y se instancian en runtime con valores capturados del scope circundante. El artículo deconstruye el pipeline completo (desde AST hasta template ProveIR, clasificación de capturas, serialización, instanciación a IR SSA, optimización, y finalmente generación de constraints R1CS o Plonkish), explicando por qué esta capa intermedia es esencial para la correctitud, el rendimiento y la portabilidad entre campos primos."
+abstract: "ProveIR compila un bloque prove como template de circuito paramétrico, lo guarda en el constant pool del bytecode y lo instancia con valores capturados en runtime. Este artículo sigue el template por clasificación, serialización, lowering a SSA, optimización y generación de constraints."
 technicalDepth: "Advanced"
 references:
   - "https://github.com/achronyme/achronyme"
-  - "https://docs.achrony.me"
   - "https://eprint.iacr.org/2016/260.pdf"
   - "https://en.wikipedia.org/wiki/Static_single-assignment_form"
 ---
 
-Cada vez que un bloque `prove {}` se ejecuta en Achronyme, se genera una prueba criptográfica. El circuito se compila, se asigna un witness, y sale una prueba Groth16 o PlonK. Si has trabajado con toolchains de ZK, sabes que ese proceso es costoso: parsear, bajar a constraints y ejecutar el prover puede tomar segundos fácilmente.
+Cuando se ejecuta un bloque `prove {}`, Achronyme necesita un circuito, una asignación de witness y un backend de proving. Reconstruir la misma estructura en cada invocación repetiría el parsing y el lowering aunque solo cambiaran los valores capturados.
 
-Ahora imagina un programa que ejecuta el mismo bloque prove en un loop, diez veces, con distintos inputs. Sin un diseño cuidadoso, estarías parseando y compilando el circuito diez veces, solo para producir exactamente el mismo sistema de constraints cada vez (solo con distintos valores de witness). Es un desperdicio.
+ProveIR separa ambas partes. El compilador construye una vez el template del circuito y lo guarda en el bytecode. En runtime, la VM aporta los valores capturados e instancia un programa plano para el prover. El template funciona como un closure de circuito: su estructura es fija y sus capturas son parámetros.
 
-ProveIR existe para resolver esto. Es la representación intermedia que le permite a Achronyme **compilar un bloque prove una sola vez** en tiempo de compilación, **serializarlo en el bytecode**, e **instanciarlo muchas veces** en runtime con distintos valores capturados. Piénsalo como un closure para circuitos: la estructura es fija, pero los datos son paramétricos.
-
-## El Problema: La Compilación en Runtime es Costosa
+## El trabajo repetido de compilar en runtime
 
 En versiones tempranas de Achronyme, los bloques prove se compilaban en runtime. Cuando la VM encontraba un bloque `prove {}`, hacía lo siguiente:
 
@@ -36,7 +34,7 @@ Esto también significaba que los errores de compilación de circuitos (cosas co
 
 ProveIR mueve todo ese trabajo al tiempo de compilación.
 
-## La Idea Central: Templates de Circuitos Paramétricos
+## Templates de circuitos paramétricos
 
 Un template de ProveIR es un circuito pre-compilado con huecos. Los huecos son **capturas**: variables del scope circundante que el circuito referencia pero no define. En tiempo de compilación, la estructura del circuito es fija: qué variables son públicas, cuáles son witnesses, qué operaciones se realizan, cómo están estructurados los loops. En runtime, las capturas se llenan con valores concretos, los loops se desenrollan, y el template se convierte en un programa IR plano listo para compilarse a constraints.
 
@@ -66,7 +64,7 @@ El ciclo de vida completo de un bloque prove pasa por ocho fases. Las fases A a 
 
 ### Fase A: AST a Template ProveIR (Compile Time)
 
-Aquí es donde ocurre el trabajo pesado. El `ProveIrCompiler` toma el AST de un bloque prove y el outer scope, y produce un template ProveIR.
+El `ProveIrCompiler` toma el AST de un bloque prove y el scope exterior, y produce un template ProveIR.
 
 **Desugaring de variables mutables.** Los circuitos son puros: no hay estado mutable. Pero Achronyme te permite escribir variables `mut` dentro de bloques prove por legibilidad. ProveIR las convierte a forma SSA:
 
@@ -88,7 +86,7 @@ let sum$v2 = Add(sum$v1, Capture("b"))
 AssertEq(sum$v2, Input("result"))
 ```
 
-Cada mutación crea una nueva variable SSA. Esta transformación es imposible sin una representación intermedia: necesitas rastrear el flujo de datos de cada variable a través de las asignaciones, lo cual requiere análisis que la evaluación cruda de AST no puede proporcionar.
+Cada mutación crea una nueva variable SSA. La representación intermedia permite rastrear qué versión alcanza cada uso.
 
 **Inlining de funciones.** Las funciones definidas por el usuario referenciadas dentro del bloque prove se inlinean en cada call site. Los circuitos ZK no pueden tener dispatch dinámico: cada operación debe ser estáticamente conocida. ProveIR genera nombres de variables únicos por sitio de inline para evitar colisiones.
 
@@ -96,7 +94,7 @@ Cada mutación crea una nueva variable SSA. Esta transformación es imposible si
 
 **Detección de capturas.** Cualquier variable referenciada dentro del bloque prove pero definida fuera de él se marca como captura. El compilador registra el nombre y, para arrays, el tamaño.
 
-**Preservación de loops.** De forma crítica, los loops `for` *no* se desenrollan en la Fase A. Los bounds de los loops pueden depender de valores capturados que no se conocen hasta runtime. El template preserva la estructura del loop y difiere el desenrollado a la Fase B.
+**Preservación de loops.** Los loops `for` no se desenrollan en la Fase A cuando sus límites dependen de capturas. El template conserva su estructura y pospone el desenrollado hasta la Fase B.
 
 La salida es un struct `ProveIR`:
 
@@ -128,7 +126,7 @@ Seis pases de optimización se ejecutan sobre el IR plano:
 1. **Constant folding**: pre-computa expresiones donde ambos operandos son constantes.
 2. **Boolean propagation**: detecta variables restringidas a {0, 1} via patrones `v * (v - 1) = 0`, habilitando operaciones booleanas más eficientes.
 3. **Bit pattern detection**: reconoce patrones de descomposición Num2Bits (`suma de bits_i * 2^i = valor`) e infiere bounds de bitwidth sobre el valor original.
-4. **Bound inference**: usa los bitwidths inferidos para reemplazar comparaciones no acotadas costosas (`IsLt`, que requiere descomposición de 252 bits) con versiones acotadas (`IsLtBounded`, que necesita solo N bits). Aquí es donde ocurren las reducciones dramáticas de constraints: un circuito `LessThan(8)` bajó de 518 a 11 constraints.
+4. **Bound inference**: usa los anchos de bit inferidos para reemplazar comparaciones del ancho completo del campo por versiones acotadas. En el benchmark registrado para esta implementación, un circuito `LessThan(8)` bajó de 518 a 11 constraints.
 5. **Common subexpression elimination**: deduplica computaciones idénticas.
 6. **Dead code elimination**: elimina instrucciones cuyos resultados nunca se usan (preservando nodos que generan constraints como `AssertEq`).
 
@@ -138,7 +136,7 @@ Reducción típica: 20-40% menos instrucciones.
 
 El IR optimizado se compila a R1CS (para Groth16) o gates Plonkish (para halo2-KZG). Los valores del witness se asignan, el prover se ejecuta, y una prueba se retorna a la VM como un valor de primera clase.
 
-## Clasificación de Capturas: La Decisión de Diseño Clave
+## Clasificación de capturas
 
 No todas las variables capturadas sirven el mismo propósito en un circuito. Considera:
 
@@ -162,7 +160,7 @@ Aquí, `n` determina la *estructura* del circuito (cuántas veces se desenrolla 
 | `CircuitInput` | Usado dentro de constraints | Se convierte en witness input del circuito. |
 | `Both` | Estructural Y en constraints | Witness input + `AssertEq` vinculando al valor constante. |
 
-El caso `Both` es sutil. Si una variable se usa como bound de un loop *y* dentro de una constraint, el circuito necesita tanto desenrollar el loop (estructural) como probar algo sobre el valor (constraint). ProveIR maneja esto creando un witness input e inmediatamente restringiéndolo a ser igual a la constante conocida, asegurando que el prover no pueda mentir sobre el parámetro estructural.
+Si una variable se usa como límite de un loop y dentro de una constraint, el circuito debe usarla como estructura y como dato. ProveIR crea un witness input y lo restringe para que sea igual al valor estructural concreto. Sin esa igualdad, el witness podría diferir del valor usado para desenrollar el loop.
 
 Esta clasificación ocurre automáticamente en la Fase A al recorrer el cuerpo del circuito y analizar dónde aparece cada captura.
 
@@ -176,7 +174,7 @@ Los templates de ProveIR se serializan en un formato binario compacto (v5):
 
 El header mágico `ACHP` (Achronyme Circuit Prove) previene la deserialización accidental de datos incorrectos. El prime ID identifica a qué campo pertenecen las constantes (BN254, BLS12-381 o Goldilocks).
 
-Una decisión de diseño crítica: las constantes se almacenan como `FieldConst([u8; 32])`: 32 bytes en forma canónica little-endian, independientes de cualquier tipo de campo específico. Esto hace a ProveIR **field-erased**: el mismo template serializado podría teóricamente instanciarse sobre distintos campos primos (con reinterpretación apropiada de constantes). En la práctica, el byte de prime ID asegura type safety.
+Las constantes se almacenan como `FieldConst([u8; 32])`: 32 bytes en forma canónica little-endian en lugar de un tipo genérico de campo de Rust. El prime ID vincula esos bytes al campo elegido para la instanciación e impide cargarlos con un objetivo incompatible.
 
 El compilador de bytecode almacena los bytes serializados en el constant pool y emite:
 
@@ -187,7 +185,7 @@ Prove     R[map], K[prove_ir_index]
 
 Donde `R[map]` contiene un mapa de nombres de capturas a sus valores en runtime, y `K[prove_ir_index]` apunta a los bytes serializados de ProveIR en el constant pool.
 
-La definición completa del circuito viaja dentro del binario `.achb`. Sin archivos externos, sin definiciones de circuito separadas, sin ceremonia.
+La definición del circuito viaja dentro del binario `.achb`, por lo que no necesita otro archivo fuente en runtime. Ese empaquetado no elimina el trusted setup requerido por claves Groth16 de producción.
 
 ## Ejemplo End-to-End
 
@@ -243,11 +241,9 @@ Los inputs públicos se emiten primero, luego los witnesses. El circuito complet
 
 **Fases D-H:** Compilación a R1CS, asignación de witness, generación de prueba Groth16. La prueba se retorna a la VM como un `Value::Proof`.
 
-## ¿Por Qué No Compilar Directo a R1CS?
+## Por qué conservar una IR de templates
 
-Podrías preguntarte: ¿por qué no saltarse ProveIR por completo e ir directo del AST a constraints?
-
-**Eficiencia.** Sin un template intermedio, cada ejecución de un bloque prove re-parsea y re-baja el mismo circuito. Con ProveIR, la compilación ocurre una sola vez. El template pesa ~200 bytes; re-parsear el AST y re-ejecutar el compilador tomaría órdenes de magnitud más.
+**Ejecución repetida.** Sin un template intermedio, cada ejecución de un bloque prove vuelve a parsear y bajar el mismo circuito. Con ProveIR, el compilador hace ese trabajo una vez y la instanciación en runtime solo resuelve las capturas variables.
 
 **Reporte de errores.** ProveIR atrapa errores de circuito en compile time. Usar `print()` dentro de un bloque prove, referenciar una variable indefinida, o escribir una construcción no soportada: todos estos son errores de compilación, no sorpresas en runtime.
 
@@ -265,7 +261,7 @@ La forma instanciada de ProveIR (el IR plano) usa 24 instrucciones SSA, diseñad
 
 **Constraints:** `AssertEq` (la constraint fundamental de R1CS), `Assert` (verdad booleana)
 
-**Comparaciones:** `IsEq`, `IsNeq`, `IsLt`, `IsLe`, `IsLtBounded`, `IsLeBounded`. Las variantes bounded usan bitwidths inferidos para dramáticamente menos constraints.
+**Comparaciones:** `IsEq`, `IsNeq`, `IsLt`, `IsLe`, `IsLtBounded`, `IsLeBounded`. Las variantes acotadas usan anchos de bit inferidos para evitar descomponer un valor con todo el ancho del campo.
 
 **Lógica:** `And`, `Or`, `Not`, `Mux` (selección condicional sin branching)
 
@@ -277,10 +273,10 @@ La forma instanciada de ProveIR (el IR plano) usa 24 instrucciones SSA, diseñad
 
 Cada instrucción produce exactamente una variable resultado (propiedad SSA). La única excepción es `Decompose`, que produce tanto un resultado como un array de variables de bits.
 
-## Reflexiones Finales
+## Dónde encaja ProveIR
 
-ProveIR es, en esencia, una apuesta por la separación de responsabilidades. Al insertar una capa de templates entre el lenguaje fuente y el sistema de constraints, Achronyme gana validación en compile time, eficiencia en runtime, portabilidad entre campos, y la capacidad de tratar circuitos como artefactos de primera clase embebidos en el bytecode del programa.
+ProveIR evita repetir el análisis del código fuente durante cada ejecución de una prueba. También da a la validación, clasificación de capturas, serialización y vinculación con el campo una frontera documentada antes de que el backend emita constraints.
 
-El diseño fue impulsado por una observación práctica: la estructura de un circuito casi nunca cambia entre invocaciones; solo los datos cambian. ProveIR explota esa invariante para compilar una vez y probar muchas veces, convirtiendo lo que sería trabajo repetido en una sola serialización y muchas instanciaciones baratas.
+La optimización parte de una observación limitada: las invocaciones repetidas de un mismo bloque prove suelen compartir la estructura del circuito aunque cambien sus valores. Si una captura modifica la estructura, la instanciación la resuelve explícitamente antes de generar constraints, en lugar de fingir que todas las invocaciones tienen el mismo circuito plano.
 
 El código fuente de ProveIR vive en `ir/src/prove_ir/` (tipos, compilador, instanciador, clasificador de capturas) y `compiler/src/control_flow/zk.rs` (integración con bytecode). El codebase completo está en [github.com/achronyme/achronyme](https://github.com/achronyme/achronyme).

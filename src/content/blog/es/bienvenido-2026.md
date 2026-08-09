@@ -1,33 +1,22 @@
 ---
 title: "Bienvenido 2026"
-description: "Un nuevo comienzo enfocado en la esencia de la ingeniería de software y los retos por venir."
+description: "Lo que quiero construir, aprender y documentar este año."
 pubDate: "2026-01-01"
+updatedDate: "2026-08-08"
 tags: ["personal", "2026", "reflection"]
 translationKey: "welcome-2026"
 ---
 
-El calendario marca 1 de enero de 2026. Un nuevo ciclo comienza y, con él, una oportunidad renovada para definir quiénes somos y qué construimos.
+Empecé 2026 con un trabajo pendiente muy concreto: lograr que Achronyme funcionara fuera de mi propia computadora.
 
-El año pasado fue una forja. Hubo fuego, hubo golpes y hubo transformación. Ahora, el metal está templado y listo para ser afilado. Este año no se trata solo de sobrevivir al mercado o de aprender a la fuerza; se trata de **ejecutar con maestría**.
+Eso significa dedicar menos tiempo a describir lo que el proyecto podría ser y más tiempo a comprobar lo que realmente hace. Quiero releases reproducibles, ejemplos que sobrevivan una instalación limpia y notas técnicas que también cuenten las decisiones que salieron mal.
 
-## Volver a la Esencia
+También quiero mantenerme cerca de los fundamentos. Los asistentes de código son útiles, pero pueden hacer que un razonamiento débil parezca terminado. Si no puedo explicar con mis propias palabras un modelo de memoria, un pase del compilador o un fallo de despliegue, todavía no lo entiendo lo suficiente.
 
-En un mundo cada vez más saturado de abstracciones y automatización, mi deseo para todos nosotros este año es que no perdamos la conexión con los fundamentos. Que las herramientas inteligentes sean nuestros amplificadores, no nuestros sustitutos.
+Este sitio será el registro. Aquí voy a escribir sobre las partes internas de Achronyme, errores en producción, mediciones de rendimiento y alguna actualización personal cuando ayude a entender el trabajo.
 
-Invito a cada ingeniero y desarrollador que lea esto a buscar la elegancia en la simplicidad. A no conformarse con que el código "funcione", sino a entender profundamente *por qué* funciona. Que este sea el año donde la curiosidad técnica le gane a la comodidad de la "caja negra".
+La primera versión de esta entrada hacía promesas generales sobre maestría e impacto. Esas palabras decían muy poco. El plan honesto es más acotado: terminar cosas difíciles, publicar la evidencia y corregirme cuando la implementación contradiga la historia.
 
-## Construir con Propósito
-
-Que el 2026 sea el año donde dejemos atrás las dudas y comencemos a construir aquello que nos desafía. Que cada proyecto, sea grande o pequeño, tenga una intención clara.
-
-La tecnología es, al final del día, una herramienta humana. Usémosla para crear valor real, para resolver problemas complejos y para dejar el ecosistema un poco mejor de lo que lo encontramos. No busquemos solo la velocidad, busquemos la solidez y el impacto.
-
-## Un Nuevo Comienzo
-
-Gracias por ser parte de este camino. Ya sea que estés aquí por primera vez o que hayas seguido mi trayectoria, espero que encontremos en este nuevo ciclo un espacio para compartir, debatir y crecer juntos.
-
-El 2026 es un lienzo en blanco (o mejor dicho, un `main` branch vacío esperando el primer commit). Vamos a llenarlo de código de calidad y de historias que valgan la pena.
-
-¡Feliz Año Nuevo!
+Actualización de agosto de 2026: [Achronyme 0.1.0 ya está publicado](/es/blog/achronyme-0-1-0/). Tardó mucho más de lo que esperaba y la nota del release explica por qué.
 
 **Edd.**

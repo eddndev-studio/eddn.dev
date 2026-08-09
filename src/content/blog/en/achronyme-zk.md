@@ -1,39 +1,32 @@
 ---
-title: "Achronyme: From a 500KB 'Hello World' to a Cryptographic Engine"
-description: "How a failed DSP experiment taught me that memory management is everything, and why I'm rewriting my language for the Zero-Knowledge ecosystem."
+title: "Achronyme: From a 500 KB Hello World to Cryptographic Circuits"
+description: "The memory mistake that forced me to narrow Achronyme's purpose and redesign its runtime."
 pubDate: "2026-01-24"
+updatedDate: "2026-08-08"
 tags: ["achronyme", "rust", "engineering-mistakes", "cryptography", "optimization"]
 translationKey: "achronyme-rebirth"
 ---
 
-Every engineer has a project in their code graveyard that taught them more through its failures than its successes. For me, that project was the beginning of **Achronyme**.
+Achronyme started as an experiment for digital signal processing pipelines. I quickly expanded the scope to include a general-purpose language, a graphics engine, UI, and async support. The project had no single constraint strong enough to guide its architecture.
 
-What started as a simple experiment to create Digital Signal Processing (DSP) pipelines escalated wildly. I fell into the classic "Scope Creep" trap: I wanted a general-purpose language, with a custom graphics engine, UI, and async support... all at once.
+## The 500 KB measurement
 
-## The Half-Megabyte Mistake
+In an early build, a Hello World program retained roughly 500 KB of memory. The number was not catastrophic for a desktop program, but it exposed how little discipline the runtime had. Most values were heap objects, `Arc<T>` appeared throughout the data model, and JavaScript-like structures were the default even when a compact value would have worked.
 
-The result of that unbridled ambition was an architectural Frankenstein's monster.
+The runtime paid for pointer chasing, reference counts, and poor cache locality before the program did meaningful work. I paused the project because adding features on top of that model would only make it harder to replace.
 
-In my initial versions, I committed the cardinal sin of memory management: naivety. I modeled data as heavy objects, abusing `Arc<T>` and JavaScript-style structures for everything. There was no cache locality, no arenas, just smart pointers scattered across the heap.
+## A narrower problem
 
-The cost of that abstraction was brutal: **a simple "Hello World" consumed 500KB of RAM.** The runtime was slow, heavy, and frankly, unusable for anything serious. I had to pause it.
+I restarted Achronyme around cryptographic programs and proof circuits. That scope gave the runtime useful constraints: finite-field values needed to be first-class, memory behavior needed to be inspectable, and circuit execution had to remain separate from dynamic host behavior.
 
-## The Pivot: Rust and Memory Discipline
+The redesign included three early choices:
 
-During that hiatus, I discovered the real potential of **Rust** when applied correctly. Not just for safety, but for the control it gives you over memory layout if you're willing to fight the *borrow checker*.
+1. **Typed arenas for managed objects.** Objects with similar lifetimes could live together instead of carrying atomic reference counts everywhere.
+2. **Compact tagged values.** NaN boxing let common values fit in 64 bits without a heap allocation.
+3. **Native large integers and field elements.** Cryptographic arithmetic could use dedicated representations instead of passing through floating-point types.
 
-I decided that Achronyme wasn't going to die as a slow toy. It was going to be reborn with a new and specific purpose: **Cryptography and Protocols**.
+Those choices were a starting point, not a final architecture. The VM later split into specialized execution engines, the proving pipeline gained its own intermediate representations, and the release requirements became much stricter than I imagined in January.
 
-For a language to be useful in the world of cryptography (and potentially Zero-Knowledge Proofs), it needs precision and efficiency, not heavy abstractions. This meant redesigning the VM from scratch with principles opposite to the previous version:
+The useful lesson from the old Hello World was not that every program must minimize a small memory figure. It was that I had chosen representations without measuring their cost or defining what the runtime was for. Once the purpose became concrete, the tradeoffs became easier to test.
 
-1.  **Goodbye `Arc`, Hello Arenas:** Instead of expensive atomic reference counting for every object, I now manage memory via **Typed Arenas** (Slabs). This guarantees memory locality and makes garbage collection much more predictable.
-2.  **NaN Boxing:** To squeeze every bit, I implemented NaN Boxing. Now, a 64-bit value can be a float, a pointer, or a small integer, all without heap allocations.
-3.  **Native BigInts:** Cryptography doesn't live on floats. The new engine is designed to integrate `BigInts` and finite field elements as first-class citizens.
-
-## Current State ("In Diapers")
-
-This new phase of Achronyme is just beginning. I'm building the foundations: a real **Garbage Collector** (Mark-and-Sweep), support for efficient data structures, and an architecture that doesn't choke on recursion.
-
-The long-term goal is ambitious: to turn Achronyme into a mature language for cryptographic applications, capable of compiling to WebAssembly or optimized native binaries (perhaps via LLVM).
-
-It's not the easy path, but after seeing what a poorly made "Hello World" costs, efficiency is no longer an option; it's the only goal.
+Update, August 2026: [Achronyme 0.1.0 is now available](/blog/achronyme-0-1-0/). The release story covers the architecture and proving work that followed this first redesign.

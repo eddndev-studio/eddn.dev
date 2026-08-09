@@ -1,31 +1,28 @@
 ---
 title: "El futuro de eddn.dev"
-description: "Reflexiones sobre el rediseño y los objetivos de este nuevo espacio personal."
+description: "Por qué reconstruí este sitio como una bitácora pública de ingeniería."
 pubDate: "2025-12-31"
+updatedDate: "2026-08-08"
 tags: ["personal", "webdev", "achronyme"]
 translationKey: "future-of-eddndev"
 ---
 
-Bienvenidos a la nueva versión de mi sitio personal. Este espacio nace con la intención de ser mi bitácora central de ingeniería. Aquí no solo documentaré el desarrollo de **Achronyme**, sino que también compartiré anécdotas del oficio, casos de estudio técnicos y reflexiones sobre lo que significa construir software hoy en día.
+Reconstruí eddn.dev para usarlo como mi bitácora de ingeniería. Aquí puedo explicar Achronyme, documentar trabajo de producción y conservar decisiones que de otro modo quedarían enterradas entre commits e issues.
 
-## Mirando por el retrovisor: 2025
+## Lo que cambió en 2025
 
-Seré honesto: el 2025 fue un año de aprendizaje durísimo. No fue un camino de rosas, sino una etapa marcada por la superación de un *burnout* y la necesidad imperiosa de reconstruirme. Fue el año en que todo ese conocimiento disperso que tenía finalmente tuvo que tomar forma sólida o desaparecer.
+2025 fue difícil. Estaba saliendo de un burnout mientras intentaba convertir experiencia dispersa en trabajo que pudiera defender. Los incidentes de producción me enseñaron más sobre software que las demos bien preparadas. CI dejó de ser una insignia en el README y se convirtió en el lugar donde descubrí cuáles supuestos solo funcionaban en mi computadora.
 
-Fue una transición forzada hacia la madurez técnica. Aprendí a golpes de realidad: viendo producción caída, entendiendo lo que significan las optimizaciones agresivas y el bajo nivel, y configurando flujos de CI/CD no por moda, sino por supervivencia.
+El trabajo freelance fue difícil por otra razón: antes de que alguien conozca tu nombre, tiene pocos motivos para confiar en una promesa de calidad. Mis amigos me ayudaron a encontrar los primeros proyectos y Sylestudio me dio espacio para aportar mientras todavía aprendía a presentar mi trabajo con claridad. Agradezco ambas cosas.
 
-También me enfrenté a la crudeza del mercado *freelance*. Es increíblemente difícil darte a conocer y lograr que la gente tome en serio tu trabajo cuando estás empezando a volar solo. Aunque siento que aún no he "despegado" del todo, agradezco profundamente los proyectos que llegaron gracias a la ayuda de amigos y, muy especialmente, a **Sylestudio**, que ha sido mi nicho y mi hogar en medio de esta tormenta.
+## Para qué existe este sitio
 
-## Horizonte 2026
+En 2026 mi principal objetivo técnico era publicar una versión usable de Achronyme. También quería estudiar con más cuidado los sistemas de bajo nivel: layout de memoria, máquinas virtuales, compiladores, circuitos criptográficos y el trabajo menos vistoso que hace falta para entregarlos.
 
-Para este nuevo año, mi objetivo profesional es claro y ambicioso: **lanzar la versión usable de Achronyme**.
+Uso asistentes de código, pero no quiero que el texto o el código generado sustituyan el entendimiento. El criterio útil es sencillo: debo poder explicar una decisión, probarla y mostrar la evidencia detrás de cualquier afirmación pública.
 
-Más allá del producto, tengo un compromiso personal con mi oficio: quiero volver a la programación "dura". Quiero despegarme de la dependencia de los asistentes de código y volver a ensuciarme las manos con la lógica pura. Mi meta es profundizar en las arquitecturas de bajo nivel para ser capaz de ofrecer productos verdaderamente optimizados para la industria, no solo software que "funcione".
+Este sitio forma parte de ese criterio. No es una página comercial. Es el registro técnico de lo que construyo.
 
-## ¡Feliz Año Nuevo!
-
-A todos los que leen esto, gracias por estar aquí. Este sitio será testigo de ese viaje de regreso al código puro y del nacimiento de Achronyme.
-
-Les deseo un 2026 lleno de retos que valgan la pena y de compilaciones exitosas.
+Actualización de agosto de 2026: el primer objetivo estable está completo. [Achronyme 0.1.0 ya está publicado](/es/blog/achronyme-0-1-0/), junto con la evidencia que retrasó el release.
 
 **Edd.**

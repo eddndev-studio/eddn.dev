@@ -1,91 +1,74 @@
 ---
-title: "Anatomía de una Máquina Virtual: De la Pila a los Registros en Achronyme"
-description: "Un análisis profundo de la arquitectura de máquinas virtuales y por qué migrar Achronyme a un modelo basado en registros redujo las instrucciones en un 50%."
+title: "Anatomía de una Máquina Virtual: De Stack a Registros en Achronyme"
+description: "Por qué Achronyme pasó de bytecode basado en stack a una VM de registros y qué cambió con ese tradeoff."
 pubDate: "2026-03-07"
+updatedDate: "2026-08-08"
 tags: ["architecture", "compilers", "vm", "achronyme"]
 draft: false
 translationKey: "achronyme-vm-architecture"
-abstract: "Este paper explora los fundamentos arquitectónicos de las Máquinas Virtuales, analizando las diferencias estructurales entre los modelos basados en Pila y en Registros. A través del caso de estudio del lenguaje Achronyme, se demuestra cómo el cuello de botella inherente de las Stack VMs en operaciones criptográficas fue mitigado al adoptar una Register-based VM (inspirada en RISC, Lua 5.0 y Dalvik), reduciendo el overhead del dispatch loop y optimizando la localidad de caché."
+abstract: "Una comparación entre bytecode de stack y de registros a partir de la primera reescritura de la VM de Achronyme. El diseño de registros agrandó cada instrucción, pero redujo los dispatches en las cargas medidas en ese momento."
 technicalDepth: "Advanced"
 references:
   - "https://www.lua.org/doc/jucs05.pdf"
   - "https://source.android.com/docs/core/runtime/dalvik-bytecode"
 ---
 
-Cuando empecé a construir Achronyme hace más de un año, estaba recién salido de la teoría de compiladores y máquinas virtuales. En su fase de prototipo, Achronyme no era más que un simple binario funcionando como un *tree-walk interpreter* (evaluando el árbol de sintaxis abstracta nodo por nodo). Era ineficiente, sin duda, pero construirlo marcó lo que para mí fue el momento más decisivo en la arquitectura del proyecto: la necesidad de construir una verdadera máquina virtual.
+Achronyme comenzó con un intérprete que recorría el árbol de sintaxis. Evaluar el AST directamente era útil mientras el lenguaje cambiaba todos los días, pero se volvió costoso cuando los mismos nodos empezaron a ejecutarse dentro de loops. La primera implementación de bytecode usó un stack de operandos. La siguiente usó registros virtuales.
 
-En la academia se suele enseñar la teoría de las máquinas virtuales de forma abstracta, pero no es hasta que necesitas optimizar ciclos de reloj en un entorno real que el panorama se aclara. 
+Este artículo registra por qué hice ese segundo cambio. Describe la VM como existía en marzo de 2026; después Achronyme dividió la ejecución entre [tres máquinas especializadas](/es/articles/achronyme-three-vms/).
 
-## ¿Qué es exactamente una Máquina Virtual (en este contexto)?
+## Qué significa "máquina virtual" aquí
 
-Cuando hablamos de una VM en el contexto de lenguajes de programación (como la JVM de Java, V8 de JavaScript, o BEAM de Erlang), no nos referimos a virtualización de hardware (como VirtualBox o VMware). Nos referimos a un **Process Virtual Machine**: una capa de software que emula una arquitectura de computadora abstracta diseñada para ejecutar un conjunto de instrucciones específico (Bytecode), aislando la ejecución del hardware físico subyacente.
+Se trata de una máquina virtual de proceso, no de un sistema operativo virtualizado. Ejecuta bytecode de Achronyme mediante un loop de dispatch:
 
-El corazón de estas VMs es el **Dispatch Loop** (o ciclo de *fetch-decode-execute*):
-1. **Fetch:** Obtiene la siguiente instrucción de memoria.
-2. **Decode:** Entiende qué operación es y cuáles son sus operandos.
-3. **Execute:** Realiza la operación y avanza el puntero de instrucción (IP).
+1. Lee la instrucción indicada por el instruction pointer.
+2. Decodifica el opcode y sus operandos.
+3. La ejecuta y avanza o reemplaza el instruction pointer.
 
-La forma en que la VM maneja la memoria y el paso de variables hacia la fase de *Execute* define su arquitectura. Las dos familias dominantes son las basadas en **Pila (Stack)** y las basadas en **Registros (Registers)**.
+El formato del bytecode determina dónde lee y escribe valores cada instrucción. Esa elección afecta la densidad del código, la complejidad del compilador y la cantidad de trabajo de dispatch que realiza el intérprete.
 
-![Stack vs Register VM Architecture](/images/articles/achronyme-vm/architecture-comparison.svg)
+![Arquitectura de VM Stack vs Registros](/images/articles/achronyme-vm/architecture-comparison.svg)
 
-## El Cuello de Botella de la Pila (Stack VM)
+## Bytecode basado en stack
 
-Cuando implementé la primera prueba de concepto de Achronyme, utilicé una Stack VM, el estándar *de facto* para proyectos nacientes debido a su simplicidad al momento de compilar. En este modelo, las instrucciones no tienen operandos explícitos; asumen que los datos que necesitan están en la cima de una estructura de datos LIFO (Last-In-First-Out): la pila de operandos.
+Una Stack VM mantiene los operandos en una pila last-in, first-out. Instrucciones como `ADD` no nombran sus entradas porque se asumen los dos valores superiores del stack.
 
-Para entender el problema, veamos cómo se compila una simple suma matemática: `a = b + c`.
+Para `a = b + c`, un compilador sencillo podría emitir:
 
-**Bytecode en una Stack VM:**
 ```text
-0001: LOAD_LOCAL 1  // Hace push de 'b' al stack
-0002: LOAD_LOCAL 2  // Hace push de 'c' al stack
-0003: ADD           // Pop 'c', Pop 'b', suma, y hace Push del resultado
-0004: STORE_LOCAL 0 // Pop del resultado y lo guarda en 'a'
+0001: LOAD_LOCAL 1  // coloca b en el stack
+0002: LOAD_LOCAL 2  // coloca c en el stack
+0003: ADD           // retira b y c, luego coloca el resultado
+0004: STORE_LOCAL 0 // guarda el resultado en a
 ```
 
-### La Ilusión de la Eficiencia
+La codificación puede ser compacta. El costo es la secuencia de instrucciones de carga y almacenamiento necesaria para mover valores entre las variables locales y el stack de operandos. En los programas aritméticos de Achronyme, esas instrucciones aumentaban las vueltas por el loop de dispatch sin hacer aritmética por sí mismas.
 
-La ventaja teórica de este modelo es la densidad del código. Como las instrucciones como `ADD` no necesitan decir "qué" sumar (siempre es el tope de la pila), las instrucciones suelen ocupar un solo byte (de ahí el nombre *bytecode*). 
+Eso no significa que las Stack VMs sean lentas en general. Son sencillas de generar, fáciles de validar y con frecuencia compactas. Significa que su tradeoff no encajaba con las cargas que yo estaba midiendo.
 
-Sin embargo, me llevé una sorpresa: el objetivo de ser un entorno de ejecución eficiente se estaba viendo truncado. Las instrucciones intermedias para mover datos entre la memoria local y el tope del stack (`LOAD` y `STORE`) se acumulan rapidísimo. 
+## Bytecode basado en registros
 
-El enfoque criptográfico que le estaba dando a Achronyme requería evaluar funciones matemáticas densas en *hot loops*. Las operaciones criptográficas son costosas por naturaleza; sumarles el costo de ejecutar el **Dispatch Loop cuatro veces** por una simple suma matemática no era viable. Cada iteración del loop implica overhead de decodificación y saltos condicionales en el procesador físico.
+Una VM de registros asigna a cada función un frame con registros virtuales. Las instrucciones nombran explícitamente sus fuentes y destino:
 
-## RISC en Software: Máquinas Basadas en Registros
-
-Quería evadir este overhead, investigué varios proyectos industriales y descubrí las **máquinas virtuales orientadas a registros**. Fue un momento de revelación. Si te gusta la arquitectura RISC (Reduced Instruction Set Computer) en hardware, una Register VM es prácticamente un emulador súper optimizado de esa filosofía.
-
-En lugar de usar una pila intermediaria, una Register VM asigna a cada función un bloque de memoria (un *Stack Frame*) y lo trata como un arreglo de "Registros Virtuales" (`R0, R1, R2...`). Las instrucciones especifican explícitamente sobre qué registros operar.
-
-Veamos la misma suma matemática (`a = b + c`) en este modelo:
-
-**Bytecode en una Register VM:**
 ```text
-// Formato: OPCODE Destino, Origen1, Origen2
-0001: ADD R0, R1, R2  // Suma R1 y R2, guarda en R0. (Todo en una instrucción)
+// Formato: OPCODE destino, fuente1, fuente2
+0001: ADD R0, R1, R2
 ```
 
-### La Validación de la Industria
+Una instrucción realiza ahora el movimiento de datos que la versión de stack expresaba con cuatro. A cambio, la instrucción es más ancha porque debe codificar tres índices de registro.
 
-No inventé nada nuevo; la transición de Pila a Registros tiene precedentes masivos en la industria de los que tomé inspiración directa para Achronyme:
+Lua 5.0 es el precedente más claro para este diseño. Dalvik también usó un formato orientado a registros, aunque sus restricciones y runtime eran distintos de los de Achronyme. Usé esos sistemas como referencias para el layout del bytecode, no como prueba de que el mismo resultado de rendimiento aparecería automáticamente.
 
-1. **La VM de Lua 5.0:** Quizá el paper más famoso al respecto es *"The Implementation of Lua 5.0"* (2005). Lua revolucionó el scripting al demostrar que, aunque las instrucciones con registros son más "gordas" (4 bytes en Lua para acomodar el opcode y las direcciones de tres registros), la dramática reducción en el número total de instrucciones compensa con creces el costo de decodificación individual.
-2. **Dalvik (Android):** Antes de migrar a la compilación Ahead-Of-Time con ART, Android utilizaba la Dalvik VM. Diseñada para los limitados procesadores ARM de los primeros smartphones, Google eligió una arquitectura de registros. ¿La razón? Mapeaba de forma mucho más natural a los registros físicos del procesador ARM y reducía el tráfico de memoria.
+## Qué cambió en Achronyme
 
-## El Tradeoff Arquitectónico en Achronyme
+En los programas que comparé durante la reescritura, el compilador de registros emitió cerca de la mitad de instrucciones despachadas que el compilador de stack. Ese es un resultado sobre conteo de instrucciones, no una afirmación de que todo programa se volvió dos veces más rápido. Un bytecode más ancho aumenta el tamaño del código, y el tiempo total también depende de ramas, asignaciones, llamadas nativas, caché y el trabajo de cada opcode.
 
-Implementar este cambio en Achronyme no fue trivial y trajo un *tradeoff* evidente: los binarios de bytecode crecieron en tamaño. Como cada instrucción debe codificar los índices de sus operandos explícitamente (usualmente en palabras de 32 o 64 bits), se pierde la densidad de 1-byte por instrucción de las Stack VMs.
+Los registros también hicieron más claro el flujo de datos dentro del compilador. El productor y los consumidores de cada valor quedaron explícitos en la secuencia de instrucciones, lo que ayudó al trabajo posterior sobre lowering estilo SSA y rutas de ejecución especializadas.
 
-Pero el resultado en el *runtime* lo justificó con creces: **el número de instrucciones despachadas se redujo en casi un 50%**. Al reducir las instrucciones a la mitad, reducimos a la mitad la cantidad de veces que la VM debe realizar el costoso proceso de *fetch* y decodificación.
+Originalmente atribuí parte de la mejora a la localidad de caché. El frame de registros es contiguo y evita mover constantemente el stack de operandos, pero no publiqué mediciones con contadores de hardware para esa versión. El resultado defendible es la reducción de instrucciones despachadas; una afirmación precisa sobre caché necesitaría otra medición.
 
-### El Impacto Oculto: Localidad de Caché
+## El tradeoff
 
-Más allá del contador de instrucciones, el mayor beneficio lo vi en la **localidad de caché espacial**. Al mantener los operandos en un bloque de memoria contiguo (el arreglo de registros del *frame* de la función) y no modificar constantemente el puntero de una pila LIFO, la CPU física puede predecir y cachear la memoria (caché L1/L2) con mucha más eficiencia. Los algoritmos criptográficos dentro de Achronyme comenzaron a iterar a una velocidad que simplemente era inalcanzable con el modelo anterior.
+La migración cambió bytecode compacto por menos dispatches y un flujo de datos más explícito. Esa elección encajó con los programas aritméticos de Achronyme y facilitó el trabajo posterior del compilador. No sería necesariamente la elección correcta para cualquier intérprete.
 
-## Conclusión
-
-Construir tu propia máquina virtual y escribir el compilador que genera su código te enseña una lección brutal que la abstracción del software moderno suele esconder: en algún punto, la decisión arquitectónica correcta te obliga a dejar de pensar en la sintaxis del lenguaje y empezar a entender cómo respira el hardware físico.
-
-Tienes que pensar en cómo se mueven realmente los bytes a través de los buses de memoria, cómo el procesador interactúa con las líneas de caché para evitar el *cache miss*, y por qué ejecutar **una** instrucción de 4 bytes importa infinitamente más en la vida real que despachar cuatro instrucciones de 1 byte. 
-
-El software de alto rendimiento se escribe cuando, sin importar el nivel de abstracción en el que operes, entiendes íntimamente a la máquina de silicio que finalmente lo ejecuta.
+Lo importante fue medir la secuencia real de instrucciones. El diseño de stack parecía eficiente al comparar el ancho de los opcodes. Se veía distinto al contar las cargas y stores adicionales que requería un programa real.

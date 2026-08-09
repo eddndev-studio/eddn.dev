@@ -1,20 +1,19 @@
 ---
-title: "Achronyme: A Language for Zero-Knowledge Proofs"
-description: "Introducing Achronyme: write readable code, generate cryptographic proofs. One language, two execution targets, zero ceremony."
+title: "The Achronyme Beta Before 0.1.0"
+description: "A dated look at the language and proving workflow that preceded the stable Achronyme release."
 pubDate: "2026-03-14"
+updatedDate: "2026-08-08"
 tags: ["achronyme", "release", "zk", "rust", "compiler"]
 translationKey: "achronyme-0-1-0-beta2"
 ---
 
-If you've ever written a ZK circuit, you know the pain. You write constraints in one DSL, generate witnesses in JavaScript, download a Powers of Tau file, run a trusted setup, invoke snarkjs three separate times, and pray everything lines up. Seven steps, three tools, two languages, just to prove you know a number.
+This article described Achronyme while it was still on `v0.1.0-beta.19`. I have kept it as a record of that stage, but corrected two claims that did not survive the stable release: the setup was automated, not trust-free, and the beta was still a prototype in several important ways.
 
-I built Achronyme to make this simpler.
+For the completed release, read [Achronyme 0.1.0: stable at last](/blog/achronyme-0-1-0/).
 
-## What is Achronyme?
+## What the beta could do
 
-Achronyme is a programming language where the same syntax can run as a general-purpose program or compile to arithmetic constraints for zero-knowledge proofs.
-
-Here's what proving a Poseidon commitment looks like:
+Achronyme used one syntax for general-purpose execution and arithmetic circuits. A `prove(...)` block captured values from the surrounding scope, compiled its body as a circuit, generated a witness, and returned a proof to the running program.
 
 ```ach
 let secret = 0p12345
@@ -25,77 +24,27 @@ let p = prove(commitment: Public) {
     assert_eq(poseidon(secret, blinding), commitment)
 }
 
-print(proof_json(p))    // Groth16 proof, verifiable on-chain
-assert(verify_proof(p)) // verified
+print(proof_json(p))
+assert(verify_proof(p))
 ```
 
-One file. The `prove(...)` block compiles a circuit, captures variables from scope as witnesses, generates a witness, and returns a cryptographic proof, all inline. No ceremony.
+The same source language had two execution paths:
 
-Compare that to the Circom equivalent: write a template, compile to WASM, generate witness with JavaScript, download ptau, run trusted setup, prove, verify. Seven steps across three different tools.
+- `ach run` executed dynamic code with closures, recursion, arrays, maps, strings, and managed memory.
+- `ach circuit` lowered supported code into R1CS or Plonkish constraints. Loops needed static bounds, branches became selections, and functions were inlined into the circuit.
 
-The reason this works is that Achronyme doesn't separate "the language you think in" from "the language the prover understands." The same source code serves both roles.
+The `prove` block connected those paths. Host code prepared values; circuit code expressed what the proof constrained.
 
-## Dual Execution
+## What automation did and did not remove
 
-That's possible because of dual execution: the same source, two targets:
+The beta bundled native Groth16 and Plonkish backends, so ordinary proving did not require a separate Node.js process. It could also export `.r1cs` and `.wtns` files for `snarkjs` interoperability.
 
-**VM mode** (`ach run`) gives you a real programming language: closures, recursion, mark-sweep GC, arrays, maps, strings, native functions. Write algorithms, manipulate data, prepare inputs.
+That convenience did not remove Groth16's trusted setup. During development the tool could create local keys automatically, but a production release still needed a circuit-bound ceremony, externally controlled entropy, artifact verification, and a clear retention policy. Stable 0.1.0 added that release gate and published its evidence.
 
-**Circuit mode** (`ach circuit`) compiles the same syntax to R1CS or Plonkish constraints over BN254. Loops unroll statically, `if/else` becomes `mux`, functions inline at every call site. The output is a flat constraint system ready for proof generation.
+## The useful parts of the preview
 
-The `prove {}` block bridges both: it runs inside the VM but compiles its body as a circuit.
+By March, the project already had an SSA-based circuit IR, compiler diagnostics, modules, a VS Code extension, and selectable prime fields. Those parts were real, but they did not make the whole system release-ready. Concurrency semantics, capabilities, backend conformance, reproducible gates, and trusted proving policy still needed work.
 
-## Native Provers
+The beta article originally presented 0.1.0 as the next quick milestone. It took almost five more months. The delay is documented in the stable release note rather than hidden by rewriting this date.
 
-Achronyme includes native Groth16 (ark-groth16) and PlonK (halo2-KZG) backends compiled directly into the binary. No Node.js, no snarkjs, no external dependencies. Proofs are generated in-process.
-
-```bash
-# Groth16 (default)
-ach run my_proof.ach
-
-# PlonK
-ach run my_proof.ach --prove-backend plonkish
-
-# Compile circuit + generate Solidity verifier
-ach circuit vote.ach --inputs "..." --solidity Verifier.sol
-```
-
-The `.r1cs` and `.wtns` output files are also snarkjs-compatible, so you can use external tooling if you prefer.
-
-## What's Included
-
-This isn't a prototype. The current release (v0.1.0-beta.19) is the result of months of work on correctness, developer experience, and tooling:
-
-- **4,000+ tests**: every feature is tested across both execution modes, every commit runs CI
-- **SSA IR with optimization passes**: taint analysis catches under-constrained variables before you waste 20 minutes on a failed proof; boolean propagation eliminates redundant constraints automatically
-- **Rustc-style diagnostics**: when something goes wrong, you get source snippets, "did you mean?" suggestions, and warning codes, not a raw constraint index
-- **Module system**: `import`/`export` with circular dependency detection, so circuits can share code without copy-pasting
-- **VS Code extension**: syntax highlighting, completions, go-to-definition, hover docs, and real-time error detection via LSP
-- **Multi-curve support**: BN254, BLS12-381, and Goldilocks as selectable prime fields
-- **Install script**: one command, no Rust toolchain required
-
-## Get Started
-
-```bash
-curl -fsSL https://achrony.me/install.sh | sh
-```
-
-This installs the `ach` binary to `~/.local/bin`. Then:
-
-```bash
-ach --version          # verify
-ach run script.ach     # run a program
-ach circuit circ.ach   # compile a circuit
-ach disassemble f.ach  # inspect bytecode or IR
-```
-
-The source is at [github.com/achronyme/achronyme](https://github.com/achronyme/achronyme). Docs at [docs.achrony.me](https://docs.achrony.me). VS Code extension at [achronyme-editor](https://github.com/achronyme/achronyme-editor).
-
-## What's Next
-
-The roadmap:
-
-- **0.1.0**: stable release with Circom frontend, browser playground, and all core features polished
-- **Future**: multi-language support (Cairo, Noir), zkML
-
-If you write ZK circuits and you're tired of the ceremony, try porting one of your existing circuits to Achronyme and see how it feels. If something breaks or doesn't make sense, [open an issue](https://github.com/achronyme/achronyme/issues): that's the most useful feedback at this stage.
+Source and downloads: [github.com/achronyme/achronyme](https://github.com/achronyme/achronyme/releases/tag/v0.1.0).
