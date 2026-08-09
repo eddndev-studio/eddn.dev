@@ -50,6 +50,31 @@ test("display headlines use one sans-serif voice", () => {
 	assert.doesNotMatch(read("src/styles/global.css"), /Instrument Serif/);
 });
 
+test("display titles keep a semibold weight across page transitions", () => {
+	const astroSource = collectFiles("src", ".astro").map(read).join("\n");
+	const pageTitles = astroSource.match(/<h1\b[^>]*>/gs) ?? [];
+	const sharedTitles = astroSource.match(
+		/<(?:h[1-3]|a)\b[^>]*transition:name=\{`title-\$\{[^}]+\}`\}[^>]*>/gs,
+	) ?? [];
+
+	assert.ok(pageTitles.length > 0, "page titles are present");
+	assert.ok(sharedTitles.length > 0, "shared transition titles are present");
+	pageTitles.forEach((title) => assert.match(title, /\bfont-semibold\b/));
+	sharedTitles.forEach((title) => assert.match(title, /\bfont-semibold\b/));
+});
+
+test("content renders without automatic load or scroll reveals", () => {
+	const astroSource = collectFiles("src", ".astro").map(read).join("\n");
+	const layout = read("src/layouts/Layout.astro");
+	const landing = read("src/components/pages/LandingPage.astro");
+	const styles = read("src/styles/global.css");
+
+	assert.doesNotMatch(astroSource, /data-page-header/);
+	assert.doesNotMatch(layout, /applyStagger|animateContent|fade-up|slide-left/);
+	assert.doesNotMatch(landing, /hero-seq|io-reveal|initReveals|IntersectionObserver/);
+	assert.doesNotMatch(styles, /rise-in|clip-reveal|hero-seq|io-reveal/);
+});
+
 test("the home index is composed as rows instead of cards", () => {
 	const landing = read("src/components/pages/LandingPage.astro");
 	const rows = landing.match(/data-entry-row/g) ?? [];
@@ -67,6 +92,7 @@ test("the hero decoration is a kinetic SVG field rather than a canvas simulation
 	const slot = landing.match(/<div\s+data-hero-slot[^>]*>/)?.[0];
 	const section = landing.match(/<section\s+data-hero-section[^>]*>/)?.[0];
 	const fieldPath = join(projectRoot, "src/components/KineticField.astro");
+	const controller = read("src/lib/kinetic/KineticField.ts");
 
 	assert.ok(existsSync(fieldPath), "kinetic field component is present");
 	const field = read("src/components/KineticField.astro");
@@ -90,9 +116,18 @@ test("the hero decoration is a kinetic SVG field rather than a canvas simulation
 	assert.match(field, /<svg[^>]+data-kinetic-svg[^>]+aria-hidden="true"/s);
 	assert.match(field, /data-kinetic-row/);
 	assert.match(field, /data-kinetic-column/);
+	assert.match(field, /\.kinetic-field\s*{[^}]*opacity:\s*0;/s);
+	assert.match(field, /\.kinetic-field\.is-ready\s*{[^}]*opacity:\s*1;/s);
+	assert.match(field, /transition:\s*opacity 500ms/);
+	assert.match(controller, /this\.revealFrameId = requestAnimationFrame/);
+	assert.match(controller, /this\.root\.classList\.add\("is-ready"\)/);
 	assert.doesNotMatch(field, /<canvas|HeroEngine|data-term-|<button|<pre/);
 	assert.equal(existsSync(join(projectRoot, "src/components/HeroCanvas.astro")), false);
 	assert.equal(existsSync(join(projectRoot, "src/lib/hero/HeroEngine.ts")), false);
+});
+
+test("the site surface has no grain overlay", () => {
+	assert.doesNotMatch(read("src/styles/global.css"), /body::before\s*{/);
 });
 
 test("social and contact links live in the main hero content", () => {

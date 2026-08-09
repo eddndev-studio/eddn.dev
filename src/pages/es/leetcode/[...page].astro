@@ -52,9 +52,9 @@ function getSlug(id: string) {
 	hreflangs={[{ lang: "en", href: "/leetcode/" }]}
 >
 	<div class="max-w-7xl mx-auto px-6 py-24">
-		<header data-page-header class="mb-16">
+		<header class="mb-16">
 			<h1
-				class="text-6xl sm:text-8xl font-normal tracking-[-0.04em] text-ink leading-[0.9] mb-8 [&_span]:text-brand-600 dark:[&_span]:text-brand-300"
+				class="text-6xl sm:text-8xl font-semibold tracking-[-0.04em] text-ink leading-[0.9] mb-8 [&_span]:text-brand-600 dark:[&_span]:text-brand-300"
 				set:html={t("leetcode.title")}
 			></h1>
 			<p class="text-xl text-body font-normal max-w-2xl leading-snug">
@@ -93,7 +93,7 @@ function getSlug(id: string) {
 								<td class="py-6">
 									<a
 										href={`/es/leetcode/${getSlug(solution.id)}`}
-										class="font-medium text-ink rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+										class="font-semibold text-ink rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
 									>
 										<span
 											transition:name={`title-${solution.id}`}
