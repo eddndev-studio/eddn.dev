@@ -9,9 +9,9 @@ translationKey: "achronyme-0-1-0-stable"
 
 I published [Achronyme 0.1.0](https://github.com/achronyme/achronyme/releases/tag/v0.1.0) today. The tag points to the exact commit `fd07b38e16256e2ed6a8f2b438d340a681c9b0ac`.
 
-I need to start with something simple: I'm sorry for how long this took and for going quiet. In March I wrote about a beta as if the stable release were just around the corner. It was not. I underestimated the remaining work, then said too little while I worked through it.
+I need to start with something simple: I'm sorry for how long this took and for going quiet. In March I wrote about a beta as if the stable release were just around the corner. I was wrong: I underestimated the remaining work, then said too little while I worked through it.
 
-I do not want to excuse the delay with a task list. I do want to explain why I refused to change the version number until there was evidence another person could inspect.
+The delay needs more than a task list. I held the version number until there was evidence another person could inspect, and that decision deserves an explanation.
 
 ## What changed since the beta
 
@@ -45,7 +45,7 @@ I did not publish entropy, toxic waste, private inputs, the witness, Powers of T
 
 ## Less elegant things failed too
 
-Cryptography was not the only source of delays. One CI contract assumed that `rg` was installed. A pending-request limit test depended too heavily on the exact moment a job started. An AOT smoke test for an installed package omitted the `file.read` and `file.write` capabilities that the runtime already required.
+Ordinary engineering failures caused more delays. One CI contract assumed that `rg` was installed. A pending-request limit test depended too heavily on the exact moment a job started. An AOT smoke test for an installed package omitted the `file.read` and `file.write` capabilities that the runtime already required.
 
 Each failure looked small in isolation. Together they showed that the release still depended on my workstation, a scheduler race, or implicit permissions. I fixed them because a stable version has to survive outside the environment where it was written.
 
@@ -57,7 +57,7 @@ The [Achronyme 0.1.0 release](https://github.com/achronyme/achronyme/releases/ta
 
 For a concrete program that exercises the new module, concurrency, capability, and proof boundaries together, read [A private auction as an Achronyme integration test](/articles/achronyme-private-auction-integration-test/).
 
-I am not calling the language finished. I am calling one exact source revision stable and documenting how to check it. That distinction accounts for much of the past few months.
+The stable label applies to one exact source revision and the documented checks around it. The language still has unfinished work. Drawing that boundary accounts for much of the past few months.
 
 Thank you to everyone who kept asking about Achronyme when I still could not give a serious date. Thank you as well to the person who made the external contribution and gave up hours of computer time for a process that was not especially exciting to watch.
 

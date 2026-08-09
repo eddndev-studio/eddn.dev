@@ -2,7 +2,7 @@
 title: "El futuro de eddn.dev"
 description: "Por qué reconstruí este sitio como una bitácora pública de ingeniería."
 pubDate: "2025-12-31"
-updatedDate: "2026-08-08"
+updatedDate: "2026-08-09"
 tags: ["personal", "webdev", "achronyme"]
 translationKey: "future-of-eddndev"
 ---
@@ -21,7 +21,7 @@ En 2026 mi principal objetivo técnico era publicar una versión usable de Achro
 
 Uso asistentes de código, pero no quiero que el texto o el código generado sustituyan el entendimiento. El criterio útil es sencillo: debo poder explicar una decisión, probarla y mostrar la evidencia detrás de cualquier afirmación pública.
 
-Este sitio forma parte de ese criterio. No es una página comercial. Es el registro técnico de lo que construyo.
+Este sitio aplica ese criterio al registrar el trabajo técnico detrás de lo que construyo.
 
 Actualización de agosto de 2026: el primer objetivo estable está completo. [Achronyme 0.1.0 ya está publicado](/es/blog/achronyme-0-1-0/), junto con la evidencia que retrasó el release.
 

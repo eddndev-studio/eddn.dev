@@ -2,7 +2,7 @@
 title: "Akron, Artik, Lysis: Why Achronyme Uses Three Virtual Machines"
 description: "How scripting, witness generation, and constraint emission led Achronyme to three different memory models."
 pubDate: "2026-05-03"
-updatedDate: "2026-08-08"
+updatedDate: "2026-08-09"
 tags: ["architecture", "compilers", "vm", "achronyme", "memory"]
 draft: false
 translationKey: "achronyme-three-vms"
@@ -17,7 +17,7 @@ references:
 
 My first article about Achronyme's VM covered the move from stack bytecode to registers. By May 2026, calling it "the VM" was already inaccurate. The project had three execution engines: **Akron**, **Artik**, and **Lysis**.
 
-They were not created from a plan to maximize the number of VMs. Witness generation and large constraint programs imposed memory rules that conflicted with the dynamic language runtime. Splitting the machines made those rules explicit.
+Conflicting memory rules drove the split. Witness generation and large constraint programs required behavior that the dynamic language runtime could not provide cleanly. Separate machines made those rules explicit.
 
 ## Three jobs, three memory models
 
@@ -95,6 +95,6 @@ The possible pairs share implementation details but not the same contract:
 - Merging Akron and Lysis would force dynamic language values into a single-write storage model.
 - Merging Artik and Lysis would either give Artik spill storage it does not need or remove the storage that lets Lysis handle large unrolled programs.
 
-Three is not a permanent law. If the compiler changes, these boundaries can change too. It is simply the smallest split I found that let each execution path state its memory rules without exceptions from the other two.
+Three is the smallest split I found that lets each execution path state its memory rules without exceptions from the other two. Changes to the compiler can still move or remove these boundaries.
 
 The source lives in the [Achronyme repository](https://github.com/achronyme/achronyme). The useful design test is whether each VM's invariant remains enforceable at its bytecode boundary. If that stops being true, the split should be reconsidered rather than defended for historical reasons.

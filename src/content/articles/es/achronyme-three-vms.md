@@ -2,7 +2,7 @@
 title: "Akron, Artik, Lysis: Por Qué Achronyme Usa Tres Máquinas Virtuales"
 description: "Cómo scripting, generación de witness y emisión de constraints llevaron a Achronyme a tres modelos de memoria distintos."
 pubDate: "2026-05-03"
-updatedDate: "2026-08-08"
+updatedDate: "2026-08-09"
 tags: ["architecture", "compilers", "vm", "achronyme", "memory"]
 draft: false
 translationKey: "achronyme-three-vms"
@@ -17,7 +17,7 @@ references:
 
 Mi primer artículo sobre la VM de Achronyme explicaba el cambio de bytecode basado en stack a registros. En mayo de 2026, hablar de "la VM" ya era inexacto. El proyecto tenía tres motores de ejecución: **Akron**, **Artik** y **Lysis**.
 
-No surgieron de un plan para maximizar la cantidad de máquinas virtuales. La generación de witness y los programas grandes de constraints imponían reglas de memoria incompatibles con el runtime dinámico del lenguaje. Separar las máquinas hizo explícitas esas reglas.
+El conflicto entre reglas de memoria produjo la separación. La generación de witness y los programas grandes de constraints exigían un comportamiento que el runtime dinámico del lenguaje no podía ofrecer de forma limpia. Las máquinas separadas hicieron explícitas esas reglas.
 
 ## Tres trabajos, tres modelos de memoria
 
@@ -95,6 +95,6 @@ Las parejas posibles comparten detalles de implementación, pero no el mismo con
 - Fusionar Akron y Lysis obligaría a representar valores dinámicos mediante almacenamiento de una sola escritura.
 - Fusionar Artik y Lysis daría a Artik un heap que no necesita o quitaría a Lysis el almacenamiento que le permite procesar programas grandes y desenrollados.
 
-Tres no es una ley permanente. Si cambia el compilador, también pueden cambiar estas fronteras. Es simplemente la división más pequeña que encontré para que cada ruta de ejecución pudiera declarar sus reglas de memoria sin excepciones creadas por las otras dos.
+Tres es la división más pequeña que encontré para que cada ruta de ejecución declare sus reglas de memoria sin excepciones creadas por las otras dos. Los cambios al compilador todavía pueden mover o eliminar estas fronteras.
 
 El código está en el [repositorio de Achronyme](https://github.com/achronyme/achronyme). La prueba útil del diseño es si cada VM puede seguir aplicando su invariante en la frontera del bytecode. Si eso deja de ser cierto, conviene revisar la separación en lugar de defenderla por razones históricas.
