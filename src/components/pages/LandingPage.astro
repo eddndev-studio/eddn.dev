@@ -122,7 +122,7 @@ if (latestLeetCode) {
 		<div data-hero-content class="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 content-center gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-12 lg:gap-6 lg:px-8 lg:py-24">
 			<div class="hero-seq lg:col-span-8">
 				<div class="mb-8 flex items-center gap-4 sm:mb-10">
-					<span class="font-mono text-[11px] uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">01 / Index</span>
+					<span class="font-mono text-[11px] uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">01 / {t("home.index_label")}</span>
 					<span class="h-px w-10 bg-hairline" aria-hidden="true"></span>
 					<span class="font-mono text-[11px] uppercase tracking-[0.18em] text-mute">{t("home.greeting")}</span>
 				</div>
@@ -153,9 +153,9 @@ if (latestLeetCode) {
 						{t("home.trajectory_btn")}
 					</a>
 				</div>
-				<span class="inline-flex items-center font-mono text-[11px] uppercase tracking-[0.15em] text-mute">
+				<a href="https://eddndev.com" class="inline-flex items-center font-mono text-[11px] uppercase tracking-[0.15em] text-mute transition-colors hover:text-ink">
 					{t("home.availability")}
-				</span>
+				</a>
 
 				<div data-hero-links class="flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-hairline pt-5">
 					<a
@@ -189,7 +189,7 @@ if (latestLeetCode) {
 		<section id="latest" class="scroll-mt-24 py-28 sm:py-36 lg:py-44">
 			<div class="io-reveal mb-12 grid gap-6 lg:mb-16 lg:grid-cols-12 lg:items-end">
 				<div class="lg:col-span-8">
-					<span class="mb-4 block font-mono text-[11px] uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">02 / Editorial index</span>
+					<span class="mb-4 block font-mono text-[11px] uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">02 / {t("home.content_index_label")}</span>
 					<h2 class="text-[clamp(2.8rem,6vw,6.5rem)] font-semibold leading-[0.86] tracking-[-0.07em] text-ink">{t("home.latest_label")}</h2>
 				</div>
 				<a href={blogIndexUrl} class="group inline-flex items-center gap-3 justify-self-start border-b border-hairline pb-1 text-sm text-body transition-colors duration-300 hover:border-ink hover:text-ink lg:col-span-4 lg:justify-self-end">

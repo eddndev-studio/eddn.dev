@@ -121,16 +121,6 @@ if (GITHUB_TOKEN) {
   }
 }
 
-// Final Fallback if everything fails
-if (languages.length === 0) {
-    languages = [
-        { name: "TypeScript", percent: 45, color: dataPalette[0] },
-        { name: "Rust", percent: 30, color: dataPalette[1] },
-        { name: "Python", percent: 15, color: dataPalette[2] },
-        { name: "Other", percent: 10, color: dataPalette[3] }
-    ];
-}
-
 const totalPercent = languages.reduce((acc, curr) => acc + curr.percent, 0);
 ---
 
@@ -146,41 +136,45 @@ const totalPercent = languages.reduce((acc, curr) => acc + curr.percent, 0);
     </div>
   </div>
 
-  <div class="grid gap-10 md:grid-cols-12 md:gap-6">
-    <div class="border-t border-hairline pt-6 md:col-span-8">
-      <div class="flex h-2 w-full overflow-hidden bg-hairline">
-        {languages.map((lang) => (
-          <div
-            style={{ width: `${(lang.percent / totalPercent) * 100}%`, backgroundColor: lang.color }}
-            class="group relative h-full transition-opacity duration-500 hover:opacity-80"
-          >
-             <div class="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 whitespace-nowrap bg-[#1c1916] px-2 py-1 font-mono text-xs text-[#f7f5f0] group-hover:block">
-                {lang.name} {lang.percent}%
+  {languages.length > 0 ? (
+    <div class="grid gap-10 md:grid-cols-12 md:gap-6">
+      <div class="border-t border-hairline pt-6 md:col-span-8">
+        <div class="flex h-2 w-full overflow-hidden bg-hairline">
+          {languages.map((language) => (
+            <div
+              style={{ width: `${(language.percent / totalPercent) * 100}%`, backgroundColor: language.color }}
+              class="group relative h-full transition-opacity duration-500 hover:opacity-80"
+            >
+              <div class="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 whitespace-nowrap bg-[#1c1916] px-2 py-1 font-mono text-xs text-[#f7f5f0] group-hover:block">
+                {language.name} {language.percent}%
                 <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#1c1916]"></div>
-             </div>
-          </div>
-        ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <p class="mt-5 max-w-[44ch] text-sm leading-relaxed text-body">
+          {t('languages.description')}
+        </p>
       </div>
-      <p class="mt-5 max-w-[44ch] text-sm leading-relaxed text-body">
-        {lang === 'es'
-          ? 'Distribucion por bytes en repositorios publicos y de organizaciones.'
-          : 'Distribution by bytes across public and organization repositories.'}
-      </p>
-    </div>
 
       <div class="border-t border-hairline md:col-span-4">
-        {languages.map((lang) => (
+        {languages.map((language) => (
           <div class="grid grid-cols-[1fr_auto] items-center border-b border-hairline py-2.5">
             <div class="flex items-center gap-2">
-            <div
+              <div
                 class="h-0.5 w-3"
-                style={{ backgroundColor: lang.color }}
-            ></div>
-              <span class="text-xs font-medium text-body-strong">{lang.name}</span>
+                style={{ backgroundColor: language.color }}
+              ></div>
+              <span class="text-xs font-medium text-body-strong">{language.name}</span>
             </div>
-            <span class="font-mono text-[10px] text-mute">{lang.percent}%</span>
+            <span class="font-mono text-[10px] text-mute">{language.percent}%</span>
           </div>
         ))}
       </div>
-  </div>
+    </div>
+  ) : (
+    <p class="border-y border-hairline py-6 text-sm text-body">
+      {t('languages.unavailable')}
+    </p>
+  )}
 </section>

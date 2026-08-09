@@ -25,6 +25,24 @@ const editorialFiles = [
 	...collectMarkdown("src/content/articles"),
 ];
 
+const siteCopyFiles = [
+	"src/i18n/ui.ts",
+	"src/i18n/trajectory.ts",
+	"src/layouts/Layout.astro",
+	"src/components/Header.astro",
+	"src/components/Footer.astro",
+	"src/components/GitHubLanguages.astro",
+	"src/components/pages/LandingPage.astro",
+	"src/pages/blog/[...page].astro",
+	"src/pages/es/blog/[...page].astro",
+	"src/pages/articles/[...page].astro",
+	"src/pages/es/articles/[...page].astro",
+	"src/pages/leetcode/[...page].astro",
+	"src/pages/es/leetcode/[...page].astro",
+	"src/pages/leetcode/[...slug].astro",
+	"src/pages/es/leetcode/[...slug].astro",
+];
+
 test("editorial writing avoids canned framing and decorative dashes", () => {
 	const cannedPhrases = [
 		/last year was a forge/i,
@@ -71,6 +89,74 @@ test("English editorial links use the unprefixed default-locale routes", () => {
 	for (const file of englishFiles) {
 		assert.doesNotMatch(read(file), /\]\(\/en\//, `${file} prefixes an English route`);
 	}
+});
+
+test("site copy uses concrete language instead of canned portfolio claims", () => {
+	const stalePhrases = [
+		/ambitious products/i,
+		/productos ambiciosos/i,
+		/selected transmissions/i,
+		/transmisiones seleccionadas/i,
+		/proof of work/i,
+		/evidencia de trabajo/i,
+		/leaves a trace/i,
+		/deja rastro/i,
+		/polished estimates/i,
+		/estimaciones bonitas/i,
+		/where depth matters/i,
+		/donde la profundidad importa/i,
+		/undefined route/i,
+		/ruta no definida/i,
+		/best algorithms/i,
+		/mejores algoritmos/i,
+		/high-impact creative studio/i,
+		/estudio creativo de alto impacto/i,
+		/deep academic training/i,
+		/formaci(?:o|ó)n acad(?:e|é)mica profunda/i,
+		/technical evolution over the years/i,
+		/evoluci(?:o|ó)n t(?:e|é)cnica a lo largo de los a(?:n|ñ)os/i,
+		/driven by the creative vision/i,
+		/impulsado por la visi(?:o|ó)n creativa/i,
+		/blog chronicles/i,
+		/pensamientos sobre software/i,
+		/system deep-dives/i,
+		/an(?:a|á)lisis de sistemas/i,
+		/optimized solution for/i,
+		/soluci(?:o|ó)n optimizada para/i,
+	];
+
+	for (const file of siteCopyFiles) {
+		const content = read(file);
+		for (const phrase of stalePhrases) {
+			assert.doesNotMatch(content, phrase, `${file} contains ${phrase}`);
+		}
+	}
+});
+
+test("English and Spanish interface copy expose the same keys", async () => {
+	const { ui } = await import("../src/i18n/ui.ts");
+	assert.deepEqual(Object.keys(ui.en).sort(), Object.keys(ui.es).sort());
+});
+
+test("site copy identifies the work and content sections precisely", () => {
+	const ui = read("src/i18n/ui.ts");
+	const trajectory = read("src/i18n/trajectory.ts");
+
+	assert.match(ui, /Compilers, backend systems and technical notes\./);
+	assert.match(ui, /Compiladores, sistemas backend y notas t(?:e|é)cnicas\./);
+	assert.match(ui, /TECHNICAL<br \/><span>ARTICLES\.<\/span>/);
+	assert.match(ui, /ART(?:I|Í)CULOS<br \/><span>T(?:E|É)CNICOS\.<\/span>/);
+	assert.doesNotMatch(ui, /Rust solutions?|soluci(?:o|ó)n en Rust/i);
+	assert.match(trajectory, /compiler, runtime and tooling/i);
+	assert.match(trajectory, /compilador, runtime y las herramientas/i);
+});
+
+test("GitHub language stats do not replace missing data with invented percentages", () => {
+	const component = read("src/components/GitHubLanguages.astro");
+
+	assert.doesNotMatch(component, /TypeScript[^\n]+percent:\s*45/);
+	assert.doesNotMatch(component, /Rust[^\n]+percent:\s*30/);
+	assert.match(component, /languages\.unavailable/);
 });
 
 test("the stable 0.1.0 release story is complete in English and Spanish", () => {

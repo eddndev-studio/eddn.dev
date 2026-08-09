@@ -28,9 +28,14 @@ const difficultyColor = {
 	Medium: 'text-amber-600 dark:text-amber-400 border-amber-500/40',
 	Hard: 'text-rose-600 dark:text-rose-400 border-rose-500/40',
 };
+const difficultyLabels = {
+	Easy: t('difficulty.easy'),
+	Medium: t('difficulty.medium'),
+	Hard: t('difficulty.hard'),
+};
 ---
 
-<Layout title={`${solution.data.title} — LeetCode Solution`} description={`Optimized solution for the LeetCode problem ${solution.data.title}.`}>
+<Layout title={`${solution.data.title} - LeetCode solution`} description={`Implementation and complexity analysis for ${solution.data.title} on LeetCode.`}>
 	<div class="max-w-7xl mx-auto px-6 py-24 lg:py-32" data-pagefind-body data-pagefind-filter="type:Solution">
 		<header class="mb-16 lg:mb-24 max-w-4xl">
 			<div class="flex items-center gap-4 mb-6">
@@ -38,7 +43,7 @@ const difficultyColor = {
 					transition:name={`difficulty-${solution.id}`}
 					class={`text-[11px] font-mono px-2 py-0.5 rounded-[3px] border ${difficultyColor[solution.data.difficulty]}`}
 				>
-					{solution.data.difficulty.toUpperCase()}
+					{difficultyLabels[solution.data.difficulty].toUpperCase()}
 				</span>
 				<div class="h-px bg-hairline w-8"></div>
 				<a href={solution.data.problemUrl} target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-mute hover:text-ink transition-colors flex items-center gap-1 group rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
@@ -75,7 +80,7 @@ const difficultyColor = {
 
 					<a href="/leetcode/" class="inline-flex items-center text-sm font-medium text-body hover:text-ink transition-colors group rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
 						<svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-						Back to Solutions
+						{t('leetcode.back')}
 					</a>
 				</div>
 			</aside>
@@ -105,7 +110,7 @@ const difficultyColor = {
 				<div class="mt-24 pt-12 border-t border-hairline flex justify-between items-center lg:hidden">
 					<a href="/leetcode/" class="inline-flex items-center text-sm font-medium text-body hover:text-ink transition-colors group rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
 						<svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-						Back to Solutions
+						{t('leetcode.back')}
 					</a>
 				</div>
 			</article>
