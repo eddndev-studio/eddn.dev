@@ -2,7 +2,7 @@
 title: "Anatomía de una Máquina Virtual: De Stack a Registros en Achronyme"
 description: "Por qué Achronyme pasó de bytecode basado en stack a una VM de registros y qué cambió con ese tradeoff."
 pubDate: "2026-03-07"
-updatedDate: "2026-08-08"
+updatedDate: "2026-08-09"
 tags: ["architecture", "compilers", "vm", "achronyme"]
 draft: false
 translationKey: "achronyme-vm-architecture"
@@ -19,7 +19,7 @@ Este artículo registra por qué hice ese segundo cambio. Describe la VM como ex
 
 ## Qué significa "máquina virtual" aquí
 
-Se trata de una máquina virtual de proceso, no de un sistema operativo virtualizado. Ejecuta bytecode de Achronyme mediante un loop de dispatch:
+Aquí, máquina virtual significa una VM de proceso que ejecuta bytecode de Achronyme mediante un loop de dispatch:
 
 1. Lee la instrucción indicada por el instruction pointer.
 2. Decodifica el opcode y sus operandos.
@@ -44,7 +44,7 @@ Para `a = b + c`, un compilador sencillo podría emitir:
 
 La codificación puede ser compacta. El costo es la secuencia de instrucciones de carga y almacenamiento necesaria para mover valores entre las variables locales y el stack de operandos. En los programas aritméticos de Achronyme, esas instrucciones aumentaban las vueltas por el loop de dispatch sin hacer aritmética por sí mismas.
 
-Eso no significa que las Stack VMs sean lentas en general. Son sencillas de generar, fáciles de validar y con frecuencia compactas. Significa que su tradeoff no encajaba con las cargas que yo estaba midiendo.
+Las Stack VMs siguen siendo sencillas de generar, fáciles de validar y con frecuencia compactas. Su tradeoff no encajaba con las cargas que yo estaba midiendo.
 
 ## Bytecode basado en registros
 
@@ -57,7 +57,7 @@ Una VM de registros asigna a cada función un frame con registros virtuales. Las
 
 Una instrucción realiza ahora el movimiento de datos que la versión de stack expresaba con cuatro. A cambio, la instrucción es más ancha porque debe codificar tres índices de registro.
 
-Lua 5.0 es el precedente más claro para este diseño. Dalvik también usó un formato orientado a registros, aunque sus restricciones y runtime eran distintos de los de Achronyme. Usé esos sistemas como referencias para el layout del bytecode, no como prueba de que el mismo resultado de rendimiento aparecería automáticamente.
+Lua 5.0 es el precedente más claro para este diseño. Dalvik también usó un formato orientado a registros, aunque sus restricciones y runtime eran distintos de los de Achronyme. Esos sistemas orientaron el layout del bytecode; las mediciones específicas de Achronyme todavía debían establecer el resultado de rendimiento.
 
 ## Qué cambió en Achronyme
 

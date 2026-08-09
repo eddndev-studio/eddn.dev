@@ -14,9 +14,9 @@ references:
   - "https://eprint.iacr.org/2019/458.pdf"
 ---
 
-El directorio de trabajo de este programa todavía se llama `tilino-lab`. Ese apodo sirvió mientras lo construimos, pero oculta el propósito del código. Aquí usaré un nombre más preciso: la **Prueba de integración de subasta privada**.
+El programa se llama **Prueba de integración de subasta privada** y su directorio de trabajo es `private-auction-integration-test`.
 
-No es un producto de subastas. Es un programa determinista para Achronyme 0.1.0 que obliga a varios límites del lenguaje a interactuar en una sola ejecución:
+Este programa determinista para Achronyme 0.1.0 obliga a varios límites del lenguaje a interactuar en una sola ejecución:
 
 1. Los módulos con espacios de nombres separan orquestación, transporte, lógica de prueba, registro y almacenamiento de artefactos.
 2. La concurrencia estructurada es propietaria de seis tareas hijas, incluido un plazo límite.
@@ -25,7 +25,7 @@ No es un producto de subastas. Es un programa determinista para Achronyme 0.1.0 
 5. Un circuito Groth16 verifica la apertura de tres compromisos Poseidon, un ganador estricto y una ruta de pertenencia Merkle.
 6. El programa verifica la prueba dentro del proceso, guarda un paquete separado y vuelve a verificarlo en un proceso nuevo de la CLI.
 
-El valor de la prueba no es que "Bob gana". El valor está en hacer que la ejecución ordinaria del host y una afirmación de conocimiento cero se encuentren en un límite inspeccionable, y que el resultado sobreviva la serialización y una verificación independiente.
+"Bob gana" proporciona el fixture. La prueba ejercita un límite inspeccionable entre la ejecución ordinaria del host y una afirmación de conocimiento cero, y después lleva el resultado por la serialización y una verificación independiente.
 
 ## El resultado observado
 
@@ -37,7 +37,7 @@ Proof generated (Groth16, 854 bytes)
 Proof verified - 1,864 constraints
 winner proof verified: true
 artifact bytes written: 4128
-PASS: private_concurrent_auction
+PASS: private_auction_integration_test
 ```
 
 Los bytes exactos de la prueba son aleatorios y no deben repetirse entre ejecuciones. El recibo sí es determinista porque esta prueba fija deliberadamente sus entradas y nonces.
@@ -112,9 +112,9 @@ El límite es más fácil de inspeccionar en una tabla:
 | Hoja de Bob en el registro | Testigo | No | No |
 | Dos hermanos Merkle | Testigo | No | No |
 
-"Testigo" significa que los valores no forman parte de la entrada pública del verificador. No significa automáticamente que la aplicación haya construido correctamente un esquema de compromiso ocultante.
+"Testigo" significa que los valores están ausentes de la entrada pública del verificador. El ocultamiento todavía depende del esquema de compromiso de la aplicación y de los nonces elegidos.
 
-Esta prueba usa nonces fijos: 1111, 2222 y 3333. Eso hace deterministas las ejecuciones, pero no sirve para una subasta real. Quien conozca el código y vea un compromiso puede calcular el hash de ofertas plausibles con el nonce conocido hasta encontrar una coincidencia. El programa demuestra separación de testigos y el recorrido de una prueba, no el secreto de la oferta ante un ataque de diccionario. Un diseño de producción requiere valores de ocultamiento impredecibles y únicos, además de un protocolo para protegerlos.
+Esta prueba usa nonces fijos: 1111, 2222 y 3333. Los valores fijos vuelven deterministas las ejecuciones y dejan las ofertas de dominio pequeño expuestas a un ataque de diccionario. Quien conozca el código y vea un compromiso puede calcular el hash de ofertas plausibles con el nonce conocido hasta encontrar una coincidencia. El alcance demostrado cubre la separación de testigos y el recorrido de una prueba. Un diseño de producción requiere valores de ocultamiento impredecibles y únicos, además de un protocolo para protegerlos.
 
 ## Cinco módulos y un orquestador
 
@@ -139,7 +139,7 @@ import "./artifacts.ach" as artifacts
 
 El orquestador lee entradas, llama funciones exportadas como `transport::exchange_commitments` y entrega cada resultado a la siguiente etapa. Los auxiliares `submit_commitment`, `collect_commitments` y `write_artifact` permanecen privados dentro de sus módulos.
 
-La separación no es cosmética. El contrato de fuente rechaza primitivas de red, creación de archivos, `prove winner` o `merkle_verify` si regresan a `main.ach`, y limita ese archivo a 90 líneas. Una regresión no puede convertir silenciosamente al orquestador en una segunda implementación de los módulos.
+El contrato de fuente hace exigible esta separación de responsabilidades. Rechaza primitivas de red, creación de archivos, `prove winner` o `merkle_verify` si regresan a `main.ach`, y limita ese archivo a 90 líneas. Una regresión no puede convertir silenciosamente al orquestador en una segunda implementación de los módulos.
 
 ## Etapa 1: entradas del host y compromisos
 
@@ -265,7 +265,7 @@ Bob está designado por la interfaz del circuito. El circuito verifica que el co
 
 ## Etapa 5: verificación y propiedad de artefactos
 
-La prueba devuelta es un valor de primera clase en el host. `main.ach` llama inmediatamente a `verify_proof` y se niega a continuar si el resultado no es verdadero. Esto detecta un fallo antes de producir el recibo, pero no es la comprobación final de portabilidad.
+La prueba devuelta es un valor de primera clase en el host. `main.ach` llama inmediatamente a `verify_proof` y se niega a continuar si el resultado no es verdadero. Esto detecta un fallo antes de producir el recibo. La verificación separada aporta la comprobación final de portabilidad.
 
 El módulo de artefactos serializa cuatro documentos independientes:
 
@@ -311,7 +311,7 @@ También habilita parámetros locales de prueba con `--insecure-dev-setup`. Son 
 
 El contrato de seguridad ejecuta el programa sin permisos del host y exige un fallo de capacidades. Después concede los recursos del host, omite la autoridad de prueba y exige que la generación falle. Pasar un límite nunca implica permiso en el otro.
 
-El proyecto también establece presupuestos finitos para la VM: 16 tareas, 16 recursos, 16 scopes de tareas, 16 solicitudes nativas pendientes, 4 canales y 16 operaciones de canal. Ejecutar el mismo programa con `TILINO_MAX_TASKS=2` debe fallar por límite de recursos en vez de asignar más de forma silenciosa.
+El proyecto también establece presupuestos finitos para la VM: 16 tareas, 16 recursos, 16 scopes de tareas, 16 solicitudes nativas pendientes, 4 canales y 16 operaciones de canal. Ejecutar el mismo programa con `PRIVATE_AUCTION_MAX_TASKS=2` debe fallar por límite de recursos en vez de asignar más de forma silenciosa.
 
 ## Las pruebas negativas forman parte del resultado
 
@@ -333,7 +333,7 @@ El caso de la entrada pública alterada es especialmente importante. Una prueba 
 
 El contrato de motores ejecuta el programa completo dos veces: una con el intérprete y otra con el LLVM JIT. Exige recibos idénticos byte por byte y verifica ambas pruebas separadas en procesos nuevos.
 
-No exige pruebas idénticas byte por byte. La generación Groth16 es aleatoria; equivalencia aquí significa que ambos motores producen el mismo recibo público y paquetes de prueba válidos de manera independiente.
+La igualdad de las pruebas byte por byte queda fuera del contrato porque la generación Groth16 es aleatoria. La equivalencia entre motores exige el mismo recibo público y paquetes de prueba válidos de manera independiente.
 
 La prueba también inspecciona el manifiesto compilado y exige estos efectos:
 
@@ -363,7 +363,7 @@ No demuestra:
 - que el setup Groth16 local y de una sola parte sea seguro para producción;
 - que el runtime AOT independiente pueda ejecutar efectos de prueba.
 
-Estas exclusiones no son notas al pie. Definen la diferencia entre una prueba útil de integración del lenguaje y un protocolo de subasta desplegable.
+Estas exclusiones definen la frontera entre una prueba útil de integración del lenguaje y un protocolo de subasta desplegable.
 
 ## Lo que exigiría producción
 
@@ -371,7 +371,7 @@ Una versión de producción necesitaría al menos:
 
 1. Valores de ocultamiento impredecibles y únicos, con un protocolo para guardarlos o derivarlos de forma segura.
 2. Un identificador de subasta vinculado a la afirmación pública para evitar reutilización entre sesiones.
-3. Registro autenticado de postores y transporte autenticado, no nombres autodeclarados sobre TCP de loopback.
+3. Registro autenticado de postores y transporte autenticado que vinculen cada identidad con una sesión y sus credenciales.
 4. Un registro dinámico con una regla publicada que conecte identidades, hojas, posiciones y raíces.
 5. Una afirmación general para seleccionar al ganador, incluida la política de empates y ofertas inválidas.
 6. Una clave de prueba derivada de ceremonia para este circuito optimizado exacto, cargada desde un almacén confiable sin `--insecure-dev-setup`.
@@ -395,6 +395,6 @@ bash test/security_contract.sh
 bash test/engine_contract.sh
 ```
 
-En la ejecución documentada aquí, los cuatro pasaron. En conjunto prueban más que el camino feliz: responsabilidad de la fuente, ejecución acotada en el host, autoridad cerrada por defecto, rechazo de restricciones, vinculación de entradas públicas, portabilidad de artefactos, acuerdo entre motores y una capacidad AOT no soportada de forma explícita.
+En la ejecución documentada aquí, los cuatro pasaron. En conjunto cubren el camino exitoso, la responsabilidad de la fuente, la ejecución acotada en el host, la autoridad cerrada por defecto, el rechazo de restricciones, la vinculación de entradas públicas, la portabilidad de artefactos, el acuerdo entre motores y una capacidad AOT no soportada de forma explícita.
 
-Por eso esta pequeña subasta es una prueba seria de Achronyme. Obliga al lenguaje a transportar una afirmación desde I/O concurrente, a través de un circuito, hasta un artefacto separado que otro proceso puede rechazar o verificar. Igual de importante: deja una lista precisa de las afirmaciones que el programa nunca hace.
+La subasta privada funciona como una prueba seria de integración de Achronyme porque transporta una afirmación desde I/O concurrente, a través de un circuito, hasta un artefacto separado que otro proceso puede rechazar o verificar. Sus límites explícitos forman parte del resultado.

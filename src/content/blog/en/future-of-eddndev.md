@@ -2,7 +2,7 @@
 title: "The Future of eddn.dev"
 description: "Why I rebuilt this site as a public engineering notebook."
 pubDate: "2025-12-31"
-updatedDate: "2026-08-08"
+updatedDate: "2026-08-09"
 tags: ["personal", "webdev", "achronyme"]
 translationKey: "future-of-eddndev"
 ---
@@ -21,7 +21,7 @@ In 2026 my main technical goal was to publish a usable Achronyme release. I also
 
 I use code assistants, but I do not want generated prose or generated code to stand in for understanding. The useful standard is simple: I should be able to explain a decision, test it, and show the evidence behind any public claim.
 
-This site is part of that standard. It is not a sales page. It is the technical record behind the things I build.
+This site applies that standard by recording the technical work behind the things I build.
 
 Update, August 2026: the first stable goal is complete. [Achronyme 0.1.0 is published](/blog/achronyme-0-1-0/), together with the evidence that held the release back.
 

@@ -14,9 +14,9 @@ references:
   - "https://eprint.iacr.org/2019/458.pdf"
 ---
 
-The working directory for this program is still called `tilino-lab`. That was a useful nickname while building it, but it hides the purpose of the code. I will use a more accurate name here: the **Private Auction Integration Test**.
+The program is named the **Private Auction Integration Test**, with `private-auction-integration-test` as its working directory.
 
-It is not an auction product. It is a deterministic Achronyme 0.1.0 program designed to make several language boundaries interact in one run:
+This deterministic Achronyme 0.1.0 program makes several language boundaries interact in one run:
 
 1. Namespaced modules keep orchestration, transport, proof logic, registry construction, and artifact storage separate.
 2. Structured concurrency owns six child tasks, including a deadline.
@@ -25,7 +25,7 @@ It is not an auction product. It is a deterministic Achronyme 0.1.0 program desi
 5. A Groth16 circuit checks three Poseidon commitment openings, a strict winner, and one Merkle membership path.
 6. The program verifies the proof in process, persists a detached bundle, and verifies it again in a fresh CLI process.
 
-The value of the test is not that "Bob wins." The value is that ordinary host execution and a zero-knowledge statement meet at an inspectable boundary, then the result survives serialization and independent verification.
+"Bob wins" supplies the fixture. The test exercises an inspectable boundary between ordinary host execution and a zero-knowledge statement, then carries the result through serialization and independent verification.
 
 ## The observed result
 
@@ -37,7 +37,7 @@ Proof generated (Groth16, 854 bytes)
 Proof verified - 1,864 constraints
 winner proof verified: true
 artifact bytes written: 4128
-PASS: private_concurrent_auction
+PASS: private_auction_integration_test
 ```
 
 The exact proof bytes are randomized and should not be expected to repeat. The receipt is deterministic because this test deliberately fixes its inputs and nonces.
@@ -112,9 +112,9 @@ The boundary is easier to inspect as a table:
 | Bob registry leaf | Witness | No | No |
 | Two Merkle siblings | Witness | No | No |
 
-"Witness" means the values are not included in the verifier's public input. It does not automatically mean the application has built a hiding commitment scheme correctly.
+"Witness" means the values are absent from the verifier's public input. Hiding still depends on the application's commitment scheme and its choice of nonces.
 
-This test uses fixed nonces: 1111, 2222, and 3333. That makes runs deterministic, but it is unsuitable for a real auction. Anyone who knows the source and sees a commitment can hash plausible bids with the known nonce until one matches. The program demonstrates witness separation and proof plumbing, not bid secrecy against a dictionary attack. A production design needs unpredictable, unique blinding values and a protocol for protecting them.
+This test uses fixed nonces: 1111, 2222, and 3333. The fixed values make runs deterministic and leave low-domain bids open to a dictionary attack. Anyone who knows the source and sees a commitment can hash plausible bids with the known nonce until one matches. The demonstrated scope covers witness separation and proof plumbing. A production design needs unpredictable, unique blinding values and a protocol for protecting them.
 
 ## Five modules, one orchestrator
 
@@ -139,7 +139,7 @@ import "./artifacts.ach" as artifacts
 
 The orchestrator reads inputs, calls exported functions such as `transport::exchange_commitments`, and passes results to the next stage. Helpers such as `submit_commitment`, `collect_commitments`, and `write_artifact` remain private to their modules.
 
-This split is not cosmetic. The source contract rejects network primitives, file creation, `prove winner`, or `merkle_verify` if they move back into `main.ach`, and it caps that file at 90 lines. A regression therefore cannot quietly turn the orchestrator into a second implementation of the modules.
+The source contract makes this ownership enforceable. It rejects network primitives, file creation, `prove winner`, or `merkle_verify` if they move back into `main.ach`, and it caps that file at 90 lines. A regression therefore cannot quietly turn the orchestrator into a second implementation of the modules.
 
 ## Stage 1: host inputs and commitments
 
@@ -265,7 +265,7 @@ Bob is designated by the circuit interface. The circuit verifies that the design
 
 ## Stage 5: verification and artifact ownership
 
-The returned proof is a first-class host value. `main.ach` immediately calls `verify_proof` and refuses to continue unless the result is true. This catches a failure before producing a receipt, but it is not the final portability check.
+The returned proof is a first-class host value. `main.ach` immediately calls `verify_proof` and refuses to continue unless the result is true. This catches a failure before producing a receipt. Detached verification supplies the final portability check.
 
 The artifact module serializes four independent documents:
 
@@ -311,7 +311,7 @@ It also opts into local proving parameters with `--insecure-dev-setup`. These ar
 
 The security contract runs the program without host grants and requires a capability failure. It then grants the host resources but omits proving authority and requires proof generation to fail. Passing one boundary never implies permission at the other.
 
-The project also sets finite VM budgets: 16 tasks, 16 resources, 16 task scopes, 16 pending native requests, 4 channels, and 16 channel operations. Running the same program with `TILINO_MAX_TASKS=2` must fail with a resource-limit error instead of silently allocating more.
+The project also sets finite VM budgets: 16 tasks, 16 resources, 16 task scopes, 16 pending native requests, 4 channels, and 16 channel operations. Running the same program with `PRIVATE_AUCTION_MAX_TASKS=2` must fail with a resource-limit error instead of silently allocating more.
 
 ## The negative tests are part of the result
 
@@ -333,7 +333,7 @@ The altered-public-input case is especially important. A valid proof is bound to
 
 The engine contract runs the complete program twice, once with the interpreter and once with the LLVM JIT. It requires byte-identical receipts and verifies both detached proofs in fresh processes.
 
-It does **not** require byte-identical proofs. Groth16 proof generation is randomized; equivalence here means both engines produce the same public receipt and independently valid proof bundles.
+Proof-byte equality is outside the contract because Groth16 proof generation is randomized. Engine equivalence means both runs produce the same public receipt and independently valid proof bundles.
 
 The test also inspects the compiled manifest and requires these effects:
 
@@ -363,7 +363,7 @@ It does not prove:
 - that the local single-party Groth16 setup is safe for production;
 - that the standalone AOT runtime can execute proof effects.
 
-Those exclusions are not footnotes. They define the difference between a useful language integration test and a deployable auction protocol.
+Those exclusions define the boundary between a useful language integration test and a deployable auction protocol.
 
 ## What production would require
 
@@ -371,7 +371,7 @@ A production version would need at least:
 
 1. Unpredictable, unique blinding values and a protocol for storing or deriving them safely.
 2. An auction identifier bound into the public statement to prevent cross-session replay.
-3. Authenticated bidder enrollment and transport, not self-declared names over loopback TCP.
+3. Authenticated bidder enrollment and transport that bind each identity to a session and its credentials.
 4. A dynamic registry with a published rule connecting identities, leaves, positions, and roots.
 5. A general winner-selection statement, including tie and invalid-bid policy.
 6. A ceremony-derived proving key for this exact optimized circuit, loaded through a trusted store without `--insecure-dev-setup`.
@@ -395,6 +395,6 @@ bash test/security_contract.sh
 bash test/engine_contract.sh
 ```
 
-On the run documented here, all four passed. Together they test more than the happy path: source responsibility, bounded host execution, fail-closed authority, constraint rejection, public-input binding, artifact portability, engine agreement, and an explicit unsupported AOT capability.
+On the run documented here, all four passed. Together they cover the success path, source responsibility, bounded host execution, fail-closed authority, constraint rejection, public-input binding, artifact portability, engine agreement, and an explicit unsupported AOT capability.
 
-That is why this small auction is a serious test of Achronyme. It forces the language to carry one claim from concurrent I/O, through a circuit, into a detached artifact another process can reject or verify. Just as importantly, it leaves a precise list of claims the program never makes.
+The private auction serves as a serious Achronyme integration test because it carries one claim from concurrent I/O, through a circuit, into a detached artifact another process can reject or verify. Its explicit limits are part of that result.

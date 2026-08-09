@@ -9,9 +9,9 @@ translationKey: "achronyme-0-1-0-stable"
 
 Hoy publiqué [Achronyme 0.1.0](https://github.com/achronyme/achronyme/releases/tag/v0.1.0). El tag apunta al commit exacto `fd07b38e16256e2ed6a8f2b438d340a681c9b0ac`.
 
-Primero tengo que decir algo sencillo: perdón por el tiempo que pasó y por el silencio. En marzo escribí sobre una beta como si la versión estable estuviera a la vuelta de la esquina. No lo estaba. Subestimé el trabajo que faltaba y después comuniqué muy poco mientras lo resolvía.
+Primero tengo que decir algo sencillo: perdón por el tiempo que pasó y por el silencio. En marzo escribí sobre una beta como si la versión estable estuviera a la vuelta de la esquina. Me equivoqué: subestimé el trabajo que faltaba y después comuniqué muy poco mientras lo resolvía.
 
-No quiero justificar el retraso con una lista de tareas. Sí quiero explicar por qué me negué a cambiar el número de versión hasta tener evidencia que pudiera revisar otra persona.
+El retraso necesita más que una lista de tareas. Mantuve el número de versión sin cambios hasta tener evidencia que pudiera revisar otra persona, y esa decisión merece una explicación.
 
 ## Qué cambió desde la beta
 
@@ -45,7 +45,7 @@ No publiqué entropía, toxic waste, inputs privados, witness, Powers of Tau ni 
 
 ## También fallaron cosas menos elegantes
 
-El proceso no se atascó solo en criptografía. Un contrato de CI asumía que `rg` estaba instalado. Una prueba del límite de solicitudes dependía demasiado del momento exacto en que arrancaba un job. Un smoke test de AOT para un paquete instalado no declaraba las capacidades `file.read` y `file.write` que el runtime ya exigía.
+También hubo retrasos por fallos ordinarios de ingeniería. Un contrato de CI asumía que `rg` estaba instalado. Una prueba del límite de solicitudes dependía demasiado del momento exacto en que arrancaba un job. Un smoke test de AOT para un paquete instalado no declaraba las capacidades `file.read` y `file.write` que el runtime ya exigía.
 
 Cada fallo parecía pequeño al aislarlo. Juntos mostraron que el release todavía dependía de mi máquina, de una carrera de scheduler o de permisos implícitos. Los corregí porque una versión estable debe sobrevivir fuera del entorno donde fue escrita.
 
@@ -57,7 +57,7 @@ La página de [Achronyme 0.1.0](https://github.com/achronyme/achronyme/releases/
 
 Para ver los límites nuevos de módulos, concurrencia, capacidades y pruebas dentro de un solo programa, consulta [una subasta privada como prueba de integración de Achronyme](/es/articles/achronyme-private-auction-integration-test/).
 
-No estoy llamando terminado al lenguaje. Estoy llamando estable a un punto concreto del código y dejando claro cómo comprobarlo. Esa diferencia explica buena parte de estos meses.
+La etiqueta estable se aplica a un punto concreto del código y a las comprobaciones documentadas que lo rodean. El lenguaje todavía tiene trabajo pendiente. Trazar esa frontera explica buena parte de estos meses.
 
 Gracias a quienes siguieron preguntando por Achronyme cuando yo todavía no podía dar una fecha seria. Gracias también a la persona que hizo la contribución externa y cedió horas de su computadora para un proceso bastante poco emocionante de ver.
 

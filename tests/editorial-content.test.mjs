@@ -59,11 +59,30 @@ test("editorial writing avoids canned framing and decorative dashes", () => {
 		/avance revolucionario/i,
 		/if you take one thing from this article/i,
 		/si te llevas algo de este art(?:i|í)culo/i,
+		/\bIt is not\b[^.!?\n]+[.!?]\s+It is\b/i,
+		/\bNo es\b[^.!?\n]+[.!?]\s+Es\b/i,
+		/\bThe value\b[^.!?\n]+\bis not\b[^.!?\n]+[.!?]\s+The value\b/i,
+		/\bEl valor\b[^.!?\n]+\bno es\b[^.!?\n]+[.!?]\s+El valor\b/i,
+		/\b(?:The useful )?lesson\b[^.!?\n]+\bwas not\b[^.!?\n]+[.!?]\s+It was\b/i,
+		/\bLa lecci(?:o|ó)n\b[^.!?\n]+\bno fue\b[^.!?\n]+[.!?]\s+Fue\b/i,
+		/\bI do not want\b[^.!?\n]+[.!?]\s+I do want\b/i,
+		/\bNo quiero\b[^.!?\n]+[.!?]\s+S(?:i|í) quiero\b/i,
+		/\bI am not calling\b[^.!?\n]+[.!?]\s+I am calling\b/i,
+		/\bNo estoy llamando\b[^.!?\n]+[.!?]\s+Estoy llamando\b/i,
+		/\bThat does not mean\b[^.!?\n]+[.!?]\s+It means\b/i,
+		/\bEso no significa\b[^.!?\n]+[.!?]\s+Significa\b/i,
+		/\bThree is not\b[^.!?\n]+[.!?]\s+It is\b/i,
+		/\bTres no es\b[^.!?\n]+[.!?]\s+Es\b/i,
 	];
 
 	for (const file of editorialFiles) {
 		const content = read(file);
 		assert.doesNotMatch(content, /[\u2013\u2014]/, `${file} uses a Unicode dash`);
+		assert.doesNotMatch(
+			content,
+			/\btil(?:i|í)n(?:o)?\b/i,
+			`${file} contains the informal project nickname`,
+		);
 		for (const phrase of cannedPhrases) {
 			assert.doesNotMatch(content, phrase, `${file} contains ${phrase}`);
 		}
@@ -195,7 +214,10 @@ test("the private auction article documents the executable claim and its limits"
 			article,
 			/translationKey: "achronyme-private-auction-integration-test"/,
 		);
-		assert.match(article, /tilino-lab/);
+		assert.match(article, /private-auction-integration-test/);
+		assert.doesNotMatch(article, /\btil(?:i|í)n(?:o)?\b/i);
+		assert.match(article, /PRIVATE_AUCTION_MAX_TASKS=2/);
+		assert.match(article, /PASS: private_auction_integration_test/);
 		assert.match(article, /channel\(1\)/);
 		assert.match(article, /--insecure-dev-setup/);
 		assert.match(article, /2,501/);

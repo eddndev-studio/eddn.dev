@@ -2,7 +2,7 @@
 title: "Anatomy of a Virtual Machine: From Stack to Registers in Achronyme"
 description: "Why Achronyme moved from stack bytecode to a register VM, and what that tradeoff changed."
 pubDate: "2026-03-07"
-updatedDate: "2026-08-08"
+updatedDate: "2026-08-09"
 tags: ["architecture", "compilers", "vm", "achronyme"]
 draft: false
 translationKey: "achronyme-vm-architecture"
@@ -19,7 +19,7 @@ This article records why I made that second change. It describes the VM as it ex
 
 ## What "virtual machine" means here
 
-This is a process virtual machine, not a virtualized operating system. It executes Achronyme bytecode through a dispatch loop:
+Here, virtual machine means a process VM that executes Achronyme bytecode through a dispatch loop:
 
 1. Fetch the instruction at the instruction pointer.
 2. Decode its opcode and operands.
@@ -44,7 +44,7 @@ For `a = b + c`, a simple stack compiler might emit:
 
 The encoding can be compact. The cost is the stream of load and store instructions needed to move values between locals and the operand stack. For arithmetic-heavy Achronyme programs, those instructions increased the number of trips through the dispatch loop without doing arithmetic themselves.
 
-That does not make stack VMs generally slow. They are simple to generate, easy to validate, and often compact. It means their tradeoff was a poor fit for the workloads I was measuring.
+Stack VMs remain simple to generate, easy to validate, and often compact. Their tradeoff was a poor fit for the workloads I was measuring.
 
 ## Register bytecode
 
@@ -57,7 +57,7 @@ A register VM gives each function a frame containing virtual registers. Instruct
 
 One instruction now performs the data movement that the stack version expressed with four. The instruction itself is wider because it must encode three register indices.
 
-Lua 5.0 is the clearest precedent for this design. Dalvik used a register-oriented format as well, although its constraints and runtime were different from Achronyme's. I used those systems as references for the bytecode layout, not as evidence that the same performance result would automatically carry over.
+Lua 5.0 is the clearest precedent for this design. Dalvik used a register-oriented format as well, although its constraints and runtime were different from Achronyme's. Those systems informed the bytecode layout; Achronyme-specific measurements still had to establish the performance result.
 
 ## What changed in Achronyme
 
