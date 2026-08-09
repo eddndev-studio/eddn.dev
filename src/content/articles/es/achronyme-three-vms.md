@@ -1,11 +1,12 @@
 ---
-title: "Akron, Artik, Lysis: Por Qué Achronyme Compone Tres Máquinas Virtuales en Lugar de Una"
-description: "Cuando una sola VM de propósito general no alcanza: cómo Achronyme terminó con tres máquinas virtuales especializadas (una para scripting, una para generación de witness y una para emisión de constraints), cada una con su propia disciplina de memoria."
+title: "Akron, Artik, Lysis: Por Qué Achronyme Usa Tres Máquinas Virtuales"
+description: "Cómo scripting, generación de witness y emisión de constraints llevaron a Achronyme a tres modelos de memoria distintos."
 pubDate: "2026-05-03"
+updatedDate: "2026-08-08"
 tags: ["architecture", "compilers", "vm", "achronyme", "memory"]
 draft: false
 translationKey: "achronyme-three-vms"
-abstract: "Este artículo continúa el análisis arquitectónico de la VM de Achronyme publicado en marzo, esta vez explicando cómo y por qué el proyecto evolucionó de tener una única máquina virtual register-based a componer tres VMs especializadas: Akron (scripting + bloques prove con heap y GC tri-color), Artik (generación determinista de witness sin heap ni GC) y Lysis (bytecode SSA con disciplina single-static-store que la frontend de constraints recorre). Cada una nació de un invariante que la anterior no podía sostener, y la disciplina de memoria de cada una está exactamente alineada con la pregunta que la VM existe para responder. El artículo argumenta que la composición de máquinas pequeñas con invariantes precisos resulta en menos código y más garantías que una VM unificada que intenta absorber todos los casos."
+abstract: "Achronyme separa scripting dinámico, generación de witness y emisión de constraints entre Akron, Artik y Lysis. Cada VM usa el modelo de memoria que requiere su trabajo en lugar de compartir un solo runtime de propósito general."
 technicalDepth: "Advanced"
 references:
   - "https://github.com/achronyme/achronyme"
@@ -14,110 +15,86 @@ references:
   - "https://en.wikipedia.org/wiki/Tracing_garbage_collection"
 ---
 
-Hace dos meses publiqué un artículo sobre la arquitectura de la máquina virtual de Achronyme: la transición de pila a registros, las lecciones de Lua 5.0 y Dalvik, la localidad de caché. Ese artículo sigue siendo correcto, pero está incompleto: en algún punto entre marzo y mayo, Achronyme dejó de tener *una* máquina virtual y pasó a tener tres.
+Mi primer artículo sobre la VM de Achronyme explicaba el cambio de bytecode basado en stack a registros. En mayo de 2026, hablar de "la VM" ya era inexacto. El proyecto tenía tres motores de ejecución: **Akron**, **Artik** y **Lysis**.
 
-No fue una decisión que tomé sentado frente a una pizarra. Fue la consecuencia acumulada de chocar contra dos paredes que la VM original no podía atravesar (una con la generación de witness, otra con SHA-256), y darme cuenta de que la respuesta correcta no era hacer una VM más grande, sino componer varias VMs pequeñas, cada una con su propia disciplina de memoria.
+No surgieron de un plan para maximizar la cantidad de máquinas virtuales. La generación de witness y los programas grandes de constraints imponían reglas de memoria incompatibles con el runtime dinámico del lenguaje. Separar las máquinas hizo explícitas esas reglas.
 
-Este artículo es la historia de **Akron**, **Artik** y **Lysis**: por qué cada una existe, qué problema resuelve, y por qué juntas son menos que la suma de sus partes en líneas de código pero más que la suma de sus partes en garantías estructurales.
+## Tres trabajos, tres modelos de memoria
 
-## La trampa de la VM de propósito general
+Achronyme necesitaba ejecutar tres clases de trabajo:
 
-La forma natural de extender una VM cuando aparece un caso de uso nuevo es agregar opcodes, agregar tipos, agregar paths en el dispatch loop. La consecuencia no es solo más código; es más invariantes simultáneos que la misma máquina debe sostener al mismo tiempo. Una VM que tiene heap con GC y al mismo tiempo debe ser determinista en latencia para witness es una VM que rompe uno de los dos invariantes en cada decisión de diseño.
+1. **Programas de usuario y bloques `prove {}`.** Closures, strings, maps y valores con vidas dinámicas requieren un heap administrado.
+2. **Funciones de witness.** Este código corre dentro del proving. Su asignación de memoria debe estar acotada y poder predecirse a partir del programa compilado.
+3. **Emisión de constraints.** Los programas SSA grandes y desenrollados necesitan almacenar intermedios fuera del frame, pero el emisor no debería requerir análisis general de aliasing ni garbage collection.
 
-En algún punto del camino me di cuenta de que las tres responsabilidades centrales que Achronyme estaba pidiéndole a su única VM eran fundamentalmente incompatibles:
+Agregar todos los requisitos al mismo loop de dispatch habría acoplado invariantes que no tenían relación. Una función de heap para scripting podría afectar la ejecución del witness; una restricción para hacer predecible el witness podría volver incómodo el código ordinario del lenguaje.
 
-1. **Scripting y bloques `prove {}`**: necesita semántica dinámica completa: closures, alocación arbitraria, valores con vidas impredecibles. Eso pide *heap* con *garbage collection*.
-2. **Generación de witness**: corre dentro del hot path de la prueba; tiene que ser determinista en tiempo y libre de pausas. Eso pide *sin heap*, *sin GC*.
-3. **Emisión de constraints**: la frontend de circom genera SSA tan grande que un solo iter body de SHA-256 ya no cabe en un frame de registros. Eso pide *heap con disciplina explícita de spill*, no GC pero sí slots persistentes.
+## Akron: el runtime del lenguaje
 
-Cualquier VM única que intenta sostener los tres invariantes al mismo tiempo resuelve mal los tres. La salida fue separar.
-
-## Akron: la VM de scripting
-
-Akron es la VM original, la que describí en el artículo de marzo, ahora con nombre propio. Es register-based, tiene cuarenta y tantos opcodes, valores de 64 bits con tag de 4 bits en los bits altos, y un *garbage collector* mark-sweep tri-color sobre el heap. Ejecuta `.achb` (bytecode compilado del lenguaje completo), incluyendo los bloques `prove { ... }` que un usuario escribe en su código.
+Akron es la VM de registros que ejecuta programas `.achb`. Soporta las partes dinámicas del lenguaje y ejecuta el lado host de los bloques `prove {}`. Sus valores pueden sobrevivir a una sola expresión, así que tiene heap y un garbage collector por trazado.
 
 ```text
-// a = b + c en bytecode Akron (register-based)
+// a = b + c en bytecode de Akron
 ADD R0, R1, R2
 ```
 
-¿Por qué Akron puede permitirse un GC? Porque su trabajo es *human-perceptible*: scripting de pruebas, transformaciones de datos, configuración. Una pausa de GC de pocos milisegundos cada tanto no rompe nada. El usuario no percibe esa latencia, y los valores que viven en su heap pueden tener vidas arbitrarias (closures que capturan variables, mapas que crecen en runtime, strings concatenados).
+La recolección de basura encaja aquí porque el compilador de bytecode no siempre puede determinar estáticamente las vidas de closures, maps, arrays y strings. Una pausa es el tradeoff que Akron acepta a cambio de esa flexibilidad.
 
-Akron sostiene el modelo mental de "lenguaje de programación normal con tipos dinámicos". Heap + GC es la respuesta correcta a esa pregunta.
+## Artik: ejecución acotada del witness
 
-## Artik: la VM determinista para witness
+El frontend de Circom necesita evaluar funciones auxiliares imperativas mientras construye el witness. Primero intenté ejecutarlas mediante Akron. Eso reutilizaba más código, pero también permitía asignaciones en el heap y colecciones dentro de la ruta de proving.
 
-El primer límite apareció con la generación de witness. Cuando una prueba ZK se construye, la frontend de circom describe *qué* signals existen y *qué* constraints las relacionan, pero no calcula directamente sus valores. Eso es trabajo del *witness generator*, que ejecuta las funciones imperativas del usuario (declaraciones `function` en circom: `nbits`, `log2`, etc.) para producir los números concretos que después la prueba criptográfica firma.
-
-Este código corre dentro del hot path de la prueba: cada vez que alguien genera una proof, el witness se recomputa. Tiene que ser rápido y, más importante, tiene que ser **determinista**. Una pausa de GC en medio de una computación de witness puede no romper la corrección (el resultado final es el mismo), pero rompe propiedades observacionales del sistema (timing channels, throughput predecible bajo carga, capacidad de ejecutar witness en entornos de memoria estricta).
-
-Intenté primero levantar witness gen sobre Akron. Funcionaba, pero no podía garantizar las propiedades que necesitaba. Cualquier llamada que alocara strings o cerrara un `Vec` podía disparar una colección. La solución fue construir una VM separada cuya disciplina de memoria fuera estructuralmente incompatible con el problema:
-
-**Artik** tiene aproximadamente veinticinco opcodes, ejecuta `.artik` bytecode liftado de los cuerpos de funciones de circom, usa registros estilo SSA, y, críticamente, **no tiene heap y no tiene GC**. Cada valor vive en un registro con vida computable estáticamente; el dispatch loop es un switch sobre opcodes que solo manipulan campos finitos y enteros pequeños. El R1CS backend la dispatcha vía un opcode dedicado (`WitnessOp::ArtikCall`).
+Artik es una máquina de registros más pequeña para esas funciones. Opera sobre elementos de campo y enteros pequeños, y no tiene heap general ni garbage collector:
 
 ```text
-// Pseudocódigo de un cuerpo de función circom liftado a Artik
-LOAD_PARAM    R0, 0       // primer parámetro
+LOAD_PARAM    R0, 0
 CONST_FIELD   R1, 1
 ADD_FIELD     R2, R0, R1
 RET           R2
 ```
 
-La invariante que Artik sostiene es simple y verificable: la memoria que usa una llamada a Artik es exactamente la suma de los registros declarados por su bytecode, no más. Eso hace que Artik sea trivialmente compatible con witness generation, exactamente porque renunció a la flexibilidad que Akron necesita.
+La cantidad de registros declarada en el bytecode acota el almacenamiento requerido por una llamada de Artik. Eso elimina el comportamiento del allocator y del collector de esta parte de la generación de witness. No vuelve constante en tiempo a todo el prover ni debe presentarse como una defensa completa contra canales temporales. Le da al runtime una propiedad más limitada que puede comprobarse desde el programa.
 
-## Lysis: la VM de SSA que la frontend de constraints recorre
+## Lysis: almacenamiento auxiliar con una escritura por slot
 
-El segundo límite apareció con SHA-256.
+El siguiente límite apareció al bajar templates grandes de Circom como SHA-256. Una ronda desenrollada podía crear más intermedios SSA de los que cabían en el frame original. Aumentar el frame solo posponía el overflow sin expresar cuánto tiempo seguían siendo válidos los valores almacenados fuera de él.
 
-La frontend de circom de Achronyme lleva los `template`s de circom a un IR SSA propio. Para circuitos chicos (Num2Bits, IsZero, EdDSA, MiMCSponge) ese IR cabe limpiamente en un esquema "frame de registros + emisor de constraints que recorre el IR linealmente". Para SHA-256 con 64 bytes de input, ese esquema se rompe: un solo cuerpo de iteración del round principal genera tantas operaciones SSA que el frame de registros previsto no las contiene, y el emisor de constraints (que yo había llamado *Walker*) empieza a fallar con frame overflow.
-
-La salida obvia era hacer el frame más grande. Pero el problema no era el tamaño; era estructural. Lo que el Walker realmente necesitaba era un mecanismo explícito de *spill*: un heap donde poder guardar valores intermedios cuando un cuerpo de iteración excedía el frame, y reglas estrictas sobre cómo ese heap se usa para que el emisor pudiera caminar el bytecode sin tener que hacer análisis de aliasing.
-
-**Lysis** es esa VM. Tiene treinta y tantos opcodes, un header con `heap_size_hint`, opcodes explícitos `StoreHeap` y `LoadHeap` para spill controlado, y un opcode `EmitWitnessCallHeap` para invocar Artik con argumentos resueltos desde el heap. Pero la decisión arquitectónica clave no es la presencia del heap; es el invariante que gobierna su uso:
-
-> **Cada slot del heap se escribe exactamente una vez.**
-
-Esa regla (*single-static-store*) es lo que hace que Lysis sea recorrible por el constraint emitter sin análisis de aliasing. Si cada slot se escribe una sola vez, el grafo de dependencias del bytecode es estático y construible en una sola pasada. No hay GC porque no hay liveness dinámica que rastrear; los slots viven hasta que el frame termina, y como cada uno se escribió una vez, el lector siempre puede recuperar el valor sin preocuparse de race conditions o sobreescrituras.
+Lysis ofrece instrucciones explícitas de spill:
 
 ```text
-// Pseudocódigo Lysis: spill de un valor SSA al heap
-COMPUTE       %v3, %v1, %v2     // operación interna
-STORE_HEAP    slot_42, %v3      // spill al heap (single-static-store)
+COMPUTE       %v3, %v1, %v2
+STORE_HEAP    slot_42, %v3
 ...
-LOAD_HEAP     %v77, slot_42     // recuperar más tarde
-EMIT_R1CS     %v77, ...         // el emitter lee desde aquí
+LOAD_HEAP     %v77, slot_42
+EMIT_R1CS     %v77, ...
 ```
 
-Lysis no es una VM "más" general que Artik; es una VM cuya disciplina (heap con escritura única) está alineada exactamente con la pregunta que el emisor de constraints necesita responder: *"¿cómo conecto las restricciones a través de las iteraciones desenrolladas de un loop grande?"*.
+Su heap sigue una regla central:
 
-## La invariante que une a las tres
+> Cada slot del heap se escribe exactamente una vez.
 
-La elección de modelo de memoria de cada VM no es una decisión separada del propósito de la VM; es una *consecuencia* del propósito.
+Con single-static-store, el emisor de constraints puede construir dependencias en una sola pasada. Una lectura posterior nunca observa un valor sobrescrito y los slots permanecen válidos hasta el final del frame. Lysis obtiene almacenamiento auxiliar sin adoptar el modelo de objetos ni el garbage collector de Akron.
 
-| VM     | Pregunta que responde                          | Memoria         | GC  |
-|--------|------------------------------------------------|-----------------|-----|
-| Akron  | "¿Qué quiere computar el usuario?"             | Heap            | Sí  |
-| Artik  | "¿Cuál es el witness para esta proof?"         | Solo registros  | No  |
-| Lysis  | "¿Cómo conecto estos constraints entre iters?" | Heap (1-store)  | No  |
+Lysis también puede resolver desde su heap los argumentos usados al invocar código de witness en Artik. Las dos máquinas cooperan, pero conservan reglas de memoria distintas.
 
-Akron pregunta por flexibilidad y la responde con heap libre y GC tri-color. Artik pregunta por determinismo y lo responde renunciando al heap. Lysis pregunta por spillabilidad sin aliasing y lo responde con un heap restringido por construcción.
+## La frontera entre ellas
 
-Lo que tres VMs me dieron, y una sola no, es la habilidad de razonar localmente. Cuando estoy escribiendo código en Akron, no tengo que preocuparme si una alocación rompe una invariante de witness: Artik no toca el heap de Akron. Cuando estoy debuggeando un emisor de constraints sobre Lysis, no tengo que considerar si un slot pudo haber sido sobreescrito: el invariante single-static-store lo prohíbe estructuralmente.
+| VM | Responsabilidad | Almacenamiento | GC |
+|---|---|---|---|
+| Akron | Programas dinámicos de Achronyme | Registros y heap administrado | Sí |
+| Artik | Funciones auxiliares de witness | Registros | No |
+| Lysis | Recorrido del programa de constraints | Registros y slots de una sola escritura | No |
 
-## Por qué tres, no dos ni cuatro
+La separación reduce los casos que cada motor debe manejar. Una asignación de Akron no puede disparar una colección dentro de Artik. Un slot de Lysis no puede sobrescribirse porque el validador de bytecode rechaza un segundo store. Cada problema puede investigarse dentro de la máquina que posee la invariante correspondiente.
 
-La pregunta natural es si esta separación es óptima o si refleja accidentes históricos. Mi respuesta honesta es: tres es lo que el problema pidió, y cualquier fusión rompe un invariante.
+## Por qué no las fusioné
 
-- **Akron + Artik**: forzaría witness gen a convivir con GC. Inviable por las razones de la sección de Artik.
-- **Akron + Lysis**: forzaría el lenguaje de scripting a operar bajo single-static-store. Imposible para closures y mutación normal.
-- **Artik + Lysis**: las dos comparten "no GC", pero Artik es no-heap y Lysis es heap-con-disciplina. Fusionar las dos significaría darle a Artik un heap que no necesita, o quitarle a Lysis un heap que sí necesita. Cualquiera de las dos direcciones empeora una de las dos.
+Las parejas posibles comparten detalles de implementación, pero no el mismo contrato:
 
-La cuarta VM hipotética sería una para *optimization passes* sobre el IR; eventualmente quizás exista, si los passes acumulan suficiente complejidad para justificar su propio bytecode. Pero hoy los optimization passes corren como código Rust nativo sobre el grafo SSA, y no hay un invariante claro que pida una VM nueva. Tres es lo correcto para el problema actual; cuatro sería complejidad sin justificación.
+- Fusionar Akron y Artik volvería a introducir memoria administrada en la ejecución de auxiliares de witness o eliminaría funciones necesarias para el runtime del lenguaje.
+- Fusionar Akron y Lysis obligaría a representar valores dinámicos mediante almacenamiento de una sola escritura.
+- Fusionar Artik y Lysis daría a Artik un heap que no necesita o quitaría a Lysis el almacenamiento que le permite procesar programas grandes y desenrollados.
 
-## Conclusión
+Tres no es una ley permanente. Si cambia el compilador, también pueden cambiar estas fronteras. Es simplemente la división más pequeña que encontré para que cada ruta de ejecución pudiera declarar sus reglas de memoria sin excepciones creadas por las otras dos.
 
-La tentación cuando un sistema empieza a romperse bajo carga es agregar features: un nuevo flag, un nuevo opcode, un caso especial. A veces eso es lo correcto. Pero a veces, lo que estás viendo no es un bug en una abstracción; es la abstracción intentando sostener dos invariantes incompatibles al mismo tiempo. La salida no es un parche; es reconocer que hay dos problemas pretendiendo ser uno, y separarlos.
-
-En Achronyme la separación produjo tres máquinas virtuales pequeñas (cada una de las cuales podría borrarse y reconstruirse en un par de semanas si el problema cambiara) en lugar de una máquina grande que nadie podría tocar sin romper algo lejano. La disciplina de memoria de cada una es estricta porque la pregunta que cada una responde es estricta. La complejidad agregada del sistema completo no aumentó por componer tres VMs; *bajó*, porque cada VM puede analizarse aislada de las otras.
-
-Si te llevás algo de este artículo, que sea esto: cuando una invariante se rompe, antes de agregar otro caso especial, preguntate si lo que tenés enfrente es realmente un solo sistema, o son dos sistemas que se vienen disfrazando de uno hace meses.
+El código está en el [repositorio de Achronyme](https://github.com/achronyme/achronyme). La prueba útil del diseño es si cada VM puede seguir aplicando su invariante en la frontera del bytecode. Si eso deja de ser cierto, conviene revisar la separación en lugar de defenderla por razones históricas.

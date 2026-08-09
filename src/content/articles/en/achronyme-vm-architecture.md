@@ -1,91 +1,74 @@
 ---
 title: "Anatomy of a Virtual Machine: From Stack to Registers in Achronyme"
-description: "A deep dive into virtual machine architecture and why migrating Achronyme to a register-based model reduced executed instructions by 50%."
+description: "Why Achronyme moved from stack bytecode to a register VM, and what that tradeoff changed."
 pubDate: "2026-03-07"
+updatedDate: "2026-08-08"
 tags: ["architecture", "compilers", "vm", "achronyme"]
 draft: false
 translationKey: "achronyme-vm-architecture"
-abstract: "This paper explores the architectural foundations of Virtual Machines, analyzing the structural differences between Stack-based and Register-based models. Through the case study of the Achronyme language, it demonstrates how the inherent bottleneck of Stack VMs in cryptographic operations was mitigated by adopting a Register-based VM (inspired by RISC, Lua 5.0, and Dalvik), significantly reducing the dispatch loop overhead and optimizing cache locality."
+abstract: "A comparison of stack and register bytecode using Achronyme's first VM rewrite. The register design enlarged individual instructions but reduced dispatches in the workloads measured at the time."
 technicalDepth: "Advanced"
 references:
   - "https://www.lua.org/doc/jucs05.pdf"
   - "https://source.android.com/docs/core/runtime/dalvik-bytecode"
 ---
 
-When I started building Achronyme over a year ago, I was fresh out of studying compiler theory and virtual machines. In its prototype phase, Achronyme was nothing more than a simple binary functioning as a *tree-walk interpreter* (evaluating the Abstract Syntax Tree node by node). It was undeniably inefficient, but building it marked what was, for me, the most decisive moment in the project's architecture: the need to build a true virtual machine.
+Achronyme began with a tree-walk interpreter. It evaluated the abstract syntax tree directly, which was useful while the language changed every day, but expensive once the same nodes started running inside loops. The first bytecode implementation used an operand stack. The next one used virtual registers.
 
-In academia, virtual machines are often taught somewhat abstractly, but it isn't until you actually need to optimize clock cycles in a real-world environment that the full picture becomes clear.
+This article records why I made that second change. It describes the VM as it existed in March 2026; Achronyme later split execution across [three specialized machines](/articles/achronyme-three-vms/).
 
-## What Exactly is a Virtual Machine (in this context)?
+## What "virtual machine" means here
 
-When we talk about a VM in the context of programming languages (like Java's JVM, JavaScript's V8, or Erlang's BEAM), we are not referring to hardware virtualization (like VirtualBox or VMware). We are referring to a **Process Virtual Machine**: a software layer that emulates an abstract computer architecture designed to execute a specific instruction set (Bytecode), isolating execution from the underlying physical hardware.
+This is a process virtual machine, not a virtualized operating system. It executes Achronyme bytecode through a dispatch loop:
 
-The heart of these VMs is the **Dispatch Loop** (or *fetch-decode-execute* cycle):
-1. **Fetch:** Retrieve the next instruction from memory.
-2. **Decode:** Understand what the operation is and identify its operands.
-3. **Execute:** Perform the operation and advance the instruction pointer (IP).
+1. Fetch the instruction at the instruction pointer.
+2. Decode its opcode and operands.
+3. Execute it and advance or replace the instruction pointer.
 
-How the VM handles memory and passes variables into the *Execute* phase defines its architecture. The two dominant families are **Stack-based** and **Register-based**.
+The bytecode format determines where each instruction reads and writes values. That choice affects instruction density, compiler complexity, and the amount of dispatch work performed by the interpreter.
 
 ![Stack vs Register VM Architecture](/images/articles/achronyme-vm/architecture-comparison.svg)
 
-## The Stack Bottleneck
+## Stack bytecode
 
-When I implemented Achronyme's first proof of concept, I used a Stack VM, the *de facto* standard for nascent projects due to its simplicity when compiling. In this model, instructions do not have explicit operands; they assume the data they need is at the top of a LIFO (Last-In-First-Out) data structure: the operand stack.
+A stack VM keeps operands on a last-in, first-out stack. Instructions such as `ADD` do not name their inputs because the top two stack values are implied.
 
-To understand the problem, let's look at how a simple mathematical addition (`a = b + c`) is compiled.
+For `a = b + c`, a simple stack compiler might emit:
 
-**Bytecode in a Stack VM:**
 ```text
-0001: LOAD_LOCAL 1  // Pushes 'b' to the stack
-0002: LOAD_LOCAL 2  // Pushes 'c' to the stack
-0003: ADD           // Pops 'c', Pops 'b', adds them, and Pushes the result
-0004: STORE_LOCAL 0 // Pops the result and stores it in 'a'
+0001: LOAD_LOCAL 1  // push b
+0002: LOAD_LOCAL 2  // push c
+0003: ADD           // pop b and c, then push the result
+0004: STORE_LOCAL 0 // store the result in a
 ```
 
-### The Illusion of Efficiency
+The encoding can be compact. The cost is the stream of load and store instructions needed to move values between locals and the operand stack. For arithmetic-heavy Achronyme programs, those instructions increased the number of trips through the dispatch loop without doing arithmetic themselves.
 
-The theoretical advantage of this model is code density. Since instructions like `ADD` don't need to specify "what" to add (it's always the top of the stack), instructions usually occupy a single byte (hence the name *bytecode*).
+That does not make stack VMs generally slow. They are simple to generate, easy to validate, and often compact. It means their tradeoff was a poor fit for the workloads I was measuring.
 
-However, I was in for a surprise: the goal of creating an efficient runtime environment was being thwarted. The intermediate instructions required to move data between local memory and the top of the stack (`LOAD` and `STORE`) accumulate incredibly fast.
+## Register bytecode
 
-The cryptographic focus I was giving Achronyme required evaluating dense mathematical functions in *hot loops*. Cryptographic operations are inherently expensive; adding the cost of executing the **Dispatch Loop four times** just for a simple mathematical addition was not viable. Every loop iteration implies decoding overhead and conditional jumps on the physical processor.
+A register VM gives each function a frame containing virtual registers. Instructions name their sources and destination explicitly:
 
-## RISC in Software: Register-Based Machines
-
-I wanted to avoid this overhead, so I researched several industrial projects and discovered **register-based virtual machines**. It was a moment of revelation. If you like the RISC (Reduced Instruction Set Computer) philosophy in hardware, a Register VM is practically a highly optimized emulator of that approach designed to execute bytecode.
-
-Instead of using an intermediary stack, a Register VM allocates a block of memory (a *Stack Frame*) for each function and treats it as an array of "Virtual Registers" (`R0, R1, R2...`). Instructions explicitly specify which registers to operate on.
-
-Let's look at the same mathematical addition (`a = b + c`) in this model:
-
-**Bytecode in a Register VM:**
 ```text
-// Format: OPCODE Destination, Source1, Source2
-0001: ADD R0, R1, R2  // Adds R1 and R2, stores in R0. (All in one instruction)
+// Format: OPCODE destination, source1, source2
+0001: ADD R0, R1, R2
 ```
 
-### Industry Validation
+One instruction now performs the data movement that the stack version expressed with four. The instruction itself is wider because it must encode three register indices.
 
-I didn't invent anything new; the transition from Stack to Registers has massive industrial precedents that directly inspired Achronyme:
+Lua 5.0 is the clearest precedent for this design. Dalvik used a register-oriented format as well, although its constraints and runtime were different from Achronyme's. I used those systems as references for the bytecode layout, not as evidence that the same performance result would automatically carry over.
 
-1. **The Lua 5.0 VM:** Perhaps the most famous paper on this is *"The Implementation of Lua 5.0"* (2005). Lua revolutionized scripting by demonstrating that, even though register instructions are "fatter" (4 bytes in Lua to accommodate the opcode and three register addresses), the dramatic reduction in the total number of instructions more than compensates for the individual decoding cost.
-2. **Dalvik (Android):** Before migrating to Ahead-Of-Time compilation with ART, Android used the Dalvik VM. Designed for the constrained ARM processors of early smartphones, Google chose a register architecture. The reason? It mapped much more naturally to the physical registers of the ARM processor and reduced memory traffic.
+## What changed in Achronyme
 
-## The Architectural Trade-off in Achronyme
+In the programs I compared during the rewrite, the register compiler emitted close to half as many dispatched instructions as the stack compiler. That is an instruction-count result, not a claim that every program became twice as fast. Wider bytecode increases code size, and total runtime still depends on branches, allocations, native calls, cache behavior, and the work performed by each opcode.
 
-Implementing this change in Achronyme was not trivial and brought an obvious *trade-off*: bytecode binaries grew in size. Because each instruction must encode the indices of its operands explicitly (usually in 32 or 64-bit words), the 1-byte-per-instruction density of Stack VMs is lost.
+Registers also made dataflow clearer in the compiler. A value's producer and consumers were explicit in the instruction stream, which helped later work on SSA-like lowering and specialized execution paths.
 
-But the runtime result more than justified it: **the number of dispatched instructions was reduced by almost 50%**. By cutting the instructions in half, we halve the number of times the VM must perform the expensive fetch and decode process.
+I originally attributed part of the improvement to cache locality. The register frame is contiguous and avoids constant operand-stack shuffling, but I did not publish hardware-counter measurements for that version. The defensible result is the reduction in dispatched instructions; a precise cache claim would need separate measurement.
 
-### The Hidden Impact: Cache Locality
+## The tradeoff
 
-Beyond the instruction count, I saw the greatest benefit in **spatial cache locality**. By keeping operands in a contiguous block of memory (the function frame's register array) and not constantly modifying a LIFO stack pointer, the physical CPU can predict and cache memory (L1/L2 cache) far more efficiently. The cryptographic algorithms inside Achronyme began to iterate at a speed that was simply unattainable with the previous model.
+The migration exchanged compact bytecode for fewer dispatches and more explicit dataflow. That choice fit Achronyme's arithmetic-heavy programs and made later compiler work easier. It would not be the right choice for every interpreter.
 
-## Conclusion
-
-Building your own virtual machine and writing the compiler that generates its code teaches a brutal lesson that the abstraction of modern software often hides: at some point, the correct architectural decision forces you to stop thinking about language syntax and start understanding how physical hardware breathes.
-
-You have to think about how bytes actually move across memory buses, how the processor interacts with cache lines to avoid a *cache miss*, and why executing **one** 4-byte instruction matters infinitely more in real life than dispatching four 1-byte instructions.
-
-High-performance software is written when, regardless of the level of abstraction you operate at, you intimately understand the silicon machine that ultimately executes it.
+The important part was measuring the actual instruction stream. The stack design looked efficient when I compared opcode widths. It looked different when I counted the extra loads and stores required by a real program.
