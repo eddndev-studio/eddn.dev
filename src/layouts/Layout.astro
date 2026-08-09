@@ -37,7 +37,6 @@ const imageAltPrefix = lang === 'es' ? 'Portada de:' : 'Cover of:';
 		<meta name="viewport" content="width=device-width" />
 		<script is:inline>
 			(function() {
-				document.documentElement.classList.add('js');
 				var t = localStorage.getItem('theme');
 				if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme:dark)').matches)) {
 					document.documentElement.classList.add('dark');
@@ -116,47 +115,6 @@ const imageAltPrefix = lang === 'es' ? 'Portada de:' : 'Cover of:';
 		<Footer />
 
 		<script>
-			function applyStagger(elements: NodeListOf<Element>, cls: string, staggerMs: number, baseMs = 0) {
-				elements.forEach((el, i) => {
-					(el as HTMLElement).style.setProperty('--delay', `${baseMs + i * staggerMs}ms`);
-					el.classList.add(cls);
-					el.addEventListener('animationend', () => {
-						el.classList.remove(cls);
-						(el as HTMLElement).style.removeProperty('--delay');
-					}, { once: true });
-				});
-			}
-
-			function animateContent() {
-				// Honor reduced-motion: skip the staggered entrance entirely
-				// (elements have no hidden base state, so they just appear).
-				if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-				// 1. Page header reveal (index/trajectory pages tag their
-				//    header with [data-page-header]; nesting-independent so
-				//    pages keep a single <main> landmark from Layout).
-				const heroElements = document.querySelectorAll("[data-page-header] > *");
-				if (heroElements.length) {
-					applyStagger(heroElements, 'anim-fade-up', 100);
-				}
-
-				// 2. Grid Items (Blog Posts, Cards)
-				const gridItems = document.querySelectorAll(".grid > article, .grid > a, .grid > div");
-				if (gridItems.length) {
-					applyStagger(gridItems, 'anim-fade-up-sm', 50, 100);
-				}
-
-				// 3. List/Table Items (LeetCode Rows, Trajectory Timeline)
-				const listItems = document.querySelectorAll("tbody > tr, .space-y-12 > .relative");
-				if (listItems.length) {
-					applyStagger(listItems, 'anim-slide-left', 50, 300);
-				}
-			}
-
-			function init() {
-				animateContent();
-			}
-
 			// Restore dark class after Astro view-transition DOM swap
 			document.addEventListener("astro:after-swap", () => {
 				const t = localStorage.getItem('theme');
@@ -167,29 +125,6 @@ const imageAltPrefix = lang === 'es' ? 'Portada de:' : 'Cover of:';
 					document.documentElement.classList.remove('dark');
 				}
 			});
-
-			document.addEventListener("astro:page-load", init);
 		</script>
-
-		<style is:global>
-			@keyframes fade-up {
-				from { opacity: 0; transform: translateY(20px); }
-			}
-			@keyframes fade-up-sm {
-				from { transform: translateY(10px); }
-			}
-			@keyframes slide-left {
-				from { opacity: 0; transform: translateX(-10px); }
-			}
-			.anim-fade-up {
-				animation: fade-up 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) var(--delay, 0ms) both;
-			}
-			.anim-fade-up-sm {
-				animation: fade-up-sm 0.4s cubic-bezier(0.32, 0.72, 0, 1) var(--delay, 0ms) both;
-			}
-			.anim-slide-left {
-				animation: slide-left 0.5s cubic-bezier(0.32, 0.72, 0, 1) var(--delay, 0ms) both;
-			}
-		</style>
 	</body>
 </html>

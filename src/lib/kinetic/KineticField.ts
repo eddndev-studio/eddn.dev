@@ -46,10 +46,12 @@ export class KineticFieldController {
   private pointer: PointerState = { x: 0.52, y: 0.48, active: 0 };
   private pointerTarget: PointerState = { ...this.pointer };
   private frameId: number | null = null;
+  private revealFrameId: number | null = null;
   private observer: IntersectionObserver | null = null;
   private abortController = new AbortController();
   private reducedMotion: boolean;
   private visible = true;
+  private ready = false;
 
   constructor(root: HTMLElement) {
     const svg = root.querySelector<SVGSVGElement>("[data-kinetic-svg]");
@@ -65,11 +67,14 @@ export class KineticFieldController {
 
   init() {
     const { signal } = this.abortController;
+    this.ready = false;
+    this.root.classList.remove("is-ready");
     this.svg.addEventListener("pointermove", this.onPointerMove, { signal });
     this.svg.addEventListener("pointerleave", this.onPointerLeave, { signal });
 
     if (this.reducedMotion) {
       this.render(MODE_DURATION * 0.62);
+      this.markReady();
       return;
     }
 
@@ -80,6 +85,8 @@ export class KineticFieldController {
 
   destroy() {
     this.stop();
+    if (this.revealFrameId !== null) cancelAnimationFrame(this.revealFrameId);
+    this.revealFrameId = null;
     this.observer?.disconnect();
     this.observer = null;
     this.abortController.abort();
@@ -114,8 +121,18 @@ export class KineticFieldController {
 
   private loop = (time: number) => {
     this.render(time);
+    this.markReady();
     this.frameId = requestAnimationFrame(this.loop);
   };
+
+  private markReady() {
+    if (this.ready) return;
+    this.ready = true;
+    this.revealFrameId = requestAnimationFrame(() => {
+      this.revealFrameId = null;
+      this.root.classList.add("is-ready");
+    });
+  }
 
   private render(time: number) {
     this.pointer.x = lerp(this.pointer.x, this.pointerTarget.x, 0.075);

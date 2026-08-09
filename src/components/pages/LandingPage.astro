@@ -120,7 +120,7 @@ if (latestLeetCode) {
 <Layout title="eddn.dev - Eduardo Alonso">
 	<section data-hero-section class="flex flex-col">
 		<div data-hero-content class="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 content-center gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-12 lg:gap-6 lg:px-8 lg:py-24">
-			<div class="hero-seq lg:col-span-8">
+			<div class="lg:col-span-8">
 				<div class="mb-8 flex items-center gap-4 sm:mb-10">
 					<span class="font-mono text-[11px] uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">01 / {t("home.index_label")}</span>
 					<span class="h-px w-10 bg-hairline" aria-hidden="true"></span>
@@ -128,12 +128,12 @@ if (latestLeetCode) {
 				</div>
 
 				<h1
-					class="hero-seq-clip [animation-delay:100ms] max-w-[10ch] text-[clamp(3.8rem,8.8vw,8.75rem)] font-semibold leading-[0.8] tracking-[-0.078em] text-ink [&_span]:text-brand-600 dark:[&_span]:text-brand-300"
+					class="max-w-[10ch] text-[clamp(3.8rem,8.8vw,8.75rem)] font-semibold leading-[0.8] tracking-[-0.078em] text-ink [&_span]:text-brand-600 dark:[&_span]:text-brand-300"
 					set:html={t("home.title")}
 				></h1>
 			</div>
 
-			<div class="hero-seq [animation-delay:260ms] flex flex-col justify-end gap-8 lg:col-span-4 lg:pb-2">
+			<div class="flex flex-col justify-end gap-8 lg:col-span-4 lg:pb-2">
 				<p class="max-w-[26ch] text-[clamp(1.35rem,2.2vw,2rem)] font-medium leading-[1.05] tracking-[-0.045em] text-body-strong">
 					{t("home.subtitle")}
 				</p>
@@ -179,7 +179,7 @@ if (latestLeetCode) {
 			</div>
 		</div>
 
-		<div data-hero-slot class="hero-seq relative z-0 -mt-24 h-[34dvh] min-h-[18rem] max-h-[24rem] [animation-delay:360ms] sm:-mt-32 lg:-mt-40">
+		<div data-hero-slot class="relative z-0 -mt-24 h-[34dvh] min-h-[18rem] max-h-[24rem] sm:-mt-32 lg:-mt-40">
 			<KineticField decorative />
 		</div>
 
@@ -187,7 +187,7 @@ if (latestLeetCode) {
 
 	<div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
 		<section id="latest" class="scroll-mt-24 py-28 sm:py-36 lg:py-44">
-			<div class="io-reveal mb-12 grid gap-6 lg:mb-16 lg:grid-cols-12 lg:items-end">
+			<div class="mb-12 grid gap-6 lg:mb-16 lg:grid-cols-12 lg:items-end">
 				<div class="lg:col-span-8">
 					<span class="mb-4 block font-mono text-[11px] uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">02 / {t("home.content_index_label")}</span>
 					<h2 class="text-[clamp(2.8rem,6vw,6.5rem)] font-semibold leading-[0.86] tracking-[-0.07em] text-ink">{t("home.latest_label")}</h2>
@@ -198,7 +198,7 @@ if (latestLeetCode) {
 				</a>
 			</div>
 
-			<div class="io-reveal border-b border-hairline">
+			<div class="border-b border-hairline">
 				{entries.map((entry) => (
 					<article data-entry-row class="group relative grid gap-5 border-t border-hairline py-7 sm:py-9 lg:grid-cols-12 lg:gap-6 lg:py-11">
 						<div class="flex items-baseline gap-4 lg:col-span-3">
@@ -227,7 +227,7 @@ if (latestLeetCode) {
 		</section>
 
 		<section id="proof" class="scroll-mt-24 pb-20 pt-12 sm:pb-28 sm:pt-20">
-			<div class="io-reveal mb-14 grid gap-8 border-t border-hairline pt-5 lg:mb-20 lg:grid-cols-12 lg:items-end">
+			<div class="mb-14 grid gap-8 border-t border-hairline pt-5 lg:mb-20 lg:grid-cols-12 lg:items-end">
 				<div class="lg:col-span-8">
 					<span class="mb-5 block font-mono text-[11px] uppercase tracking-[0.2em] text-brand-600 dark:text-brand-300">03 / {t("home.telemetry_label")}</span>
 					<h2 class="text-[clamp(3rem,7vw,7.5rem)] font-semibold leading-[0.82] tracking-[-0.075em] text-ink [&_span]:text-brand-600 dark:[&_span]:text-brand-300" set:html={t("home.telemetry_title")}></h2>
@@ -242,29 +242,4 @@ if (latestLeetCode) {
 			</div>
 		</section>
 	</div>
-
-	<script>
-		let revealObserver: IntersectionObserver | null = null;
-
-		function initReveals() {
-			revealObserver?.disconnect();
-			revealObserver = new IntersectionObserver((entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						entry.target.classList.add("is-visible");
-						revealObserver?.unobserve(entry.target);
-					}
-				});
-			}, { threshold: 0.12 });
-			document.querySelectorAll(".io-reveal").forEach((element) => revealObserver?.observe(element));
-		}
-
-		function cleanupReveals() {
-			revealObserver?.disconnect();
-			revealObserver = null;
-		}
-
-		document.addEventListener("astro:page-load", initReveals);
-		document.addEventListener("astro:before-swap", cleanupReveals);
-	</script>
 </Layout>
