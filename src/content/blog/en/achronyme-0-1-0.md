@@ -2,6 +2,7 @@
 title: "Achronyme 0.1.0: stable at last"
 description: "The stable Achronyme release, the ceremony that delayed it, and the evidence I needed before publishing it."
 pubDate: "2026-08-08"
+updatedDate: "2026-08-09"
 tags: ["achronyme", "release", "zk", "rust", "compiler"]
 translationKey: "achronyme-0-1-0-stable"
 ---
@@ -53,6 +54,8 @@ I used disposable Google Cloud compute for the heavy stages. When finalization f
 ## What shipped
 
 The [Achronyme 0.1.0 release](https://github.com/achronyme/achronyme/releases/tag/v0.1.0) includes binaries for Linux `x86_64` and `aarch64`, Intel and Apple Silicon macOS, and Windows `x86_64`. The Linux bundles have SHA-256 sidecars, and GitHub records a digest for every asset. The proving evidence is a separate download so anyone can inspect the link between source, circuit, ceremony, and proofs.
+
+For a concrete program that exercises the new module, concurrency, capability, and proof boundaries together, read [A private auction as an Achronyme integration test](/articles/achronyme-private-auction-integration-test/).
 
 I am not calling the language finished. I am calling one exact source revision stable and documenting how to check it. That distinction accounts for much of the past few months.
 
