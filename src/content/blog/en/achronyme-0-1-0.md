@@ -14,7 +14,7 @@ I do not want to excuse the delay with a task list. I do want to explain why I r
 
 ## What changed since the beta
 
-Achronyme is no longer only the language experiment I described at the start of the year. Version 0.1.0 includes structured concurrency, lexically scoped tasks, channels, owned I/O, resource limits, and capability manifests. The compiler propagates effects across calls so the boundary between host behavior and provable behavior remains explicit.
+Since the language experiment I described at the start of the year, Achronyme has gained structured concurrency, lexically scoped tasks, channels, owned I/O, resource limits, and capability manifests. The compiler propagates effects across calls so the boundary between host behavior and provable behavior remains explicit.
 
 That behavior is covered across the interpreter, LLVM JIT, AOT, and WebAssembly targets. The module system, LSP, diagnostics, and circuit compiler belong to the same release instead of being separate demos that happen to share a home page.
 

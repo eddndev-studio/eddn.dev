@@ -23,6 +23,6 @@ I use code assistants, but I do not want generated prose or generated code to st
 
 This site is part of that standard. It is not a sales page. It is the technical record behind the things I build.
 
-Update, August 2026: the first stable goal is complete. [Achronyme 0.1.0 is published](/en/blog/achronyme-0-1-0/), together with the evidence that held the release back.
+Update, August 2026: the first stable goal is complete. [Achronyme 0.1.0 is published](/blog/achronyme-0-1-0/), together with the evidence that held the release back.
 
 **Edd.**

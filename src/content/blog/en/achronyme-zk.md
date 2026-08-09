@@ -29,4 +29,4 @@ Those choices were a starting point, not a final architecture. The VM later spli
 
 The useful lesson from the old Hello World was not that every program must minimize a small memory figure. It was that I had chosen representations without measuring their cost or defining what the runtime was for. Once the purpose became concrete, the tradeoffs became easier to test.
 
-Update, August 2026: [Achronyme 0.1.0 is now available](/en/blog/achronyme-0-1-0/). The release story covers the architecture and proving work that followed this first redesign.
+Update, August 2026: [Achronyme 0.1.0 is now available](/blog/achronyme-0-1-0/). The release story covers the architecture and proving work that followed this first redesign.

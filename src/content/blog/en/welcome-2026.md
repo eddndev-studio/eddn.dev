@@ -17,6 +17,6 @@ This site will be the record. I will use it for Achronyme internals, production 
 
 The first version of this post made broad promises about mastery and impact. Those words did not say much. The more honest plan is narrower: finish difficult things, publish the evidence, and correct myself when the implementation disagrees with the story.
 
-Update, August 2026: [Achronyme 0.1.0 is now published](/en/blog/achronyme-0-1-0/). It took much longer than I expected, and the release note explains why.
+Update, August 2026: [Achronyme 0.1.0 is now published](/blog/achronyme-0-1-0/). It took much longer than I expected, and the release note explains why.
 
 **Edd.**

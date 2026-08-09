@@ -62,6 +62,17 @@ test("Achronyme setup claims distinguish automation from trust", () => {
 	}
 });
 
+test("English editorial links use the unprefixed default-locale routes", () => {
+	const englishFiles = [
+		...collectMarkdown("src/content/blog/en"),
+		...collectMarkdown("src/content/articles/en"),
+	];
+
+	for (const file of englishFiles) {
+		assert.doesNotMatch(read(file), /\]\(\/en\//, `${file} prefixes an English route`);
+	}
+});
+
 test("the stable 0.1.0 release story is complete in English and Spanish", () => {
 	const english = read("src/content/blog/en/achronyme-0-1-0.md");
 	const spanish = read("src/content/blog/es/achronyme-0-1-0.md");
@@ -83,6 +94,6 @@ test("the stable 0.1.0 release story is complete in English and Spanish", () => 
 		assert.match(article, /snarkjs/i);
 	}
 
-	assert.match(english, /I(?:'|’)m sorry|I apologize/i);
+	assert.match(english, /I'm sorry|I apologize/i);
 	assert.match(spanish, /perd(?:o|ó)n|disculpa/i);
 });

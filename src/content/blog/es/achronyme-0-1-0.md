@@ -14,7 +14,7 @@ No quiero justificar el retraso con una lista de tareas. Sí quiero explicar por
 
 ## Qué cambió desde la beta
 
-Achronyme ya no es solo el experimento de lenguaje que describí al inicio del año. La versión 0.1.0 incorpora concurrencia estructurada, tareas con alcance léxico, canales, E/S con propiedad explícita, límites de recursos y manifiestos de capacidades. El compilador propaga efectos entre llamadas para mantener clara la frontera entre lo que puede ejecutarse en el host y lo que puede formar parte de una prueba.
+Desde el experimento de lenguaje que describí al inicio del año, Achronyme incorporó concurrencia estructurada, tareas con alcance léxico, canales, E/S con propiedad explícita, límites de recursos y manifiestos de capacidades. El compilador propaga efectos entre llamadas para mantener clara la frontera entre lo que puede ejecutarse en el host y lo que puede formar parte de una prueba.
 
 Ese comportamiento se cubre en el intérprete, LLVM JIT, AOT y WebAssembly. El sistema de módulos, el LSP, los diagnósticos y la compilación de circuitos forman parte del mismo release, no de demos separadas que solo coinciden en la página principal.
 

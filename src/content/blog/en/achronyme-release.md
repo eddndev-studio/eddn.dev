@@ -9,7 +9,7 @@ translationKey: "achronyme-0-1-0-beta2"
 
 This article described Achronyme while it was still on `v0.1.0-beta.19`. I have kept it as a record of that stage, but corrected two claims that did not survive the stable release: the setup was automated, not trust-free, and the beta was still a prototype in several important ways.
 
-For the completed release, read [Achronyme 0.1.0: stable at last](/en/blog/achronyme-0-1-0/).
+For the completed release, read [Achronyme 0.1.0: stable at last](/blog/achronyme-0-1-0/).
 
 ## What the beta could do
 
