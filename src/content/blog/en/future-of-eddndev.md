@@ -1,31 +1,28 @@
 ---
 title: "The Future of eddn.dev"
-description: "Reflections on the redesign and goals of this new personal space."
+description: "Why I rebuilt this site as a public engineering notebook."
 pubDate: "2025-12-31"
+updatedDate: "2026-08-08"
 tags: ["personal", "webdev", "achronyme"]
 translationKey: "future-of-eddndev"
 ---
 
-Welcome to the new version of my personal site. This space is born with the intention of being my central engineering log. Here, I will not only document the development of **Achronyme**, but also share trade anecdotes, technical case studies, and reflections on what it means to build software today.
+I rebuilt eddn.dev to serve as my engineering notebook. It is where I can explain Achronyme, document production work, and keep a record of decisions that would otherwise disappear inside commits and issue threads.
 
-## Looking in the Rearview Mirror: 2025
+## What 2025 changed
 
-I'll be honest: 2025 was a year of incredibly hard learning. It wasn't a bed of roses, but a stage marked by overcoming *burnout* and the imperative need to rebuild myself. It was the year when all that scattered knowledge I had finally had to take solid shape or disappear.
+2025 was difficult. I was recovering from burnout while trying to turn scattered experience into work I could stand behind. Production incidents taught me more about software than polished demos did. CI stopped being a badge in a README and became the place where I learned which assumptions only held on my computer.
 
-It was a forced transition towards technical maturity. I learned through reality checks: seeing production down, understanding what aggressive optimizations and low-level really mean, and configuring CI/CD pipelines not for fashion, but for survival.
+Freelance work was difficult for a different reason: before people know your name, they have little reason to trust a claim about quality. Friends helped me find the first projects, and Sylestudio gave me room to contribute while I was still learning how to present my work clearly. I am grateful for both.
 
-I also faced the harshness of the *freelance* market. It is incredibly difficult to make yourself known and get people to take your work seriously when you are starting to fly solo. Although I feel I haven't fully "taken off" yet, I deeply appreciate the projects that came thanks to the help of friends and, very especially, to **Sylestudio**, which has been my niche and home in the middle of this storm.
+## What this site is for
 
-## Horizon 2026
+In 2026 my main technical goal was to publish a usable Achronyme release. I also wanted to study low-level systems more carefully: memory layout, virtual machines, compilers, cryptographic circuits, and the less glamorous work required to ship them.
 
-For this new year, my professional goal is clear and ambitious: **launch the usable version of Achronyme**.
+I use code assistants, but I do not want generated prose or generated code to stand in for understanding. The useful standard is simple: I should be able to explain a decision, test it, and show the evidence behind any public claim.
 
-Beyond the product, I have a personal commitment to my craft: I want to return to "hard" programming. I want to detach myself from the dependence on code assistants and get my hands dirty with pure logic again. My goal is to deepen into low-level architectures to be able to offer products truly optimized for the industry, not just software that "works".
+This site is part of that standard. It is not a sales page. It is the technical record behind the things I build.
 
-## Happy New Year!
-
-To everyone reading this, thank you for being here. This site will witness that journey back to pure code and the birth of Achronyme.
-
-I wish you a 2026 full of worthwhile challenges and successful builds.
+Update, August 2026: the first stable goal is complete. [Achronyme 0.1.0 is published](/en/blog/achronyme-0-1-0/), together with the evidence that held the release back.
 
 **Edd.**
