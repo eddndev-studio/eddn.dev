@@ -23,7 +23,7 @@ const currentYear = new Date().getFullYear();
 >
 	<nav
 		class="mx-auto grid h-20 max-w-[1400px] grid-cols-12 items-center px-4 sm:px-6 lg:px-8"
-		aria-label="Primary navigation"
+		aria-label={t("nav.primary_label")}
 	>
 		<a
 			href={lang === "es" ? "/es/" : "/"}
@@ -55,17 +55,17 @@ const currentYear = new Date().getFullYear();
 			<LanguagePicker />
 			<button
 				type="button"
-				aria-label="Search"
+				aria-label={t("nav.search")}
 				class="search-trigger group flex h-11 items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:text-ink"
 			>
 				<svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
 				</svg>
-				<span class="hidden xl:inline">Search</span>
+				<span class="hidden xl:inline">{t("nav.search")}</span>
 			</button>
 			<button
 				type="button"
-				aria-label="Toggle theme"
+				aria-label={t("nav.toggle_theme")}
 				class="theme-toggle grid size-11 place-items-center text-mute transition-colors duration-300 hover:text-ink"
 			>
 				<svg class="size-4 block dark:hidden" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
@@ -81,12 +81,14 @@ const currentYear = new Date().getFullYear();
 			<button
 				id="menu-toggle"
 				type="button"
-				aria-label="Toggle menu"
+				aria-label={t("nav.menu")}
 				aria-controls="mobile-menu"
 				aria-expanded="false"
+				data-menu-label={t("nav.menu")}
+				data-close-label={t("nav.close")}
 				class="header-action group flex h-11 items-center gap-3 text-[11px] font-medium uppercase tracking-[0.12em] text-ink focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
 			>
-				<span data-menu-label>Menu</span>
+				<span data-menu-label>{t("nav.menu")}</span>
 				<span class="relative block h-3 w-5" aria-hidden="true">
 					<span class="menu-line absolute left-0 top-[3px] h-px w-5 bg-ink transition-transform duration-500 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] group-[.is-open]:translate-y-[3px] group-[.is-open]:rotate-45"></span>
 					<span class="menu-line absolute bottom-[3px] left-0 h-px w-5 bg-ink transition-transform duration-500 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] group-[.is-open]:-translate-y-[3px] group-[.is-open]:-rotate-45"></span>
@@ -102,7 +104,7 @@ const currentYear = new Date().getFullYear();
 	class="fixed inset-0 z-40 flex min-h-[100dvh] flex-col bg-canvas px-4 pb-6 pt-24 text-ink opacity-0 invisible transition-[opacity,visibility] duration-500 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] sm:px-6 lg:hidden"
 >
 	<div class="mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-between">
-		<nav class="border-b border-hairline" aria-label="Compact navigation">
+		<nav class="border-b border-hairline" aria-label={t("nav.compact_label")}>
 			{navItems.map((item, index) => (
 				<a
 					href={item.href}
@@ -118,9 +120,9 @@ const currentYear = new Date().getFullYear();
 		</nav>
 
 		<div class="grid grid-cols-2 border-t border-hairline font-mono text-[11px] uppercase tracking-[0.14em] text-mute sm:grid-cols-4">
-			<button type="button" class="search-trigger mobile-search-trigger h-12 text-left transition-colors hover:text-ink sm:h-14">Search</button>
+			<button type="button" class="search-trigger mobile-search-trigger h-12 text-left transition-colors hover:text-ink sm:h-14">{t("nav.search")}</button>
 			<div class="flex h-12 items-center sm:h-14"><LanguagePicker /></div>
-			<button type="button" aria-label="Toggle theme" class="theme-toggle h-12 text-left transition-colors hover:text-ink sm:h-14">Light / Dark</button>
+			<button type="button" aria-label={t("nav.toggle_theme")} class="theme-toggle h-12 text-left transition-colors hover:text-ink sm:h-14">{t("nav.theme")}</button>
 			<span class="flex h-12 items-center justify-end sm:h-14">(c) {currentYear}</span>
 		</div>
 	</div>
@@ -173,7 +175,7 @@ const currentYear = new Date().getFullYear();
 			menu.classList.add("invisible", "opacity-0");
 			header.classList.remove("menu-open");
 			document.body.style.overflow = "";
-			if (label) label.textContent = "Menu";
+			if (label) label.textContent = toggle.dataset.menuLabel || "Menu";
 			if (restoreFocus) toggle.focus();
 		};
 
@@ -185,7 +187,7 @@ const currentYear = new Date().getFullYear();
 			menu.classList.add("visible", "opacity-100");
 			header.classList.add("menu-open");
 			document.body.style.overflow = "hidden";
-			if (label) label.textContent = "Close";
+			if (label) label.textContent = toggle.dataset.closeLabel || "Close";
 			requestAnimationFrame(() => menu.querySelector<HTMLAnchorElement>("a")?.focus({ preventScroll: true }));
 		};
 

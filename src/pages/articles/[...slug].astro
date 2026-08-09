@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import ViewCounter from "../../components/ViewCounter.astro";
+import { useTranslations } from "../../i18n/ui";
 
 export async function getStaticPaths() {
 	const posts = await getCollection("articles");
@@ -17,6 +18,12 @@ export async function getStaticPaths() {
 
 const post = Astro.props;
 const { Content } = await render(post);
+const t = useTranslations("en");
+const depthLabels = {
+	Basic: t("depth.basic"),
+	Intermediate: t("depth.intermediate"),
+	Advanced: t("depth.advanced"),
+};
 
 // Find translation
 const allPosts = await getCollection("articles");
@@ -43,7 +50,7 @@ if (translationKey) {
 ---
 
 <Layout
-	title={`${post.data.title} — eddn.dev`}
+	title={`${post.data.title} - eddn.dev`}
 	description={post.data.description}
 	hreflangs={hreflangs}
 >
@@ -72,7 +79,7 @@ if (translationKey) {
 					)
 				}
 				<span class="text-[11px] font-mono px-2 py-0.5 rounded-[3px] border border-hairline text-mute ml-4">
-					{post.data.technicalDepth}
+					{depthLabels[post.data.technicalDepth]}
 				</span>
 			</div>
 
@@ -98,7 +105,7 @@ if (translationKey) {
 			{
 				post.data.abstract && (
 					<div class="p-6 bg-canvas-soft border-l border-hairline rounded-r-md mb-8">
-						<h3 class="text-xs font-mono text-mute uppercase tracking-widest mb-2">Abstract</h3>
+						<h3 class="text-xs font-mono text-mute uppercase tracking-widest mb-2">{t("articles.abstract")}</h3>
 						<p class="text-body leading-relaxed">{post.data.abstract}</p>
 					</div>
 				)
@@ -124,7 +131,7 @@ if (translationKey) {
 					{
 						post.data.references && post.data.references.length > 0 && (
 							<div class="pt-6 border-t border-hairline">
-								<h4 class="text-xs font-mono text-mute uppercase tracking-widest mb-4">References</h4>
+								<h4 class="text-xs font-mono text-mute uppercase tracking-widest mb-4">{t("articles.references")}</h4>
 								<ul class="space-y-3">
 									{post.data.references.map((ref) => (
 										<li>
@@ -154,7 +161,7 @@ if (translationKey) {
 								stroke-width="2"
 								d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg
 						>
-						Back to Articles
+						{t("articles.back")}
 					</a>
 				</div>
 			</aside>
@@ -189,7 +196,7 @@ if (translationKey) {
 								stroke-width="2"
 								d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg
 						>
-						Back to Articles
+						{t("articles.back")}
 					</a>
 				</div>
 			</article>

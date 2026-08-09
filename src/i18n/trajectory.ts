@@ -1,65 +1,65 @@
 export const trajectoryData = {
   en: {
     title: 'PROFESSIONAL <br /> <span>TRAJECTORY.</span>',
-    description: 'My professional path and technical evolution over the years.',
+    description: 'Projects, roles and studies behind the work published on this site.',
     milestones: [
       {
         year: '2025 - Present',
-        title: 'Creator & Core Developer',
+        title: 'Creator and Core Developer',
         company: 'Achronyme',
-        description: 'Developing a modern programming language and compiler for Zero-Knowledge circuits and general-purpose logic, built in Rust.',
+        description: 'Building Achronyme\'s Rust compiler, runtime and tooling for general programs and zero-knowledge circuits.',
       },
       {
         year: '2024 - Present',
         title: 'Lead Developer',
         company: 'Festival Dango Teotihuacan 2026',
-        description: 'Web development and digital experience for the festival, driven by the creative vision of Sylestudio.',
+        description: 'Building the festival website and its supporting pages with Sylestudio.',
         link: { text: 'festivaldango.com', url: 'https://festivaldango.com' }
       },
       {
         year: '2024 - Present',
         title: 'Tech Lead',
         company: 'Sylestudio',
-        description: 'Leading technological initiatives and web development at a high-impact creative studio.',
+        description: 'Building websites and maintaining the technical stack used by Sylestudio projects.',
         link: { text: 'sylestudio.com', url: 'https://sylestudio.com' }
       },
       {
         year: '2022 - Present',
         title: 'Computer Systems Engineering',
         company: 'IPN (National Polytechnic Institute)',
-        description: 'Deep academic training in computer science, algorithms, and software architecture.',
+        description: 'Coursework in computer science, algorithms and software architecture.',
       },
     ]
   },
   es: {
     title: 'TRAYECTORIA <br /> <span>PROFESIONAL.</span>',
-    description: 'Mi camino profesional y evolución técnica a lo largo de los años.',
+    description: 'Proyectos, roles y estudios detrás del trabajo publicado en este sitio.',
     milestones: [
       {
         year: '2025 - Presente',
-        title: 'Creador y Core Developer',
+        title: 'Creador y desarrollador principal',
         company: 'Achronyme',
-        description: 'Desarrollo de un lenguaje de programación moderno y compilador para circuitos Zero-Knowledge y lógica de propósito general, construido en Rust.',
+        description: 'Desarrollo el compilador, runtime y las herramientas de Achronyme en Rust para programas generales y circuitos zero-knowledge.',
       },
       {
         year: '2024 - Presente',
         title: 'Lead Developer',
         company: 'Festival Dango Teotihuacan 2026',
-        description: 'Desarrollo del sitio web y experiencia digital para el festival, impulsado por la visión creativa de Sylestudio.',
+        description: 'Desarrollo el sitio del festival y sus páginas de apoyo con Sylestudio.',
         link: { text: 'festivaldango.com', url: 'https://festivaldango.com' }
       },
       {
         year: '2024 - Presente',
         title: 'Tech Lead',
         company: 'Sylestudio',
-        description: 'Liderando iniciativas tecnológicas y desarrollo web en un estudio creativo de alto impacto.',
+        description: 'Desarrollo sitios y mantengo la base técnica de los proyectos de Sylestudio.',
         link: { text: 'sylestudio.com', url: 'https://sylestudio.com' }
       },
       {
         year: '2022 - Presente',
         title: 'Ingeniería en Sistemas Computacionales',
         company: 'IPN (Instituto Politécnico Nacional)',
-        description: 'Formación académica profunda en ciencias de la computación, algoritmos y arquitectura de software.',
+        description: 'Estudios en ciencias de la computación, algoritmos y arquitectura de software.',
       },
     ]
   }

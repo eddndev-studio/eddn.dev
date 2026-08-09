@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import Pagination from "../../components/Pagination.astro";
 import LeetCodeFilters from "../../components/LeetCodeFilters.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
+import { useTranslations } from "../../i18n/ui";
 import type { GetStaticPaths, Page } from "astro";
 
 export const getStaticPaths = (async ({ paginate }) => {
@@ -25,12 +26,18 @@ interface Props {
 }
 
 const { page } = Astro.props;
+const t = useTranslations("en");
 
 // Border-based difficulty chips -- the semantic color is data, not chrome.
 const difficultyColor = {
 	Easy: "text-emerald-600 dark:text-emerald-400 border-emerald-500/40",
 	Medium: "text-amber-600 dark:text-amber-400 border-amber-500/40",
 	Hard: "text-rose-600 dark:text-rose-400 border-rose-500/40",
+};
+const difficultyLabels = {
+	Easy: t("difficulty.easy"),
+	Medium: t("difficulty.medium"),
+	Hard: t("difficulty.hard"),
 };
 
 function getSlug(id: string) {
@@ -47,15 +54,11 @@ function getSlug(id: string) {
 	<div class="max-w-7xl mx-auto px-6 py-24">
 		<header data-page-header class="mb-16">
 			<h1
-				class="text-6xl sm:text-8xl font-normal tracking-[-0.04em] text-ink leading-[0.9] mb-8"
-			>
-				SOLUTIONS <br />
-				<span class="text-brand-600 dark:text-brand-300"
-					>LEETCODE.</span
-				>
-			</h1>
+				class="text-6xl sm:text-8xl font-normal tracking-[-0.04em] text-ink leading-[0.9] mb-8 [&_span]:text-brand-600 dark:[&_span]:text-brand-300"
+				set:html={t("leetcode.title")}
+			></h1>
 			<p class="text-xl text-body font-normal max-w-2xl leading-snug">
-				Analysis and solutions for algorithmic problems.
+				{t("leetcode.description")}
 			</p>
 		</header>
 
@@ -67,19 +70,19 @@ function getSlug(id: string) {
 					<tr class="border-b border-hairline">
 						<th
 							class="py-4 font-mono text-xs uppercase tracking-widest text-mute"
-							>Problem</th
+							>{t("leetcode.table.problem")}</th
 						>
 						<th
 							class="py-4 font-mono text-xs uppercase tracking-widest text-mute"
-							>Difficulty</th
+							>{t("leetcode.table.difficulty")}</th
 						>
 						<th
 							class="py-4 font-mono text-xs uppercase tracking-widest text-mute"
-							>Complexity</th
+							>{t("leetcode.table.complexity")}</th
 						>
 						<th
 							class="py-4 font-mono text-xs uppercase tracking-widest text-mute"
-							>Date</th
+							>{t("leetcode.table.date")}</th
 						>
 					</tr>
 				</thead>
@@ -104,7 +107,7 @@ function getSlug(id: string) {
 										transition:name={`difficulty-${solution.id}`}
 										class={`text-[11px] font-mono px-2 py-0.5 rounded-[3px] border ${difficultyColor[solution.data.difficulty]}`}
 									>
-										{solution.data.difficulty}
+										{difficultyLabels[solution.data.difficulty]}
 									</span>
 								</td>
 								<td class="py-6 text-sm font-mono text-mute">
