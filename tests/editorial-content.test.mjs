@@ -183,3 +183,47 @@ test("the stable 0.1.0 release story is complete in English and Spanish", () => 
 	assert.match(english, /I'm sorry|I apologize/i);
 	assert.match(spanish, /perd(?:o|ó)n|disculpa/i);
 });
+
+test("the private auction article documents the executable claim and its limits", () => {
+	const englishPath = "src/content/articles/en/achronyme-private-auction-integration-test.md";
+	const spanishPath = "src/content/articles/es/achronyme-private-auction-integration-test.md";
+	const english = read(englishPath);
+	const spanish = read(spanishPath);
+
+	for (const article of [english, spanish]) {
+		assert.match(
+			article,
+			/translationKey: "achronyme-private-auction-integration-test"/,
+		);
+		assert.match(article, /tilino-lab/);
+		assert.match(article, /channel\(1\)/);
+		assert.match(article, /--insecure-dev-setup/);
+		assert.match(article, /2,501/);
+		assert.match(article, /1,864/);
+		assert.match(article, /proof\.json/);
+		assert.match(article, /public\.json/);
+		assert.match(article, /verification_key\.json/);
+		assert.match(article, /receipt\.txt/);
+		assert.match(article, /PROVE/);
+		assert.match(article, /VERIFY/);
+		assert.match(article, /CIRCOM/);
+	}
+
+	assert.match(english, /4 public inputs/i);
+	assert.match(english, /9 witness values/i);
+	assert.match(english, /fixed nonces/i);
+	assert.match(english, /does not prove/i);
+	assert.match(spanish, /4 entradas p(?:u|ú)blicas/i);
+	assert.match(spanish, /9 valores testigo/i);
+	assert.match(spanish, /nonces fijos/i);
+	assert.match(spanish, /no demuestra/i);
+
+	assert.match(
+		read("src/content/blog/en/achronyme-0-1-0.md"),
+		/\]\(\/articles\/achronyme-private-auction-integration-test\/\)/,
+	);
+	assert.match(
+		read("src/content/blog/es/achronyme-0-1-0.md"),
+		/\]\(\/es\/articles\/achronyme-private-auction-integration-test\/\)/,
+	);
+});

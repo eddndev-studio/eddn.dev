@@ -2,6 +2,7 @@
 title: "Achronyme 0.1.0: por fin, estable"
 description: "El release estable de Achronyme, la ceremonia que lo retrasó y la evidencia que necesitaba antes de publicarlo."
 pubDate: "2026-08-08"
+updatedDate: "2026-08-09"
 tags: ["achronyme", "release", "zk", "rust", "compiler"]
 translationKey: "achronyme-0-1-0-stable"
 ---
@@ -53,6 +54,8 @@ Para las etapas pesadas usé cómputo desechable en Google Cloud. Al terminar, c
 ## Qué se publicó
 
 La página de [Achronyme 0.1.0](https://github.com/achronyme/achronyme/releases/tag/v0.1.0) contiene binarios para Linux `x86_64` y `aarch64`, macOS Intel y Apple Silicon, y Windows `x86_64`. Los bundles de Linux tienen archivos SHA-256 y GitHub registra un digest para cada asset. La evidencia de proving se descarga por separado para que cualquiera pueda revisar el vínculo entre source, circuito, ceremonia y pruebas.
+
+Para ver los límites nuevos de módulos, concurrencia, capacidades y pruebas dentro de un solo programa, consulta [una subasta privada como prueba de integración de Achronyme](/es/articles/achronyme-private-auction-integration-test/).
 
 No estoy llamando terminado al lenguaje. Estoy llamando estable a un punto concreto del código y dejando claro cómo comprobarlo. Esa diferencia explica buena parte de estos meses.
 
