@@ -138,7 +138,7 @@ const totalPercent = languages.reduce((acc, curr) => acc + curr.percent, 0);
 
   {languages.length > 0 ? (
     <div class="grid gap-10 md:grid-cols-12 md:gap-6">
-      <div class="border-t border-hairline pt-6 md:col-span-8">
+      <div class="md:col-span-8">
         <div class="flex h-2 w-full overflow-hidden bg-hairline">
           {languages.map((language) => (
             <div
@@ -157,9 +157,9 @@ const totalPercent = languages.reduce((acc, curr) => acc + curr.percent, 0);
         </p>
       </div>
 
-      <div class="border-t border-hairline md:col-span-4">
+      <div class="space-y-1 md:col-span-4">
         {languages.map((language) => (
-          <div class="grid grid-cols-[1fr_auto] items-center border-b border-hairline py-2.5">
+          <div class="grid grid-cols-[1fr_auto] items-center py-2.5">
             <div class="flex items-center gap-2">
               <div
                 class="h-0.5 w-3"
@@ -173,7 +173,7 @@ const totalPercent = languages.reduce((acc, curr) => acc + curr.percent, 0);
       </div>
     </div>
   ) : (
-    <p class="border-y border-hairline py-6 text-sm text-body">
+    <p class="py-6 text-sm text-body">
       {t('languages.unavailable')}
     </p>
   )}

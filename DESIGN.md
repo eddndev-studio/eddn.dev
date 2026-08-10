@@ -4,11 +4,11 @@ Signal Index is the design system for `eddn.dev`. It treats the site as an open 
 
 ## Principles
 
-1. **Content before containers.** Space and hairlines establish groups. A surface is introduced only when interaction or contrast requires it.
+1. **Content before containers.** Space establishes editorial groups. Hairlines are reserved for indexed list rows, functional controls, tabular data, and major telemetry boundaries. A surface is introduced only when interaction or contrast requires it.
 2. **One display voice.** Geist carries every headline, navigation label, paragraph, and control. DM Mono is limited to indices, dates, code, and live readouts.
 3. **Show the mechanism.** The canvas programs and contribution data provide the visual identity. Static decoration stays quiet.
 4. **Violet means signal.** Violet identifies active text, machine output, focus, and data intensity. It is not used for glows or decorative panels.
-5. **Hard edges, clear rhythm.** Full-width fields, column shifts, and horizontal rules replace cards, shadows, and nested shells.
+5. **Hard edges, clear rhythm.** Full-width fields, column shifts, and deliberate spacing replace cards, shadows, nested shells, and decorative section rules.
 
 ## Color
 
@@ -36,8 +36,8 @@ The violet ramp lives in `src/styles/global.css`. The fixed dark field uses `#15
 
 - The main grid has 12 columns and a maximum width of 1400px.
 - The hero pairs a large typographic block with a smaller editorial note, then breaks the container with a full-width interactive field.
-- Recent work is a three-row index. Each row has an index, type, title, description, metadata, and destination.
-- Telemetry is separated by rules. Metrics use cells in one shared row, never independent cards.
+- Recent work is a three-row open index. Each row has an index, type, title, description, metadata, and destination; hairlines separate peer entries without enclosing them as cards.
+- Major telemetry modules are separated by a single rule. Metrics may use cells in one shared row, never independent cards.
 - The footer is a flat, full-width closing field with no rounded top edge.
 
 ## Navigation

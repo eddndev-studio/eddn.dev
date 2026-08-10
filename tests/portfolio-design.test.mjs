@@ -87,6 +87,26 @@ test("the home index is composed as rows instead of cards", () => {
 	assert.doesNotMatch(landing, /shadow-\[inset/);
 });
 
+test("section rules are reserved for indexed rows, telemetry and functional containers", () => {
+	const landing = read("src/components/pages/LandingPage.astro");
+	const footer = read("src/components/Footer.astro");
+	const entryRow = landing.match(/<article data-entry-row[^>]*>/)?.[0];
+	const telemetry = [
+		read("src/components/GitHubContributions.astro"),
+		read("src/components/GitHubLanguages.astro"),
+		read("src/components/LeetCodeContributions.astro"),
+	];
+
+	assert.ok(entryRow, "the shared recent-work row is present");
+	assert.match(entryRow, /\bborder-t border-hairline\b/);
+	assert.match(landing, /<div class="border-b border-hairline">\s*\{entries\.map/);
+	assert.doesNotMatch(landing.replace(entryRow, ""), /\bborder-t\b/);
+	assert.doesNotMatch(footer, /border-(?:t|b) border-white\/20/);
+	telemetry.forEach((component) => {
+		assert.match(component, /<section class="[^"]*\bborder-t border-hairline\b/);
+	});
+});
+
 test("the hero decoration is a kinetic SVG field rather than a canvas simulation", () => {
 	const landing = read("src/components/pages/LandingPage.astro");
 	const slot = landing.match(/<div\s+data-hero-slot[^>]*>/)?.[0];

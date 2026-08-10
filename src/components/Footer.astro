@@ -18,7 +18,7 @@ const links = [
 	<canvas id="footer-gol" class="pointer-events-none absolute inset-0 size-full opacity-[0.07]" aria-hidden="true"></canvas>
 
 	<div class="relative mx-auto flex min-h-[90dvh] max-w-[1400px] flex-col px-4 pb-6 pt-12 sm:px-6 sm:pb-8 sm:pt-16 lg:px-8 lg:pt-20">
-		<div class="mb-16 flex items-center justify-between border-b border-white/20 pb-5 font-mono text-[11px] uppercase tracking-[0.2em] text-white/55 sm:mb-24">
+		<div class="mb-16 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.2em] text-white/55 sm:mb-24">
 			<span>04 / {t("footer.section_label")}</span>
 			<span>{t("footer.location")} / {currentYear}</span>
 		</div>
@@ -37,7 +37,7 @@ const links = [
 			</div>
 		</div>
 
-		<div class="mt-20 grid gap-10 border-t border-white/20 pt-6 lg:grid-cols-12">
+		<div class="mt-20 grid gap-10 lg:grid-cols-12">
 			<nav class="lg:col-span-8" aria-label={t("footer.navigation_label")}>
 				<ul class="grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-4">
 					{links.map((link, index) => (

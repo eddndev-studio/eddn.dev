@@ -13,8 +13,9 @@ Signal Index replaces container decoration with an open editorial structure:
 - Geist is the only display and body family;
 - DM Mono is reserved for machine labels and evidence;
 - the simulation engine becomes a full-width interactive field;
-- recent content becomes a reusable row index;
-- telemetry uses rules and shared metric rows;
+- recent content becomes a reusable row index with hairlines between entries;
+- editorial sections use spacing instead of decorative rules;
+- major telemetry modules alone use rules, with shared metric rows where the data benefits from cells;
 - violet is limited to active text, data, focus, and canvas output;
 - the header remains compact below 1024px;
 - the compact header exposes one menu trigger and moves utilities into the overlay;
