@@ -1,0 +1,5 @@
+# Legacy cross-language slugs previously exposed to search crawlers.
+/es/blog/future-of-eddndev/ /es/blog/futuro-de-eddndev/ 301
+/blog/futuro-de-eddndev/ /blog/future-of-eddndev/ 301
+/es/blog/welcome-2026/ /es/blog/bienvenido-2026/ 301
+/blog/bienvenido-2026/ /blog/welcome-2026/ 301
