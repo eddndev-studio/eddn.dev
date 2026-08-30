@@ -40,6 +40,20 @@ test("compact navigation exposes one clear trigger", () => {
 	assert.doesNotMatch(compactNavigation, /search-trigger/);
 });
 
+test("the site exposes one dark-only color scheme", () => {
+	const layout = read("src/layouts/Layout.astro");
+	const header = read("src/components/Header.astro");
+	const styles = read("src/styles/global.css");
+	const ui = read("src/i18n/ui.ts");
+
+	assert.match(layout, /<html[^>]+class="dark overflow-x-hidden"/);
+	assert.match(layout, /<meta name="color-scheme" content="dark" \/>/);
+	assert.doesNotMatch(layout, /localStorage|prefers-color-scheme/);
+	assert.doesNotMatch(header, /theme-toggle|handleThemeToggle|toggle_theme|nav\.theme/);
+	assert.match(styles, /color-scheme:\s*dark/);
+	assert.doesNotMatch(ui, /nav\.toggle_theme|nav\.theme/);
+});
+
 test("display headlines use one sans-serif voice", () => {
 	const displaySource = [
 		...collectFiles("src", ".astro"),

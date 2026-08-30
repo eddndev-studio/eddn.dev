@@ -27,7 +27,7 @@ Signal Index replaces container decoration with an open editorial structure:
 - English and Spanish routes;
 - the fluid, life, and flow programs;
 - visibility and reduced-motion controls for canvas rendering;
-- search and native theme view transitions;
+- search and the fixed dark-only theme;
 - real GitHub and LeetCode telemetry;
 - page transition names for content titles and dates;
 - existing long-form content structure.

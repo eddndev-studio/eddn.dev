@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: "./src/content/blog" }),
@@ -19,7 +20,7 @@ const leetcode = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: "./src/content/leetcode" }),
   schema: z.object({
     title: z.string(),
-    problemUrl: z.string().url(),
+    problemUrl: z.url(),
     difficulty: z.enum(['Easy', 'Medium', 'Hard']),
     pubDate: z.coerce.date(),
     tags: z.array(z.string()).default([]),
@@ -42,7 +43,7 @@ const articles = defineCollection({
     translationKey: z.string().optional(),
     abstract: z.string().optional(),
     technicalDepth: z.enum(['Basic', 'Intermediate', 'Advanced']).default('Intermediate'),
-    references: z.array(z.string().url()).optional()
+    references: z.array(z.url()).optional()
   }),
 });
 

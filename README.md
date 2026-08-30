@@ -1,7 +1,7 @@
 # eddn.dev
 
 ![Build Status](https://img.shields.io/github/actions/workflow/status/eddndev/eddn/deploy.yml?branch=master&label=build)
-![Astro](https://img.shields.io/badge/framework-Astro_v5-orange)
+![Astro](https://img.shields.io/badge/framework-Astro_v7-orange)
 ![TypeScript](https://img.shields.io/badge/language-TypeScript-blue)
 ![License](https://img.shields.io/github/license/eddndev/eddn)
 
@@ -13,7 +13,7 @@ This repository, identified as `eddn` to differentiate it from enterprise-level 
 
 The primary objective of this project is to maintain a high-performance, low-latency platform for technical writing and experimentation. Unlike traditional portfolios, this system prioritizes:
 
-*   **Static Site Excellence:** Utilizing Astro v5 to achieve near-zero client-side JavaScript for content delivery, leveraging SSG (Static Site Generation) for optimal edge distribution.
+*   **Static Site Excellence:** Utilizing Astro v7 to achieve near-zero client-side JavaScript for content delivery, leveraging SSG (Static Site Generation) for optimal edge distribution.
 *   **Custom Simulation Engines:** Implementation of raw HTML5 Canvas simulations (`src/lib/`) for visual components, avoiding heavy abstraction layers to maintain direct control over memory and the render loop.
 *   **Structured Content Engineering:** Using strict TypeScript schemas via Astro Content Collections to manage algorithmic documentation (LeetCode) and technical articles, ensuring metadata integrity and type safety across the entire build.
 *   **Purposeful Interactivity:** Raw canvas simulations, IntersectionObserver-driven reveals, and native View Transitions keep motion expressive without taking over scrolling or content delivery.
@@ -22,7 +22,7 @@ The primary objective of this project is to maintain a high-performance, low-lat
 
 ## Tech Stack
 
-*   **Framework:** Astro v5 (SSG)
+*   **Framework:** Astro v7 (SSG)
 *   **Language:** TypeScript
 *   **Styling:** Tailwind CSS v4 (Vite-integrated)
 *   **Motion:** CSS, IntersectionObserver, View Transitions, and custom Canvas engines

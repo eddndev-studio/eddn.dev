@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
+import { unified } from '@astrojs/markdown-remark';
 import { transformerMetaHighlight, transformerNotationFocus } from '@shikijs/transformers';
 
 import remarkMath from 'remark-math';
@@ -11,6 +12,8 @@ import achGrammar from './src/styles/achronyme.tmLanguage.json';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://eddn.dev',
+  // Preserve Astro 5's HTML whitespace behavior during the v7 migration.
+  compressHTML: true,
   i18n: {
     defaultLocale: "en",
     locales: ["en", "es"],
@@ -22,8 +25,12 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   markdown: {
-    remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    // Astro 7 defaults to Sätteri; this site needs unified for remark-math
+    // and rehype-katex.
+    processor: unified({
+      remarkPlugins: [remarkMath],
+      rehypePlugins: [rehypeKatex],
+    }),
     shikiConfig: {
       theme: 'nord',
       wrap: true,

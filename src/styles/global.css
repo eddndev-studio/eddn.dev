@@ -71,9 +71,7 @@
   --text-base: 1.0625rem;
 }
 
-/* Theme-aware neutrals resolve from runtime variables so      */
-/* a single token (bg-canvas, text-ink, border-hairline...)    */
-/* flips between warm-paper (light) and warm-charcoal (dark).   */
+/* Dark-only neutrals resolve through semantic runtime tokens. */
 @theme inline {
   --color-canvas: var(--c-canvas);
   --color-canvas-soft: var(--c-canvas-soft);
@@ -86,18 +84,6 @@
 }
 
 :root {
-  --c-canvas: #f3f0ea;
-  --c-canvas-soft: #e8e3dc;
-  --c-hairline: #cbc4ba;
-  --c-ink: #17131d;
-  --c-body-strong: #302b37;
-  --c-body: #4f4958;
-  --c-mute: #655e6e;
-  --c-violet-ink: #7458d8;
-  --c-violet-contrast: #f8f5ff;
-}
-
-.dark {
   --c-canvas: #111015;
   --c-canvas-soft: #1c1a21;
   --c-hairline: #35313c;
@@ -121,6 +107,7 @@
 
 /* Keep scrollbar gutter to avoid layout shift on route change */
 html {
+  color-scheme: dark;
   scrollbar-gutter: stable;
 }
 
@@ -141,18 +128,6 @@ html {
 }
 
 /* ============================================================ */
-/*  Theme toggle -- circular mask via View Transition API      */
-/* ============================================================ */
-
-html.theme-transition::view-transition-old(root),
-html.theme-transition::view-transition-new(root) {
-  animation: none !important;
-  mix-blend-mode: normal;
-}
-html.theme-transition::view-transition-new(root) { z-index: 9999; }
-html.theme-transition::view-transition-old(root) { z-index: 1; }
-
-/* ============================================================ */
 /*  Motion primitives                                          */
 /* ============================================================ */
 
@@ -166,8 +141,8 @@ html.theme-transition::view-transition-old(root) { z-index: 1; }
 
 /* ============================================================ */
 /*  Prose (article / blog / solution body)                     */
-/*  Theme-aware tokens keep every long-form page consistent.   */
-/*  page reads warm in both modes. Color rule: body links are   */
+/*  Semantic tokens keep every long-form page consistent.      */
+/*  The page reads warm on the dark surface. Body links are     */
 /*  ink (not violet); only fenced code carries syntax color.    */
 /* ============================================================ */
 

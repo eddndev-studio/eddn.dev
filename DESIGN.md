@@ -12,17 +12,17 @@ Signal Index is the design system for `eddn.dev`. It treats the site as an open 
 
 ## Color
 
-| Role | Light | Dark |
-| --- | --- | --- |
-| Canvas | `#f3f0ea` | `#111015` |
-| Soft canvas | `#e8e3dc` | `#1c1a21` |
-| Ink | `#17131d` | `#f5f1fa` |
-| Body | `#4f4958` | `#c4bccd` |
-| Muted | `#655e6e` | `#9b92a5` |
-| Hairline | `#cbc4ba` | `#35313c` |
-| Violet | `#7458d8` | `#8c72e6` |
+| Role | Color |
+| --- | --- |
+| Canvas | `#111015` |
+| Soft canvas | `#1c1a21` |
+| Ink | `#f5f1fa` |
+| Body | `#c4bccd` |
+| Muted | `#9b92a5` |
+| Hairline | `#35313c` |
+| Violet | `#8c72e6` |
 
-The violet ramp lives in `src/styles/global.css`. The fixed dark field uses `#15111e` so the simulations retain the same contrast in both themes.
+The site is dark-only. The violet ramp lives in `src/styles/global.css`, and the fixed dark field uses `#15111e` so the simulations retain consistent contrast.
 
 ## Type
 
@@ -43,7 +43,7 @@ The violet ramp lives in `src/styles/global.css`. The fixed dark field uses `#15
 ## Navigation
 
 - Desktop navigation appears at 1024px and above.
-- Viewports below 1024px use one `Menu` trigger. Search, locale, and theme controls live inside the overlay.
+- Viewports below 1024px use one `Menu` trigger. Search and locale controls live inside the overlay.
 - The compact overlay uses the same row language as the content index.
 - Current-page state uses text color and a thin underline, not a filled pill.
 

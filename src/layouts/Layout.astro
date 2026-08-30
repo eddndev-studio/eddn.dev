@@ -31,18 +31,11 @@ const imageAltPrefix = lang === 'es' ? 'Portada de:' : 'Cover of:';
 ---
 
 <!doctype html>
-<html lang={lang} class="overflow-x-hidden">
+<html lang={lang} class="dark overflow-x-hidden">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<script is:inline>
-			(function() {
-				var t = localStorage.getItem('theme');
-				if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme:dark)').matches)) {
-					document.documentElement.classList.add('dark');
-				}
-			})();
-		</script>
+		<meta name="color-scheme" content="dark" />
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 
@@ -113,18 +106,5 @@ const imageAltPrefix = lang === 'es' ? 'Portada de:' : 'Cover of:';
 			<slot />
 		</main>
 		<Footer />
-
-		<script>
-			// Restore dark class after Astro view-transition DOM swap
-			document.addEventListener("astro:after-swap", () => {
-				const t = localStorage.getItem('theme');
-				const prefersDark = matchMedia('(prefers-color-scheme:dark)').matches;
-				if (t === 'dark' || (!t && prefersDark)) {
-					document.documentElement.classList.add('dark');
-				} else {
-					document.documentElement.classList.remove('dark');
-				}
-			});
-		</script>
 	</body>
 </html>
