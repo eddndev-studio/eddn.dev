@@ -1,6 +1,7 @@
 ---
 import { socials } from "../data/socials";
 import { useTranslations } from "../i18n/ui";
+import Brand from "./Brand.astro";
 
 const currentYear = new Date().getFullYear();
 const lang = (Astro.currentLocale as keyof typeof import("../i18n/ui").ui) || "en";
@@ -58,7 +59,10 @@ const links = [
 						<a href={social.url} target="_blank" rel="noopener noreferrer" class="transition-colors duration-300 hover:text-brand-300">{social.id}</a>
 					))}
 				</div>
-				<span class="font-mono text-[11px] uppercase tracking-[0.12em] text-white/40">(c) {currentYear} EDDN.DEV</span>
+				<div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+					<Brand />
+					<span class="font-mono text-[11px] uppercase tracking-[0.12em] text-white/40">(c) {currentYear} EDDN.DEV</span>
+				</div>
 			</div>
 		</div>
 	</div>

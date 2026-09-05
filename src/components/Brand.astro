@@ -1,0 +1,59 @@
+---
+import Symbol from "../assets/images/eddndev.svg";
+
+interface Props {
+	class?: string;
+	signature?: boolean;
+}
+
+const { class: className, signature = false } = Astro.props;
+const spanish = Astro.currentLocale === "es";
+---
+
+<a
+	href={spanish ? "/es/" : "/"}
+	class:list={["brand-link", className]}
+	aria-label={spanish ? "Inicio, eddn.dev" : "Home, eddn.dev"}
+>
+	<Symbol class="brand-mark" aria-hidden="true" focusable="false" />
+	<span class="brand-name" aria-hidden="true">eddn.dev</span>
+	{signature && <span class="brand-signature" aria-hidden="true">/ EA</span>}
+</a>
+
+<style>
+	.brand-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.55rem;
+		min-height: 2.75rem;
+		color: var(--c-ink);
+		white-space: nowrap;
+	}
+	.brand-link:focus-visible {
+		outline: 2px solid var(--color-brand-300);
+		outline-offset: 4px;
+	}
+	.brand-mark {
+		display: block;
+		flex: 0 0 auto;
+		width: 2.25rem;
+		height: auto;
+		color: var(--color-brand-300);
+	}
+	.brand-mark :global(path) { fill: currentColor; }
+	.brand-name {
+		font-size: 15px;
+		font-weight: 600;
+		letter-spacing: -0.04em;
+	}
+	.brand-signature {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.18em;
+		color: var(--color-brand-300);
+	}
+	@media (forced-colors: active) {
+		.brand-link, .brand-mark, .brand-signature { color: CanvasText; }
+		.brand-link:focus-visible { outline-color: Highlight; }
+	}
+</style>
